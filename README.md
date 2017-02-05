@@ -1,2 +1,2 @@
 # nick-blog-frontend
-A platform to display blog posts.
+A frontend to display blog posts.
