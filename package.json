@@ -1,0 +1,25 @@
+{
+  "name": "nick-blog-frontend",
+  "version": "1.0.0",
+  "description": "A frontend to display blog posts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --progress --colors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nick-ng/nick-blog-frontend.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nick-ng/nick-blog-frontend/issues"
+  },
+  "homepage": "https://github.com/nick-ng/nick-blog-frontend#readme",
+  "dependencies": {
+    "css-loader": "0.26.1",
+    "style-loader": "0.13.1",
+    "webpack": "2.2.1"
+  }
+}
