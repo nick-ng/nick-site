@@ -1,3 +1,3 @@
 module.exports = {
-  content1: "Comming Soon.",
+  content1: "Coming Soon.",
 }
