@@ -17,11 +17,10 @@ app.use((req, res, next) => {
 // serve static files
 app.use(express.static('dist'));
 
-// redirect all 404s to index.html
+// redirect all requests to index.html
 app.use((req, res) => {
-  res.sendFile(path.resolve(__dirname, './build/index.html'));
+  res.sendFile(path.resolve(__dirname, './dist/index.html'));
 });
-
 
 // starting listening
 const port = process.env.PORT || 3434;
