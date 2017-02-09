@@ -1,6 +1,18 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const plugins = [
+  new HtmlWebpackPlugin({
+    title: 'Nick Ng',
+    favicon: `${__dirname}/favicon.ico`,
+    template: './index.html',
+    inject: 'true',
+  }),
+];
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(new webpack.optimize.UglifyJsPlugin());
+}
+
 module.exports = {
   entry: './src/entry.js',
   output: {
@@ -29,18 +41,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Nick Ng',
-      favicon: `${__dirname}/favicon.ico`,
-      template: './index.html',
-      inject: 'true',
-    }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      },
-    }),
-    new webpack.optimize.UglifyJsPlugin(),
-  ],
+  plugins,
 };

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --inline --colors --history-api-fallback",
-    "build": "webpack",
+    "build": "NODE_ENV=production webpack",
     "heroku-postbuild": "npm run build",
     "server": "node ./server.js"
   },
