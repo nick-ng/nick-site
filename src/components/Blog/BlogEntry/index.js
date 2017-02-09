@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import css from './styles.css';
 
 export default function BlogEntry({ number }) {
@@ -6,7 +7,7 @@ export default function BlogEntry({ number }) {
     <div
       className={css.blogStyle}
     >
-      {`Test #${number}`}
+      <Link to={`test/${number}`}>{`Test #${number}`}</Link>
       <hr />
     </div>
   );

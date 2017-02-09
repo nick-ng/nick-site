@@ -1,0 +1,16 @@
+.normalLink,
+.activeLink {
+  border: 1px solid;
+  padding: 0.5rem;
+  text-decoration: none;
+}
+
+.normalLink {
+  color: darkGreen;
+}
+
+.activeLink {
+  color: white;
+  background-color: darkGreen;
+  border-color: darkGreen;
+}
