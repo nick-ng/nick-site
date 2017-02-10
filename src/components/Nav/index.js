@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+
 import NavLink from '../NavLink';
 
 export default function Nav(props) {
@@ -6,6 +7,7 @@ export default function Nav(props) {
     <div className={props.className}>
       <NavLink to="/" onlyActiveOnIndex>Blog Page</NavLink>
       <NavLink to="/test/">Test Page Zero</NavLink>
+      <NavLink to="/editor/">Test Editor</NavLink>
     </div>
   );
 }

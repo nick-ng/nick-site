@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
+  devtool: 'source-map',
   entry: './src/entry.js',
   output: {
     path: `${__dirname}/dist`,

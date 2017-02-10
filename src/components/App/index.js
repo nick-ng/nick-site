@@ -5,10 +5,11 @@ import Nav from '../Nav';
 
 export default function App({ children }) {
   return (
-    <div>
+    <div className={css.appStyle}>
       <h1 className={css.heading}>
         Nick Ng
       </h1>
+      <hr />
       <div className={css.mainStyle}>
         <Nav className={css.navStyle} />
         <div className={css.contentStyle}>{children}</div>
