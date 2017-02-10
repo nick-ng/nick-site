@@ -1,0 +1,18 @@
+.heading {
+  font-size: 2rem;
+}
+
+.mainStyle {
+  display: flex;
+  align-items: flex-start;
+}
+
+.navStyle {
+  order: 1;
+  flex-grow: 0;
+}
+
+.contentStyle {
+  order: 2;
+  flex-grow: 1;
+}
