@@ -1,16 +1,14 @@
 .normalLink,
 .activeLink {
-  border: 1px solid;
-  padding: 0.5rem;
+  display: flex;
   text-decoration: none;
+  line-height: 1.7;
 }
 
 .normalLink {
-  color: darkGreen;
+  color: navy;
 }
 
 .activeLink {
-  color: white;
-  background-color: darkGreen;
-  border-color: darkGreen;
+  font-weight: bold;
 }

@@ -4,10 +4,12 @@ import css from './styles.css';
 
 export default function NavLink(props) {
   return (
-    <Link
-      {...props}
-      className={css.normalLink}
-      activeClassName={css.activeLink}
-    />
+    <div>
+      <Link
+        {...props}
+        className={css.normalLink}
+        activeClassName={css.activeLink}
+      />
+    </div>
   );
 }

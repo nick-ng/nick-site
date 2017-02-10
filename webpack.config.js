@@ -10,10 +10,17 @@ const plugins = [
   }),
 ];
 if (process.env.NODE_ENV === 'production') {
+  console.log('Production build!'); // eslint-disable-line no-console
   plugins.push(new webpack.optimize.UglifyJsPlugin());
+  plugins.push(new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('production'),
+    },
+  }));
 }
 
 module.exports = {
+  devtool: 'source-map',
   entry: './src/entry.js',
   output: {
     path: `${__dirname}/dist`,

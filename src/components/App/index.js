@@ -1,15 +1,19 @@
 import React, { PropTypes } from 'react';
 
+import css from './styles.css';
 import Nav from '../Nav';
 
 export default function App({ children }) {
   return (
-    <div>
-      <h1>
+    <div className={css.appStyle}>
+      <h1 className={css.heading}>
         Nick Ng
       </h1>
-      <Nav />
-      <div>{children}</div>
+      <hr />
+      <div className={css.mainStyle}>
+        <Nav className={css.navStyle} />
+        <div className={css.contentStyle}>{children}</div>
+      </div>
     </div>
   );
 }

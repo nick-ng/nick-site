@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 
+import css from './styles.css';
+
 export default function Test({ params }) {
   return (
-    <div>
-      <hr />
+    <div className={css.testStyle}>
       {`Test Component ${params.number ? params.number : 'Zero'}`}
       <hr />
     </div>
