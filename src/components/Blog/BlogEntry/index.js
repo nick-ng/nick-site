@@ -1,18 +1,24 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
-import css from './styles.css';
 
-export default function BlogEntry({ number }) {
+import css from './styles.css';
+import PostEditor from '../../PostEditor';
+
+export default function BlogEntry({ content, renderNumber }) {
   return (
-    <div
-      className={css.blogStyle}
-    >
-      <Link to={`test/${number}`}>{`Test #${number}`}</Link>
-      <hr />
+    <div className={css.blogStyle}>
+      {renderNumber !== 0 && <hr />}
+      <PostEditor
+        initialPost={content}
+      />
     </div>
   );
 }
 
 BlogEntry.propTypes = {
-  number: PropTypes.number.isRequired,
+  content: PropTypes.string.isRequired,
+  renderNumber: PropTypes.number,
+};
+
+BlogEntry.defaultProps = {
+  renderNumber: 1,
 };

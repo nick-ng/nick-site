@@ -10,7 +10,7 @@ app.use(compression());
 app.use((req, res, next) => {
   if (req.url && req.url.includes('www.nick.ng')) {
     const newUrl = req.url.replace('www.nick.ng', 'nick.ng');
-    return res.redirect(`${req.header('x-forwarded-proto')}://${req.headers.host}${newUrl}`);
+    return res.redirect(`https://${req.headers.host}${newUrl}`);
   }
   return next();
 });

@@ -8,6 +8,7 @@
     "start": "webpack-dev-server --inline --colors --history-api-fallback",
     "build": "NODE_ENV=production webpack",
     "heroku-postbuild": "npm run build",
+    "eslint": "eslint ./src",
     "server": "node ./server.js"
   },
   "repository": {
