@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
+import classNames from 'classnames';
 
 import css from './styles.css';
 
@@ -10,14 +11,22 @@ const STYLING_CONTROLS = [
 
 export default class PostEditor extends React.Component {
   static restoreContent(contentJSON) {
-    const rawContent = JSON.parse(contentJSON);
+    if (!contentJSON) {
+      return EditorState.createEmpty();
+    }
+    let rawContent;
+    if (contentJSON && contentJSON.constructor === Object) {
+      rawContent = contentJSON;
+    } else {
+      rawContent = JSON.parse(contentJSON);
+    }
     return EditorState.createWithContent(convertFromRaw(rawContent));
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: PostEditor.restoreContent(props.initialPost),
       savedPost: null,
     };
     this.changeHandler = editorState => this.setState({ editorState });
@@ -25,6 +34,7 @@ export default class PostEditor extends React.Component {
     this.stylingControls = this.stylingControls.bind(this);
     this.renderStylingControl = this.renderStylingControl.bind(this);
     this.savePost = this.savePost.bind(this);
+    this.focusEditor = this.focusEditor.bind(this);
   }
 
   handleKeyCommand(command) {
@@ -45,6 +55,10 @@ export default class PostEditor extends React.Component {
     this.setState({ savedPost: postData });
   }
 
+  focusEditor() {
+    this.editor.focus();
+  }
+
   renderStylingControl({ action, name }) {
     return (
       <button
@@ -61,11 +75,17 @@ export default class PostEditor extends React.Component {
     return (
       <div>
         {STYLING_CONTROLS.map(this.renderStylingControl)}
-        <div className={css.editorStyle}>
+        <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+          className={classNames(css.postStyle, { [css.editingStyle]: true })}
+          onClick={this.focusEditor}
+        >
           <Editor
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.changeHandler}
+            ref={(c) => {
+              this.editor = c;
+            }}
           />
         </div>
         <button
@@ -87,3 +107,14 @@ export default class PostEditor extends React.Component {
     );
   }
 }
+
+PostEditor.propTypes = {
+  initialPost: PropTypes.oneOf([
+    PropTypes.object,
+    PropTypes.string,
+  ]),
+};
+
+PostEditor.defaultProps = {
+  initialPost: null,
+};
