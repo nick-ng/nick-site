@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
+import classNames from 'classnames';
 
 import css from './styles.css';
 
@@ -33,6 +34,7 @@ export default class PostEditor extends React.Component {
     this.stylingControls = this.stylingControls.bind(this);
     this.renderStylingControl = this.renderStylingControl.bind(this);
     this.savePost = this.savePost.bind(this);
+    this.focusEditor = this.focusEditor.bind(this);
   }
 
   handleKeyCommand(command) {
@@ -53,6 +55,10 @@ export default class PostEditor extends React.Component {
     this.setState({ savedPost: postData });
   }
 
+  focusEditor() {
+    this.editor.focus();
+  }
+
   renderStylingControl({ action, name }) {
     return (
       <button
@@ -69,11 +75,17 @@ export default class PostEditor extends React.Component {
     return (
       <div>
         {STYLING_CONTROLS.map(this.renderStylingControl)}
-        <div className={css.editorStyle}>
+        <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+          className={classNames(css.postStyle, { [css.editingStyle]: true })}
+          onClick={this.focusEditor}
+        >
           <Editor
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.changeHandler}
+            ref={(c) => {
+              this.editor = c;
+            }}
           />
         </div>
         <button

@@ -1,7 +1,13 @@
-.editorStyle {
+.postStyle {
+}
+
+.editingStyle {
   border: 1px solid;
   margin: 7px 0;
   padding: 7px 2px;
+  background-color: white;
+  min-height: 100px;
+  cursor: text;
 }
 
 .buttonStyle {
