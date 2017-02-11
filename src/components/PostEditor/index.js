@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Editor, EditorState, RichUtils, convertToRaw, convertFromRaw } from 'draft-js';
 
 import css from './styles.css';
@@ -10,14 +10,22 @@ const STYLING_CONTROLS = [
 
 export default class PostEditor extends React.Component {
   static restoreContent(contentJSON) {
-    const rawContent = JSON.parse(contentJSON);
+    if (!contentJSON) {
+      return EditorState.createEmpty();
+    }
+    let rawContent;
+    if (contentJSON && contentJSON.constructor === Object) {
+      rawContent = contentJSON;
+    } else {
+      rawContent = JSON.parse(contentJSON);
+    }
     return EditorState.createWithContent(convertFromRaw(rawContent));
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty(),
+      editorState: PostEditor.restoreContent(props.initialPost),
       savedPost: null,
     };
     this.changeHandler = editorState => this.setState({ editorState });
@@ -87,3 +95,14 @@ export default class PostEditor extends React.Component {
     );
   }
 }
+
+PostEditor.propTypes = {
+  initialPost: PropTypes.oneOf([
+    PropTypes.object,
+    PropTypes.string,
+  ]),
+};
+
+PostEditor.defaultProps = {
+  initialPost: null,
+};
