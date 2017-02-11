@@ -8,8 +8,9 @@ app.use(compression());
 
 // https to http redirect
 app.use((req, res, next) => {
-  if (req.header('x-forwarded-proto') && req.header('x-forwarded-proto') === 'https') {
-    return res.redirect(`http://${req.headers.host}${req.url}`);
+  if (req.url && req.url.includes('www.nick.ng')) {
+    const newUrl = req.url.replace('www.nick.ng', 'nick.ng');
+    return res.redirect(`${req.header('x-forwarded-proto')}://${req.headers.host}${newUrl}`);
   }
   return next();
 });
