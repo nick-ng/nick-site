@@ -56,7 +56,9 @@ export default class PostEditor extends React.Component {
   }
 
   focusEditor() {
-    this.editor.focus();
+    if (this.props.editing) {
+      this.editor.focus();
+    }
   }
 
   renderStylingControl({ action, name }) {
@@ -64,7 +66,7 @@ export default class PostEditor extends React.Component {
       <button
         className={css.buttonStyle}
         onClick={this.stylingControls(action)}
-        key={name}
+        key={name}PostEditor
       >
         {name}
       </button>
@@ -72,11 +74,12 @@ export default class PostEditor extends React.Component {
   }
 
   render() {
+    const { editing } = this.props;
     return (
       <div>
-        {STYLING_CONTROLS.map(this.renderStylingControl)}
+        {editing && STYLING_CONTROLS.map(this.renderStylingControl)}
         <div // eslint-disable-line jsx-a11y/no-static-element-interactions
-          className={classNames(css.postStyle, { [css.editingStyle]: true })}
+          className={classNames(css.postStyle, { [css.editingStyle]: editing })}
           onClick={this.focusEditor}
         >
           <Editor
@@ -86,13 +89,15 @@ export default class PostEditor extends React.Component {
             ref={(c) => {
               this.editor = c;
             }}
+            readOnly={!editing}
           />
         </div>
+        {editing &&
         <button
           onClick={this.savePost}
         >
           Save
-        </button>
+        </button>}
         {this.state.savedPost &&
         <div>
           <hr />
@@ -109,6 +114,7 @@ export default class PostEditor extends React.Component {
 }
 
 PostEditor.propTypes = {
+  editing: PropTypes.bool,
   initialPost: PropTypes.oneOf([
     PropTypes.object,
     PropTypes.string,
@@ -116,5 +122,6 @@ PostEditor.propTypes = {
 };
 
 PostEditor.defaultProps = {
+  editing: false,
   initialPost: null,
 };
