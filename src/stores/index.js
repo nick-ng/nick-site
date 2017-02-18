@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
-import postReducer from './posts';
+import { routerReducer as routing } from 'react-router-redux';
+import posts from './posts';
+import postEditor from './postEditor';
 
 export default combineReducers({
-  routing: routerReducer,
-  posts: postReducer,
+  routing,
+  posts,
+  postEditor,
 });

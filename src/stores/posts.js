@@ -1,20 +1,25 @@
-import { createReducer } from 'redux-immutable';
+import { createReducer } from 'redux-immutablejs';
 import { createSelector } from 'reselect';
 import Immutable from 'immutable';
 
-import { UPDATE_POSTS } from './constants';
+import constants from './constants';
+
+// Constants
+const { UPDATE_POSTS } = constants;
 
 const initialState = Immutable.fromJS({
   posts: {},
 });
 
 // Actions
-export const updatePosts = posts => dispatch =>
-  dispatch({ type: UPDATE_POSTS, payload: { posts } });
+export function updatePosts(posts) {
+  return dispatch =>
+    dispatch({ type: UPDATE_POSTS, payload: { posts } });
+}
 
 // Reducer
 export default createReducer(initialState, {
-  [UPDATE_POSTS]: (state, action) => state.updateIn('posts', posts => posts.merge(action.payload.posts)),
+  [UPDATE_POSTS]: (state, action) => state.updateIn(['posts'], posts => posts.merge(action.payload.posts)),
 });
 
 // Selectors
