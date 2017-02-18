@@ -1,0 +1,4 @@
+export default {
+  UPDATE_POSTS: 'UPDATE_POSTS',
+  EDITOR_POST_EDIT: 'EDITOR_POST_EDIT',
+};
