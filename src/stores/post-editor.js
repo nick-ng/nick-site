@@ -5,17 +5,18 @@ import Immutable from 'immutable';
 import constants from './constants';
 
 // Constants
-const { EDITOR_POST_EDIT } = constants;
+const {
+  EDITOR_POST_EDIT,
+} = constants;
 
+// Initial State
 const initialState = Immutable.fromJS({
   postEditorContent: '',
 });
 
 // Actions
-export function updatePostEditorContent(postContent) {
-  return dispatch =>
-    dispatch({ type: EDITOR_POST_EDIT, payload: { postContent } });
-}
+export const updatePostEditorContent = postContent => dispatch =>
+  dispatch({ type: EDITOR_POST_EDIT, payload: { postContent } });
 
 // Reducer
 export default createReducer(initialState, {

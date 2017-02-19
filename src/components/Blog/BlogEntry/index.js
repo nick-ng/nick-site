@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react';
 
 import css from './styles.css';
-import PostEditor from '../../PostEditor';
+import PostDisplayer from '../../post-displayer';
 
 export default function BlogEntry({ content, renderNumber }) {
   return (
     <div className={css.blogStyle}>
       {renderNumber !== 0 && <hr />}
-      <PostEditor
-        initialPost={content}
+      <PostDisplayer
+        postContent={content}
       />
     </div>
   );
