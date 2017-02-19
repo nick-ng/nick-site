@@ -6,7 +6,6 @@ import ReactMarkdown from 'react-markdown';
 const PostDisplayer = ({ postContent, className }) => (
   <div className={className}>
     <ReactMarkdown source={postContent} escapeHtml />
-    <div>{postContent}</div>
   </div>
 );
 

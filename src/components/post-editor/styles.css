@@ -1,0 +1,16 @@
+.editorStyle {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.textareaStyle {
+  margin: 0.1em 0;
+  resize: vertical;
+  width: 100%;
+}
+
+.controlsStyle, .displayStyle {
+  flex-basis: 45%;
+}

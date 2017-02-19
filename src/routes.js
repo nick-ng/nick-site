@@ -4,7 +4,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 
 import App from './components/App';
 import Blog from './components/Blog';
-import PostEditor from './components/PostEditor';
+import PostEditorContainer from './container/post-editor-container';
 import Test from './components/Test';
 
 export default function getRouter(store) {
@@ -15,7 +15,7 @@ export default function getRouter(store) {
       <Route path="/" component={App}>
         <IndexRoute component={Blog} />
         <Route path="test(/:number)" component={Test} />
-        <Route path="editor(/:postId)" component={PostEditor} />
+        <Route path="editor(/:postId)" component={PostEditorContainer} />
       </Route>
     </Router>
   );
