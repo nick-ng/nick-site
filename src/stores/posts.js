@@ -8,7 +8,13 @@ import constants from './constants';
 const { UPDATE_POSTS } = constants;
 
 const initialState = Immutable.fromJS({
-  posts: {},
+  posts: {
+    abcd1234: {
+      id: 'abcd1234',
+      content: '# How are you.',
+      postDate: new Date('2000-01-19'),
+    },
+  },
 });
 
 // Actions

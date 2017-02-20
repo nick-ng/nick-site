@@ -3,8 +3,8 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
 import App from './components/App';
-import Blog from './components/Blog';
-import PostEditorContainer from './container/post-editor-container';
+import BlogContainer from './containers/blog-container';
+import PostEditorContainer from './containers/post-editor-container';
 import Test from './components/Test';
 
 export default function getRouter(store) {
@@ -13,7 +13,7 @@ export default function getRouter(store) {
   return (
     <Router history={history}>
       <Route path="/" component={App}>
-        <IndexRoute component={Blog} />
+        <IndexRoute component={BlogContainer} />
         <Route path="test(/:number)" component={Test} />
         <Route path="editor(/:postId)" component={PostEditorContainer} />
       </Route>
