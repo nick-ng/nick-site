@@ -6,7 +6,11 @@ import PostDisplayer from '../post-displayer';
 import postService from '../../services/post-service';
 
 const PostEditor = ({ postContent, updatePostContent, updatePosts }) => {
-  const submitPost = () => updatePosts(postService.makePost(postContent));
+  const submitPost = () => {
+    updatePosts(postService.makePost(postContent));
+    updatePostContent('');
+  };
+
   return (
     <div className={css.editorStyle}>
       <div className={css.controlsStyle}>
