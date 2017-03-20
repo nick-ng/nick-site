@@ -11,7 +11,5 @@ module.exports = {
     "rules": {
         // only .jsx files may have JSX
         "react/jsx-filename-extension": "off",
-        // windows Git can be configured to automatically replace CRLF with LF
-        "linebreak-style": "off",
     }
 };
