@@ -12,10 +12,8 @@ export default class ScgSearchHelper extends Component {
       searchText: '',
     };
 
-    this.handleFocus = this.handleFocus.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-    this.handleHover = this.handleHover.bind(this);
-    this.handleLeave = this.handleLeave.bind(this);
+    this.updateSearchText = this.updateSearchText.bind(this);
+    this.submitSearch = this.submitSearch.bind(this);
   }
   
   updateSearchText(event) {
