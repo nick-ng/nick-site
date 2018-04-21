@@ -17,8 +17,8 @@ export default function getRouter(store) {
         <IndexRoute component={BlogContainer} />
         <Route path="test(/:number)" component={Test} />
         <Route path="editor(/:postId)" component={PostEditorContainer} />
-        <Route path="scg" component={ScgSearchHelper} />
       </Route>
+      <Route path="scg" component={ScgSearchHelper} />
     </Router>
   );
 }
