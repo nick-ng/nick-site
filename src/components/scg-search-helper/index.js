@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 
-// import css from './styles.css';
+import css from './styles.css';
 
 const searchProvider = 'https://www.starcitygames.com/results?name=';
 
@@ -39,11 +39,13 @@ export default class ScgSearchHelper extends Component {
     return (
       <div>
         <form
+          className={css.searchForm}
           id="search-form"
           onSubmit={this.submitSearch}
         >
           <input
             id="search-text"
+	    className={css.searchTextBox}
             type="text"
             value={this.state.searchText}
             onChange={this.updateSearchText}
