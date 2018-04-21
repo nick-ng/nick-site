@@ -1,0 +1,13 @@
+.searchForm {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  margin-top: 5vh;
+}
+
+.searchTextBox {
+  font-size: 18pt;
+  width: 50vw;
+  height: 30px;
+  padding: 10px;
+}
