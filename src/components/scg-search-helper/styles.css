@@ -1,13 +1,19 @@
 .searchForm {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: stretch;
   margin-top: 5vh;
 }
 
 .searchTextBox {
-  font-size: 18pt;
-  width: 50vw;
+  font-size: 36pt;
   height: 30px;
-  padding: 10px;
+  padding: 2vw 10px;
+  margin-bottom: 2vw;
+}
+
+.searchButton {
+  font-size: 7vw;
+  padding: 2vw 0;
 }
