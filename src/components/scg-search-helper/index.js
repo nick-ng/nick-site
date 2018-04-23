@@ -50,7 +50,10 @@ export default class ScgSearchHelper extends Component {
             value={this.state.searchText}
             onChange={this.updateSearchText}
           />
-          <button type="submit">
+          <button
+	    type="submit"
+	    className={css.searchButton}
+          >
             Search Star City Games!
           </button>
         </form>
