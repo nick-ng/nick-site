@@ -14,13 +14,13 @@ export default function getRouter(store) {
 
   return (
     <Router history={history}>
-      <Route path="/" component={App}>
+      <Route path="/" component={Wedding} />
+      <Route path="blog" component={App}>
         <IndexRoute component={BlogContainer} />
         <Route path="test(/:number)" component={Test} />
         <Route path="editor(/:postId)" component={PostEditorContainer} />
       </Route>
       <Route path="scg" component={ScgSearchHelper} />
-      <Route path="wedding" component={Wedding} />
     </Router>
   );
 }
