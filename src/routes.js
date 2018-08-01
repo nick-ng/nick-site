@@ -19,6 +19,7 @@ export default function getRouter(store) {
         <Route path="editor(/:postId)" component={PostEditorContainer} />
       </Route>
       <Route path="scg" component={ScgSearchHelper} />
+      <Route path="wedding" component={Wedding} />
     </Router>
   );
 }
