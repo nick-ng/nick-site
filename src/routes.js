@@ -7,6 +7,7 @@ import BlogContainer from './containers/blog-container';
 import PostEditorContainer from './containers/post-editor-container';
 import Test from './components/Test';
 import ScgSearchHelper from './components/scg-search-helper';
+import Wedding from './components/wedding';
 
 export default function getRouter(store) {
   const history = syncHistoryWithStore(browserHistory, store);
