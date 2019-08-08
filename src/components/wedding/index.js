@@ -8,7 +8,7 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-const timeUntilAnniversary = () => {
+const millisecondsUntilAnniversary = () => {
   const currentYear = (new Date()).getFullYear();
   let nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear);
 
@@ -18,35 +18,56 @@ const timeUntilAnniversary = () => {
     }
     nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear + i);
   }
-  const millisecondsRemaining = nextAnniversary - new Date();
+  return nextAnniversary - new Date();
+};
 
-  return numberWithCommas(millisecondsRemaining);
+const millenniaUntilAnniversary = (milliseconds) => {
+  const seconds = milliseconds / 1000;
+  const minutes = seconds / 60;
+  const hours = minutes / 60;
+  const days = hours / 24;
+  const years = days / 365.2422;
+  return years / 1000;
 };
 
 class Wedding extends React.Component {
   constructor(props) {
     super(props);
 
+    const urlParams = new URLSearchParams(window.location.search);
+
     this.state = {
-      milliseconds: '',
+      timeFormat: parseInt(urlParams.get('tf'), 10),
+      precision: parseInt(urlParams.get('p'), 10),
+      timeString: '',
     };
 
-    this.updateMilliseconds = this.updateMilliseconds.bind(this);
+    this.updateTimeString = this.updateTimeString.bind(this);
 
-    setInterval(this.updateMilliseconds, 11);
+    setInterval(this.updateTimeString, 11);
   }
 
-  updateMilliseconds() {
+  updateTimeString() {
+    const { timeFormat, precision } = this.state;
+    let timeString = '';
+    if (timeFormat === 2) {
+      const millennia = millenniaUntilAnniversary(millisecondsUntilAnniversary())
+        .toFixed(precision || 30);
+      timeString = `${millennia} millennia`;
+    } else {
+      const milliseconds = numberWithCommas(millisecondsUntilAnniversary());
+      timeString = `${milliseconds} milliseconds`;
+    }
     this.setState({
-      milliseconds: timeUntilAnniversary(),
+      timeString,
     });
   }
 
   render() {
-    const { milliseconds } = this.state;
+    const { timeString } = this.state;
     return (<div className={css.container}>
       <h1>Sylvia and Nick</h1>
-      <h3>{`Only ${milliseconds} milliseconds until our next wedding anniversary!`}</h3>
+      <h3>{`Only ${timeString} until our next wedding anniversary!`}</h3>
     </div>);
   }
 }
