@@ -4,9 +4,36 @@ import css from './styles.css';
 
 const weddingAnniversary = new Date('2018-09-23T00:00:00+1200');
 
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
+const conversionFactors = [
+  {
+    name: 'milliseconds',
+    factor: 1,
+  },
+  {
+    name: 'seconds',
+    factor: 1000,
+  },
+  {
+    name: 'minutes',
+    factor: 60,
+  },
+  {
+    name: 'hours',
+    factor: 60,
+  },
+  {
+    name: 'days',
+    factor: 24,
+  },
+  {
+    name: 'years',
+    factor: 365.2422,
+  },
+  {
+    name: 'millennia',
+    factor: 1000,
+  },
+];
 
 const millisecondsUntilAnniversary = () => {
   const currentYear = (new Date()).getFullYear();
@@ -19,15 +46,6 @@ const millisecondsUntilAnniversary = () => {
     nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear + i);
   }
   return nextAnniversary - new Date();
-};
-
-const millenniaUntilAnniversary = (milliseconds) => {
-  const seconds = milliseconds / 1000;
-  const minutes = seconds / 60;
-  const hours = minutes / 60;
-  const days = hours / 24;
-  const years = days / 365.2422;
-  return years / 1000;
 };
 
 class Wedding extends React.Component {
@@ -49,18 +67,32 @@ class Wedding extends React.Component {
 
   updateTimeString() {
     const { timeFormat, precision } = this.state;
-    let timeString = '';
-    if (timeFormat === 2) {
-      const millennia = millenniaUntilAnniversary(millisecondsUntilAnniversary())
-        .toFixed(precision || 30);
-      timeString = `${millennia} millennia`;
+    const milliseconds = millisecondsUntilAnniversary();
+    let factor = 1;
+
+    if (timeFormat && !isNaN(timeFormat) && conversionFactors[timeFormat]) {
+      let time = milliseconds;
+      for (let i = 0; i <= timeFormat; i++) { // eslint-disable-line no-plusplus
+        time /= conversionFactors[i].factor;
+        factor *= conversionFactors[i].factor;
+      }
+
+      const ii = Math.floor(time).toLocaleString({ useGrouping: true });
+      const actualPrecision = isNaN(precision)
+        ? Math.floor(Math.log10(factor) ** 1.2)
+        : precision;
+      const dd = actualPrecision > 0
+        ? `.${(time % 10).toFixed(actualPrecision).slice(2)}`
+        : '';
+
+      this.setState({
+        timeString: `${ii}${dd} ${conversionFactors[timeFormat].name}`,
+      });
     } else {
-      const milliseconds = numberWithCommas(millisecondsUntilAnniversary());
-      timeString = `${milliseconds} milliseconds`;
+      this.setState({
+        timeString: `${milliseconds.toLocaleString({ useGrouping: true })} milliseconds`,
+      });
     }
-    this.setState({
-      timeString,
-    });
   }
 
   render() {
