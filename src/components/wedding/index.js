@@ -73,13 +73,13 @@ class Wedding extends React.Component {
     if (timeFormat && !isNaN(timeFormat) && conversionFactors[timeFormat]) {
       let time = milliseconds;
       for (let i = 0; i <= timeFormat; i++) { // eslint-disable-line no-plusplus
-        time /= conversionFactors[i].factor;
-        factor *= conversionFactors[i].factor;
+        time = time / conversionFactors[i].factor; // eslint-disable-line operator-assignment
+        factor = factor * conversionFactors[i].factor; // eslint-disable-line operator-assignment
       }
 
       const ii = Math.floor(time).toLocaleString({ useGrouping: true });
       const actualPrecision = isNaN(precision)
-        ? Math.floor(Math.log10(factor) ** 1.2)
+        ? Math.floor(Math.pow(Math.log10(factor), 1.2)) // eslint-disable-line
         : precision;
       const dd = actualPrecision > 0
         ? `.${(time % 10).toFixed(actualPrecision).slice(2)}`
