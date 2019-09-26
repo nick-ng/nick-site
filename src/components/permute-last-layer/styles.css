@@ -1,7 +1,7 @@
 .container {
     display: grid;
-    grid-gap: 2px;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-gap: 1px;
+    grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
 }
 
 .picture {
