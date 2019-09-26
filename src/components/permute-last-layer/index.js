@@ -29,7 +29,10 @@ const PLL_GFYCATS = {
     },
     ua: {
         probability: 4 / 72,
-        url: 'MildMarriedGuppy'
+        url: 'SafeEssentialIaerismetalmark',
+        alternatives: [
+            'MildMarriedGuppy'
+        ]
     },
     ub: {
         probability: 4 / 72,
