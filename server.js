@@ -16,6 +16,7 @@ app.use((req, res, next) => {
 });
 
 // serve static files
+app.use(express.static('assets'));
 app.use(express.static('dist'));
 
 // redirect all requests to index.html
