@@ -1,0 +1,11 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.thumbnailGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px 5px;
+}
