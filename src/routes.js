@@ -9,6 +9,7 @@ import Test from './components/Test';
 import ScgSearchHelper from './components/scg-search-helper';
 import PermuteLastLayerPage from './components/permute-last-layer';
 import Wedding from './components/wedding';
+import WeddingPhotos from './components/wedding-photos';
 
 export default function getRouter(store) {
   const history = syncHistoryWithStore(browserHistory, store);
@@ -16,6 +17,8 @@ export default function getRouter(store) {
   return (
     <Router history={history}>
       <Route path="/" component={Wedding} />
+      <Route path="weddingphotos" component={WeddingPhotos} />
+      <Route path="wedding" component={WeddingPhotos} />
       <Route path="blog" component={App}>
         <IndexRoute component={BlogContainer} />
         <Route path="test(/:number)" component={Test} />
