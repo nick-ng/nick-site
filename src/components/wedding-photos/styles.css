@@ -5,7 +5,13 @@
   }
   
 .thumbnailGrid {
+    width: 99vw;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fill, 300px);
+    justify-content: center;
     grid-gap: 5px 5px;
+}
+
+.thumbnailGrid img {
+    display: block;
 }
