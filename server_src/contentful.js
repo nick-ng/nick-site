@@ -3,7 +3,7 @@ const contentful = require('contentful');
 const getClient = (space) => {
     return contentful.createClient({
         space,
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+        accessToken: process.env.CONTENTFUL_WEDDING_ACCESS_TOKEN,
     });
 }
 
