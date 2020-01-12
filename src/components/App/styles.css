@@ -24,7 +24,3 @@
     order: 2;
     width: 80%;
 }
-
-:global(body) {
-    background-color: white;
-}
