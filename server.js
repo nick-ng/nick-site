@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 
 // redirects
 app.use((req, res, next) => {
-    if (req.url && startsWith('yt.nick.ng')) {
+    if (req.url && req.url.startsWith('yt.nick.ng')) {
         return res.redirect('https://www.youtube.com/feed/subscriptions');
     }
     return next();
