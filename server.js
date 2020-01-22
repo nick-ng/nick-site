@@ -24,6 +24,14 @@ app.use((req, res, next) => {
     return next();
 });
 
+// redirects
+app.use((req, res, next) => {
+    if (req.url && req.url.includes('://yt.nick.ng')) {
+        return res.redirect('https://www.youtube.com/feed/subscriptions');
+    }
+    return next();
+});
+
 // serve static files
 app.use(express.static('assets'));
 app.use(express.static('dist'));
