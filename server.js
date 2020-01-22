@@ -17,9 +17,12 @@ app.use(compression());
 
 // https to http redirect
 app.use((req, res, next) => {
-    if (req.url && req.url.includes('www.nick.ng')) {
-        const newUrl = req.url.replace('www.nick.ng', 'nick.ng');
-        return res.redirect(`https://${req.headers.host}${newUrl}`);
+    if (req.subdomains.length === 1) {
+        switch req.subdomains[0].toLowerCase() {
+            case 'yt':
+                return res.redirect('https://www.youtube.com/feed/subscriptions');
+            default:
+        }
     }
     return next();
 });
