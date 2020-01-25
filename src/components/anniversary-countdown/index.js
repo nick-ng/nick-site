@@ -1,7 +1,5 @@
 import React from 'react';
 
-import css from './styles.css';
-
 const weddingAnniversary = new Date('2018-09-23T00:00:00+1200');
 
 const conversionFactors = [

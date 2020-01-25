@@ -37,8 +37,8 @@ export default class WeddingPhotos extends React.Component {
                 ? <div className={css.thumbnailGrid}>{photos.map(photo => {
                     const url = photo.file.url;
                     const description = photo.description;
-                    return (<a href={url}><img
-                        key={url}
+                    return (<a key={`a-${url}`} href={url}><img
+                        key={`img-${url}`}
                         src={`${url}${thumbnailParams}`}
                         alt={description}
                     /></a>)
