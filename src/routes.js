@@ -8,7 +8,7 @@ import {
 import css from './style.css';
 
 import Header from './components/header';
-import Nav from './components/navigation';
+import Nav from './components/nav';
 import PermuteLastLayerPage from './components/permute-last-layer';
 import Home from './components/home';
 import WeddingPhotos from './components/wedding-photos';
