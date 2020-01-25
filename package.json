@@ -7,11 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 0",
     "start": "webpack-dev-server --inline --colors --history-api-fallback",
     "build": "NODE_ENV=production webpack",
-    "heroku-postbuild": "npm run build",
+    "heroku-postbuild": "npm run knex-migrate-prod && npm run build",
     "eslint": "eslint ./src",
     "server": "node ./server.js",
     "dev": "npm run build && npm run server",
-    "sim-deploy": "rm -rf node_modules && npm install && npm run heroku-postbuild && npm run server"
+    "sim-deploy": "rm -rf node_modules && npm install && npm run heroku-postbuild && npm run server",
+    "knex-migrate-stage": "knex migrate:latest --env staging",
+    "knex-migrate-prod": "knex migrate:latest --env production",
+    "knex-new-migration": "knex migrate:make name_goes_here"
   },
   "repository": {
     "type": "git",
@@ -40,8 +43,10 @@
     "html-webpack-plugin": "^2.28.0",
     "immutable": "^3.8.1",
     "json-loader": "^0.5.4",
+    "knex": "^0.20.8",
     "moment": "^2.17.1",
     "path": "^0.12.7",
+    "pg": "^7.17.1",
     "react": "^16.0.0",
     "react-autosize-textarea": "^0.3.6",
     "react-dom": "^16.0.0",
