@@ -1,91 +1,86 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import css from './styles.css';
 
 const PLL_GFYCATS = {
     f: {
         probability: 4 / 72,
-        url: 'MarvelousWelllitEthiopianwolf'
+        gfycatId: 'MarvelousWelllitEthiopianwolf'
     },
     ga: {
         probability: 4 / 72,
-        url: 'VapidSilkyAtlanticblackgoby'
+        gfycatId: 'VapidSilkyAtlanticblackgoby'
     },
     gb: {
         probability: 4 / 72,
-        url: 'IdleHollowCusimanse'
+        gfycatId: 'IdleHollowCusimanse'
     },
     gc: {
         probability: 4 / 72,
-        url: 'SomeEsteemedKinglet'
+        gfycatId: 'SomeEsteemedKinglet'
     },
     gd: {
         probability: 4 / 72,
-        url: 'UnkemptForthrightChital'
+        gfycatId: 'UnkemptForthrightChital'
     },
     ja: {
         probability: 4 / 72,
-        url: 'CrazyCheerfulAyeaye'
+        gfycatId: 'CrazyCheerfulAyeaye'
     },
     na: {
         probability: 1 / 72,
-        url: 'BriefDeadFlamingo',
+        gfycatId: 'BriefDeadFlamingo',
     },
     nb: {
         probability: 1 / 72,
-        url: 'SafeBarrenElephant',
+        gfycatId: 'SafeBarrenElephant',
     },
     ra: {
         probability: 4 / 72,
-        url: 'ImportantOldfashionedAsiandamselfly',
+        gfycatId: 'ImportantOldfashionedAsiandamselfly',
     },
     rb: {
         probability: 4 / 72,
-        url: 'TotalEntireFlyingfox',
+        gfycatId: 'TotalEntireFlyingfox',
     },
     ua: {
         probability: 4 / 72,
-        url: 'SafeEssentialIaerismetalmark',
+        gfycatId: 'SafeEssentialIaerismetalmark',
         alternatives: [
             'MildMarriedGuppy'
         ]
     },
     ub: {
         probability: 4 / 72,
-        url: 'MediocreAffectionateGnatcatcher'
+        gfycatId: 'MediocreAffectionateGnatcatcher'
     },
     v: {
         probability: 4 / 72,
-        url: 'FrightenedUniformHagfish'
+        gfycatId: 'FrightenedUniformHagfish'
     },
     y: {
         probability: 4 / 72,
-        url: 'ShimmeringPleasingBabirusa'
+        gfycatId: 'ShimmeringPleasingBabirusa'
     },
 };
 
-export default class PermuteLastLayerPage extends Component {
-    constructor() {
-        super();
-    }
+const PermuteLastLayerPage = () => (
+    <div className={css.container}>
+        <h1>PLLs</h1>
+        <p>Original videos <a href="https://www.youtube.com/watch?v=JvqGU0UZPcE">Fast PLL Algorithms &amp; Finger Tricks</a> and <a href="https://www.youtube.com/watch?v=TWN9LNCHQY8">Alternative PLL Algorithms</a> by <a href="https://www.youtube.com/channel/UCqTVfT9JQqhA6_Hi_h_h97Q">J Perm</a>. Generated with <a href="https://gfycat.com/">gfycat</a></p>
+        <div className={css.imageContainer}>
+            {Object.keys(PLL_GFYCATS).sort().map(pll => {
+                const {
+                    gfycatId,
+                } = PLL_GFYCATS[pll];
+                return (<img
+                    key={`img-${gfycatId}`}
+                    src={`https://thumbs.gfycat.com/${gfycatId}.webp`}
+                    className={css.picture}
+                />);
+            })}
+        </div>
+    </div>
+)
 
-    render() {
-        return (
-            <div className={css.container}>
-                <h1>PLLs</h1>
-                <p>Original videos <a href="https://www.youtube.com/watch?v=JvqGU0UZPcE">Fast PLL Algorithms &amp; Finger Tricks</a> and <a href="https://www.youtube.com/watch?v=TWN9LNCHQY8">Alternative PLL Algorithms</a> by <a href="https://www.youtube.com/channel/UCqTVfT9JQqhA6_Hi_h_h97Q">J Perm</a>. Generated with <a href="https://gfycat.com/">gfycat</a></p>
-                <div className={css.imageContainer}>
-                    {Object.keys(PLL_GFYCATS).sort().map(pll => {
-                        const {
-                            url,
-                        } = PLL_GFYCATS[pll];
-                        return (<img
-                            src={`https://thumbs.gfycat.com/${url}.webp`}
-                            className={css.picture}
-                        />);
-                    })}
-                </div>
-            </div>
-        )
-    }
-}
+export default PermuteLastLayerPage;

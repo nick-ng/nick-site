@@ -3,7 +3,7 @@ const express = require('express');
 const compression = require('compression');
 const path = require('path');
 
-const contentful = require('./server_src/contentful');
+const contentful = require('./src_server/contentful');
 
 const app = express();
 const router = express.Router();

@@ -6,11 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "start": "webpack-dev-server --inline --colors --history-api-fallback",
+    "back": "nodemon --ignore src/ --ignore dist/ --delay 2 ./server.js",
+    "front": "webpack --watch",
     "build": "NODE_ENV=production webpack",
     "heroku-postbuild": "npm run knex-migrate-prod && npm run build",
     "eslint": "eslint ./src",
     "server": "node ./server.js",
-    "dev": "npm run build && npm run server",
+    "dev": "npm run back & npm run front",
     "sim-deploy": "rm -rf node_modules && npm install && npm run heroku-postbuild && npm run server",
     "knex-migrate-stage": "knex migrate:latest --env staging",
     "knex-migrate-prod": "knex migrate:latest --env production",
@@ -54,6 +56,7 @@
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.9.0",
+    "nodemon": "^2.0.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.0.0"
   }

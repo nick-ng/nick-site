@@ -8,8 +8,9 @@
 }
 
 .navLink {
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     text-decoration: none;
+    color: black;
 }
 
 .activeNavLink {
