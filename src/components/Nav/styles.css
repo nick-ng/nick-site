@@ -1,0 +1,17 @@
+.navContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: #EEEEEE;
+    min-height: 100vh;
+}
+
+.navLink {
+    margin-bottom: 5px;
+    text-decoration: none;
+}
+
+.activeNavLink {
+    font-weight: bold;
+}

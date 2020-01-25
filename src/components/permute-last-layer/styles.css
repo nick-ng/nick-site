@@ -1,4 +1,11 @@
 .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.imageContainer {
+    width: 100%;
     display: grid;
     grid-gap: 1px;
     grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));

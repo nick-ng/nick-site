@@ -71,10 +71,10 @@ export default class PermuteLastLayerPage extends Component {
 
     render() {
         return (
-            <div>
+            <div className={css.container}>
                 <h1>PLLs</h1>
                 <p>Original videos <a href="https://www.youtube.com/watch?v=JvqGU0UZPcE">Fast PLL Algorithms &amp; Finger Tricks</a> and <a href="https://www.youtube.com/watch?v=TWN9LNCHQY8">Alternative PLL Algorithms</a> by <a href="https://www.youtube.com/channel/UCqTVfT9JQqhA6_Hi_h_h97Q">J Perm</a>. Generated with <a href="https://gfycat.com/">gfycat</a></p>
-                <div className={css.container}>
+                <div className={css.imageContainer}>
                     {Object.keys(PLL_GFYCATS).sort().map(pll => {
                         const {
                             url,
