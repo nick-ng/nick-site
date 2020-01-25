@@ -65,7 +65,7 @@ const ordinalAnniversary = () => {
 }
 
 
-class Wedding extends React.Component {
+export default class AnniversaryCountdown extends React.Component {
     constructor(props) {
         super(props);
 
@@ -130,11 +130,8 @@ class Wedding extends React.Component {
 
     render() {
         const { ordinal, timeString } = this.state;
-        return (<div className={css.container}>
-            <h1>Sylvia and Nick</h1>
-            <h3>{`Only ${timeString} until our ${ordinal} wedding anniversary!`}</h3>
-        </div>);
+        return (
+            <p>{`Only ${timeString} until our ${ordinal} wedding anniversary!`}</p>
+        );
     }
 }
-
-export default Wedding;

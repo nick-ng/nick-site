@@ -1,21 +1,15 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
-import NavLink from '../NavLink';
+import NavLink from './nav-link';
 
-export default function Nav(props) {
-  return (
-    <div className={props.className}>
-      <NavLink to="/" onlyActiveOnIndex>Blog Page</NavLink>
-      <NavLink to="/test/">Test Page Zero</NavLink>
-      <NavLink to="/editor/">Test Editor</NavLink>
-    </div>
-  );
-}
+import css from './styles.css';
 
-Nav.propTypes = {
-  className: PropTypes.string,
-};
+const Nav = () => (
+  <div className={css.navContainer}>
+    <NavLink to="/" exact>Home</NavLink>
+    <NavLink to="/wedding">Wedding Photos</NavLink>
+    <NavLink to="/pll">Rubik's Cube PLL Algorithms</NavLink>
+  </div>
+);
 
-Nav.defaultProps = {
-  className: undefined,
-};
+export default Nav;
