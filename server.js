@@ -4,6 +4,7 @@ const compression = require('compression');
 const path = require('path');
 
 const contentful = require('./src_server/contentful');
+const { applyMiddlewares } = require('./src_server/middleware');
 
 const app = express();
 const router = express.Router();
@@ -16,51 +17,16 @@ router.post('/api/test', (req, res, next) => {
     res.json({
         hello: res.locals.identity || 'world',
     });
-})
+});
 
 app.use(compression());
 
-// https to http redirect
-app.use((req, res, next) => {
-    if (req.subdomains.length === 1) {
-        switch (req.subdomains[0].toLowerCase()) {
-            case 'yt':
-                return res.redirect('https://www.youtube.com/feed/subscriptions');
-            default:
-        }
-    }
-    return next();
-});
-
-// redirects
-app.use((req, res, next) => {
-    if (req.url && req.url.includes('yt.nick.ng')) {
-        return res.redirect('https://www.youtube.com/feed/subscriptions');
-    }
-    return next();
-});
+// redirect
+applyMiddlewares(app);
 
 // serve static files
 app.use(express.static('assets'));
 app.use(express.static('dist'));
-
-// other
-app.use((req, res, next) => {
-    const adminKey = req.header('x-admin-key');
-    const identities = [];
-    if (process.env.NICK_ADMIN_KEY) {
-        identities.push({
-            user: 'Nick',
-            key: process.env.NICK_ADMIN_KEY
-        });
-    }
-    identities.forEach((identity) => {
-        if (adminKey === identity.key) {
-            res.locals.identity = identity.user;
-        }
-    });
-    return next();
-});
 
 // router
 app.use(router);
@@ -72,6 +38,4 @@ app.use((req, res) => {
 
 // starting listening
 const port = process.env.PORT || 3434;
-app.listen(port, () => {
-    console.log(`Website server listening on ${port}.`);
-});
+app.listen(port, () => console.log(`${new Date()} Website server listening on ${port}.`));
