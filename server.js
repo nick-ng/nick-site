@@ -12,6 +12,11 @@ router.get('/api/wedding_photos', async (req, res, next) => {
     const photos = await contentful.getPhotoList();
     res.send(photos);
 });
+router.post('/api/test', (req, res, next) => {
+    res.json({
+        hello: res.locals.identity || 'world',
+    });
+})
 
 app.use(compression());
 
@@ -38,6 +43,24 @@ app.use((req, res, next) => {
 // serve static files
 app.use(express.static('assets'));
 app.use(express.static('dist'));
+
+// other
+app.use((req, res, next) => {
+    const adminKey = req.header('x-admin-key');
+    const identities = [];
+    if (process.env.NICK_ADMIN_KEY) {
+        identities.push({
+            user: 'Nick',
+            key: process.env.NICK_ADMIN_KEY
+        });
+    }
+    identities.forEach((identity) => {
+        if (adminKey === identity.key) {
+            res.locals.identity = identity.user;
+        }
+    });
+    return next();
+});
 
 // router
 app.use(router);

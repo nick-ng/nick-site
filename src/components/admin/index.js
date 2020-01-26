@@ -1,11 +1,12 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class Admin extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            adminKey: null,
+            adminKey: '',
         };
 
         this.adminKeyChangeHandler = this.adminKeyChangeHandler.bind(this);
@@ -13,7 +14,7 @@ export default class Admin extends React.Component {
 
     async componentDidMount() {
         this.setState({
-            adminKey: localStorage.getItem('adminKey'),
+            adminKey: localStorage.getItem('adminKey') || '',
         });
     }
 
@@ -23,6 +24,11 @@ export default class Admin extends React.Component {
             adminKey
         });
         localStorage.setItem('adminKey', adminKey);
+    }
+
+    async testHandler() {
+        const res = await axios.post('/api/test');
+        console.log('axios response', res.data);
     }
 
     render() {
@@ -38,6 +44,9 @@ export default class Admin extends React.Component {
                         onChange={this.adminKeyChangeHandler}
                     />
                 </label>
+                <button
+                    onClick={this.testHandler}
+                >Test</button>
             </div>
         );
     }
