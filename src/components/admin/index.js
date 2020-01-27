@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 
+import css from './styles.css';
+
 export default class Admin extends React.Component {
     constructor(props) {
         super(props);
@@ -26,15 +28,10 @@ export default class Admin extends React.Component {
         localStorage.setItem('adminKey', adminKey);
     }
 
-    async testHandler() {
-        const res = await axios.post('/api/test');
-        console.log('axios response', res.data);
-    }
-
     render() {
         const { adminKey } = this.state;
         return (
-            <div>
+            <div className={css.container}>
                 <h2>Admin Panel</h2>
                 <label>
                     Admin Key:
@@ -44,9 +41,6 @@ export default class Admin extends React.Component {
                         onChange={this.adminKeyChangeHandler}
                     />
                 </label>
-                <button
-                    onClick={this.testHandler}
-                >Test</button>
             </div>
         );
     }

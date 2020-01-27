@@ -16,3 +16,20 @@
 .activeNavLink {
     font-weight: bold;
 }
+
+.navEmoji {
+    display: none;
+}
+
+/* Phone */
+@media screen and (max-device-width: 750px) {
+    .navEmoji {
+        display: inline;
+        margin-right: 5px;
+        font-size: 32px;
+    }
+
+    .navText {
+        display: none;
+    }
+}
