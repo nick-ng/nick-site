@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route as R
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route as R } from 'react-router-dom';
 
 import css from './style.css';
 
@@ -12,6 +8,7 @@ import Nav from './components/nav';
 import PermuteLastLayerPage from './components/permute-last-layer';
 import Home from './components/home';
 import WeddingPhotos from './components/wedding-photos';
+import Location from './components/location';
 import Admin from './components/admin';
 
 export default function App() {
@@ -22,11 +19,24 @@ export default function App() {
                 <div className={css.pageContent}>
                     <Header />
                     <Switch>
-                        <R path="/weddingphotos"><WeddingPhotos /></R>
-                        <R path="/wedding"><WeddingPhotos /></R>
-                        <R path="/pll"><PermuteLastLayerPage /></R>
-                        <R path="/admin"><Admin /></R>
-                        <R path="/"><Home /></R>
+                        <R path="/weddingphotos">
+                            <WeddingPhotos />
+                        </R>
+                        <R path="/wedding">
+                            <WeddingPhotos />
+                        </R>
+                        <R path="/pll">
+                            <PermuteLastLayerPage />
+                        </R>
+                        <R path="/location">
+                            <Location />
+                        </R>
+                        <R path="/admin">
+                            <Admin />
+                        </R>
+                        <R path="/">
+                            <Home />
+                        </R>
                     </Switch>
                 </div>
             </div>

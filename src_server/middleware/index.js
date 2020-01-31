@@ -1,7 +1,7 @@
 const authMiddleware = require('./auth');
 const redirectMiddleware = require('./redirect');
 
-const applyMiddlewares = (app) => {
+const applyMiddlewares = app => {
     authMiddleware(app);
     redirectMiddleware(app);
 };

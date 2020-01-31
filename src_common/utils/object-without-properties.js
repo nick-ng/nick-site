@@ -11,6 +11,6 @@ const objectWithoutProperties = (source, excluded) => {
     }
 
     return target;
-}
+};
 
 module.exports = objectWithoutProperties;

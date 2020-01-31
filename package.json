@@ -4,7 +4,8 @@
   "description": "My website",
   "main": "./src/entry.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0",
+    "check-prettier": "prettier -c \"**/*.js\"",
+    "test": "npm run check-prettier",
     "start": "webpack-dev-server --inline --colors --history-api-fallback",
     "back": "nodemon --ignore src/ --ignore dist/ --delay 2 ./server.js",
     "front": "webpack --watch",
@@ -57,6 +58,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.9.0",
     "nodemon": "^2.0.2",
+    "prettier": "1.19.1",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.0.0"
   }

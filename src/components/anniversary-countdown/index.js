@@ -34,16 +34,19 @@ const conversionFactors = [
 ];
 
 const getGetOrdinal = n => {
-    const s = ["th", "st", "nd", "rd"],
+    const s = ['th', 'st', 'nd', 'rd'],
         v = n % 100;
     return n + (s[(v - 20) % 10] || s[v] || s[0]);
-}
+};
 
 const millisecondsUntilAnniversary = () => {
-    const currentYear = (new Date()).getFullYear();
+    const currentYear = new Date().getFullYear();
 
-    for (let i = 0; i < 10000000; i++) { // eslint-disable-line no-plusplus
-        const nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear + i);
+    for (let i = 0; i < 10000000; i++) {
+        // eslint-disable-line no-plusplus
+        const nextAnniversary = new Date(weddingAnniversary).setFullYear(
+            currentYear + i
+        );
         if (nextAnniversary > new Date()) {
             return nextAnniversary - new Date();
         }
@@ -51,17 +54,19 @@ const millisecondsUntilAnniversary = () => {
 };
 
 const ordinalAnniversary = () => {
-    const anniversaryYear = (weddingAnniversary).getFullYear();
+    const anniversaryYear = weddingAnniversary.getFullYear();
 
-    for (let i = 0; i < 10000000; i++) { // eslint-disable-line no-plusplus
-        const nextAnniversary = new Date(weddingAnniversary).setFullYear(anniversaryYear + i);
+    for (let i = 0; i < 10000000; i++) {
+        // eslint-disable-line no-plusplus
+        const nextAnniversary = new Date(weddingAnniversary).setFullYear(
+            anniversaryYear + i
+        );
         if (nextAnniversary > new Date()) {
             return getGetOrdinal(i);
         }
     }
     return 0;
-}
-
+};
 
 export default class AnniversaryCountdown extends React.Component {
     constructor(props) {
@@ -103,7 +108,8 @@ export default class AnniversaryCountdown extends React.Component {
 
         if (timeFormat && !isNaN(timeFormat) && conversionFactors[timeFormat]) {
             let time = milliseconds;
-            for (let i = 0; i <= timeFormat; i++) { // eslint-disable-line no-plusplus
+            for (let i = 0; i <= timeFormat; i++) {
+                // eslint-disable-line no-plusplus
                 time = time / conversionFactors[i].factor; // eslint-disable-line operator-assignment
                 factor = factor * conversionFactors[i].factor; // eslint-disable-line operator-assignment
             }
@@ -112,16 +118,19 @@ export default class AnniversaryCountdown extends React.Component {
             const actualPrecision = isNaN(precision)
                 ? Math.floor(Math.pow(Math.log10(factor), 1.2)) // eslint-disable-line
                 : precision;
-            const dd = actualPrecision > 0
-                ? `.${(time % 10).toFixed(actualPrecision).slice(2)}`
-                : '';
+            const dd =
+                actualPrecision > 0
+                    ? `.${(time % 10).toFixed(actualPrecision).slice(2)}`
+                    : '';
 
             this.setState({
                 timeString: `${ii}${dd} ${conversionFactors[timeFormat].name}`,
             });
         } else {
             this.setState({
-                timeString: `${milliseconds.toLocaleString({ useGrouping: true })} milliseconds`,
+                timeString: `${milliseconds.toLocaleString({
+                    useGrouping: true,
+                })} milliseconds`,
             });
         }
     }
