@@ -23,7 +23,7 @@ export default class Admin extends React.Component {
     adminKeyChangeHandler(event) {
         const adminKey = event.target.value;
         this.setState({
-            adminKey
+            adminKey,
         });
         localStorage.setItem('adminKey', adminKey);
     }
@@ -37,7 +37,7 @@ export default class Admin extends React.Component {
                     Admin Key:
                     <input
                         value={adminKey}
-                        type='text'
+                        type="text"
                         onChange={this.adminKeyChangeHandler}
                     />
                 </label>

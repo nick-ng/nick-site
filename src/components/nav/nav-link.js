@@ -7,21 +7,19 @@ import css from './styles.css';
 
 const INDENT_PX = 10;
 
-const NavLink = (props) => {
-    const {
-        indentLevel = 0,
-        emoji,
-        children,
-    } = props;
+const NavLink = props => {
+    const { indentLevel = 0, emoji, children } = props;
     const otherProps = objectWithoutProperties(props, [
         'indentLevel',
         'emoji',
         'children',
     ]);
-    const style = indentLevel ? {
-        marginLeft: `${indentLevel * INDENT_PX}px`,
-        marginTop: '-4px',
-    } : {}
+    const style = indentLevel
+        ? {
+              marginLeft: `${indentLevel * INDENT_PX}px`,
+              marginTop: '-4px',
+          }
+        : {};
     return (
         <NavLinkRRD
             className={css.navLink}
@@ -32,7 +30,7 @@ const NavLink = (props) => {
             <span className={css.navEmoji}>{emoji}</span>
             <span className={css.navText}>{children}</span>
         </NavLinkRRD>
-    )
+    );
 };
 
 export default NavLink;

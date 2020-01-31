@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route as R
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route as R } from 'react-router-dom';
 
 import css from './style.css';
 
@@ -22,11 +18,21 @@ export default function App() {
                 <div className={css.pageContent}>
                     <Header />
                     <Switch>
-                        <R path="/weddingphotos"><WeddingPhotos /></R>
-                        <R path="/wedding"><WeddingPhotos /></R>
-                        <R path="/pll"><PermuteLastLayerPage /></R>
-                        <R path="/admin"><Admin /></R>
-                        <R path="/"><Home /></R>
+                        <R path="/weddingphotos">
+                            <WeddingPhotos />
+                        </R>
+                        <R path="/wedding">
+                            <WeddingPhotos />
+                        </R>
+                        <R path="/pll">
+                            <PermuteLastLayerPage />
+                        </R>
+                        <R path="/admin">
+                            <Admin />
+                        </R>
+                        <R path="/">
+                            <Home />
+                        </R>
                     </Switch>
                 </div>
             </div>

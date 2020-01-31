@@ -31,19 +31,29 @@ export default class WeddingPhotos extends React.Component {
 
     render() {
         const { loaded, photos } = this.state;
-        return (<div className={css.container}>
-            <h2>Wedding Photos</h2>
-            {loaded
-                ? <div className={css.thumbnailGrid}>{photos.map(photo => {
-                    const url = photo.file.url;
-                    const description = photo.description;
-                    return (<a key={`a-${url}`} href={url}><img
-                        key={`img-${url}`}
-                        src={`${url}${thumbnailParams}`}
-                        alt={description}
-                    /></a>)
-                })}</div>
-                : <p>Loading...</p>}
-        </div>);
+        return (
+            <div className={css.container}>
+                <h2>Wedding Photos</h2>
+                {loaded ? (
+                    <div className={css.thumbnailGrid}>
+                        {photos.map(photo => {
+                            const url = photo.file.url;
+                            const description = photo.description;
+                            return (
+                                <a key={`a-${url}`} href={url}>
+                                    <img
+                                        key={`img-${url}`}
+                                        src={`${url}${thumbnailParams}`}
+                                        alt={description}
+                                    />
+                                </a>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <p>Loading...</p>
+                )}
+            </div>
+        );
     }
 }
