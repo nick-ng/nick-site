@@ -8,6 +8,7 @@ import Nav from './components/nav';
 import PermuteLastLayerPage from './components/permute-last-layer';
 import Home from './components/home';
 import WeddingPhotos from './components/wedding-photos';
+import Location from './components/location';
 import Admin from './components/admin';
 
 export default function App() {
@@ -26,6 +27,9 @@ export default function App() {
                         </R>
                         <R path="/pll">
                             <PermuteLastLayerPage />
+                        </R>
+                        <R path="/location">
+                            <Location />
                         </R>
                         <R path="/admin">
                             <Admin />

@@ -21,6 +21,9 @@ const Nav = () => (
         <NavLink emoji="🧩" to="/pll" indentLevel={1}>
             PLL Algorithms
         </NavLink>
+        {/* <NavLink emoji="🧭" to="/location">
+            Location
+        </NavLink> */}
     </div>
 );
 
