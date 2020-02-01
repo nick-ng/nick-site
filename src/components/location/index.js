@@ -1,5 +1,7 @@
 import React from 'react';
 
+import haversine from '../../utils/haversine';
+
 export default class Location extends React.Component {
     constructor(props) {
         super(props);
@@ -38,7 +40,7 @@ export default class Location extends React.Component {
                         lon: loc.coords.longitude,
                         lat: loc.coords.latitude,
                     },
-                    time: new Date(),
+                    time: loc.timestamp,
                 }),
             };
         });
@@ -47,20 +49,59 @@ export default class Location extends React.Component {
     render() {
         const { locationHistory } = this.state;
 
-        const lastLocation = locationHistory[locationHistory.length - 1];
+        const data = [];
+        for (let i = 1; i < locationHistory.length; i++) {
+            const location1 = locationHistory[i - 1];
+            const location2 = locationHistory[i];
+            const coords1 = location1.coords;
+            const coords2 = location2.coords;
+
+            const distance = haversine(coords1, coords2);
+
+            const duration = (location2.time - location1.time) / 1000;
+            const speed = distance / duration; // meters per second;
+
+            if (duration > 0.5) {
+                data.push({
+                    distance,
+                    time: location2.time,
+                    duration,
+                    speed,
+                });
+            }
+        }
+
+        data.reverse();
+        const lastDatum = data[0];
+        const totalDistance = data
+            .map(d => d.distance)
+            .reduce((a, c) => a + c, 0);
 
         return (
             <div>
-                {lastLocation && (
-                    <h2>
-                        {`lon: ${lastLocation.coords.lon}, lat: ${lastLocation.coords.lat}`}
-                    </h2>
+                {lastDatum && (
+                    <h2>{`${(lastDatum.speed * 3.6).toFixed(
+                        1
+                    )} km/h, ${totalDistance.toFixed(1)} m`}</h2>
                 )}
-                {locationHistory.map((location, i) => (
-                    <div key={`${location.time}${i}`}>
-                        {`lon: ${location.coords.lon}, lat: ${location.coords.lat}`}
-                    </div>
-                ))}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Distance (m)</th>
+                            <th>Duration (s)</th>
+                            <th>Speed (m/s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((datum, i) => (
+                            <tr key={`${datum.time}${i}`}>
+                                <td>{datum.distance.toFixed(3)}</td>
+                                <td>{datum.duration.toFixed(3)}</td>
+                                <td>{datum.speed.toFixed(3)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         );
     }
