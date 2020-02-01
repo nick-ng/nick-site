@@ -5,7 +5,7 @@ import css from './styles.css';
 // Check Contentful for image manipulation references
 // https://www.contentful.com/developers/docs/references/images-api/#/reference
 
-const thumbnailParams = '?fm=jpg&q=80&fit=fill&w=200&h=200&f=faces';
+const thumbnailParams = '?fm=jpg&q=80&fit=fill&w=500&h=500&f=faces';
 
 export default class WeddingPhotos extends React.Component {
     constructor(props) {
