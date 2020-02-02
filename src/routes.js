@@ -10,6 +10,7 @@ import Bookmarks from './components/bookmarks';
 import Home from './components/home';
 import WeddingPhotos from './components/wedding-photos';
 import Location from './components/location';
+import PokemonFlashCards from './components/pokemon/flash-cards';
 import Admin from './components/admin';
 
 export default function App() {
@@ -33,6 +34,9 @@ export default function App() {
                         </R>
                         <R path="/location">
                             <Location />
+                        </R>
+                        <R path="/pokemon/flashcards">
+                            <PokemonFlashCards />
                         </R>
                         <R path="/admin">
                             <Admin />
