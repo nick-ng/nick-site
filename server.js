@@ -5,6 +5,7 @@ const path = require('path');
 
 const contentful = require('./src_server/contentful');
 const { applyMiddlewares } = require('./src_server/middleware');
+const sql = require('./src_server/sql-database');
 
 const app = express();
 const router = express.Router();
@@ -13,9 +14,16 @@ router.get('/api/wedding_photos', async (req, res, next) => {
     const photos = await contentful.getPhotoList();
     res.send(photos);
 });
-router.post('/api/test', (req, res, next) => {
+router.post('/api/test', async (req, res, next) => {
+    if (res.locals.identity) {
+        const a = await sql.bookmark.getBookmarksForUser(res.locals.identity);
+        res.json({
+            hello: a,
+        });
+        return;
+    }
     res.json({
-        hello: res.locals.identity || 'world',
+        hello: 'world',
     });
 });
 
