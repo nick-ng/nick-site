@@ -6,6 +6,7 @@ import css from './style.css';
 import Header from './components/header';
 import Nav from './components/nav';
 import PermuteLastLayerPage from './components/permute-last-layer';
+import Bookmarks from './components/bookmarks';
 import Home from './components/home';
 import WeddingPhotos from './components/wedding-photos';
 import Location from './components/location';
@@ -27,6 +28,9 @@ export default function App() {
                         </R>
                         <R path="/pll">
                             <PermuteLastLayerPage />
+                        </R>
+                        <R path="/bookmarks">
+                            <Bookmarks />
                         </R>
                         <R path="/location">
                             <Location />

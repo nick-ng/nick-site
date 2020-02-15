@@ -14,9 +14,15 @@ router.get('/api/wedding_photos', async (req, res, next) => {
     const photos = await contentful.getPhotoList();
     res.send(photos);
 });
+router.get('/api/bookmarks', async (req, res, next) => {
+    console.log('res.locals', res.locals);
+    res.json({
+        message: 'ok',
+    });
+});
 router.post('/api/test', async (req, res, next) => {
-    if (res.locals.identity) {
-        const a = await sql.bookmark.getBookmarksForUser(res.locals.identity);
+    if (res.locals.user) {
+        const a = await sql.bookmark.getBookmarksForUser(res.locals.user);
         res.json({
             hello: a,
         });

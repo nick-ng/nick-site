@@ -1,6 +1,7 @@
 const knex = require('knex');
 
 const bookmark = require('./bookmark');
+const user = require('./user');
 
 const db = knex({
     client: 'pg',
@@ -10,4 +11,5 @@ const db = knex({
 
 module.exports = {
     bookmark: bookmark(db),
+    user: user(db),
 };
