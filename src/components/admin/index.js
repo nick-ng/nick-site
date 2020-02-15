@@ -37,7 +37,7 @@ export default class Admin extends React.Component {
                     Admin Key:
                     <input
                         value={adminKey}
-                        type="text"
+                        type="password"
                         onChange={this.adminKeyChangeHandler}
                     />
                 </label>

@@ -4,13 +4,9 @@
     margin: 0;
 }
 
-:global(button) {
-    padding: 20px;
-}
-
 .container {
     display: grid;
-    grid-template-columns: 170px 1fr;
+    grid-template-columns: 200px 1fr;
 }
 
 @media screen and (max-device-width: 750px) {
@@ -18,7 +14,6 @@
         grid-template-columns: max-content 1fr;
     }
 }
-
 
 .pageContent {
     display: flex;

@@ -3,6 +3,10 @@ const db = require('../sql-database');
 module.exports = app => {
     app.use(async (req, res, next) => {
         const adminKey = req.header('x-admin-key');
+        if (!adminKey) {
+            return next();
+        }
+
         const identities = [];
         if (process.env.NICK_ADMIN_KEY) {
             identities.push({
@@ -10,9 +14,9 @@ module.exports = app => {
                 key: process.env.NICK_ADMIN_KEY,
             });
         }
+
         await Promise.all(
             identities.map(async identity => {
-                console.log('identity', identity);
                 if (adminKey === identity.key) {
                     try {
                         const user = await db.user.getOrAddUser(
@@ -28,6 +32,7 @@ module.exports = app => {
                 }
             })
         );
+
         return next();
     });
 };

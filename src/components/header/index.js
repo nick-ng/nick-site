@@ -4,7 +4,7 @@ import css from './styles.css';
 
 const Header = () => (
     <div className={css.container}>
-        <h1>Sylvia and Nick</h1>
+        Sylvia &amp; Nick
     </div>
 );
 

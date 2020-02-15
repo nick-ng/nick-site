@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route as R } from 'react-router-dom';
 
-import css from './style.css';
+import css from './styles.css';
 
 import Header from './components/header';
 import Nav from './components/nav';
@@ -18,7 +18,6 @@ export default function App() {
             <div className={css.container}>
                 <Nav />
                 <div className={css.pageContent}>
-                    <Header />
                     <Switch>
                         <R path="/weddingphotos">
                             <WeddingPhotos />

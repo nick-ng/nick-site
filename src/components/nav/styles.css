@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 10px;
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
     min-height: 100vh;
 }
 
@@ -17,18 +17,17 @@
     font-weight: bold;
 }
 
-.navEmoji {
-    display: none;
+.navIcon {
+    display: inline;
+    margin-right: 5px;
 }
 
 /* Phone */
 @media screen and (max-device-width: 750px) {
-    .navEmoji {
-        display: inline;
-        margin-right: 0px;
+    .navIcon {
         font-size: 28px;
+        margin-right: 0;
     }
-
     .navText {
         display: none;
     }
