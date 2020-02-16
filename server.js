@@ -10,6 +10,7 @@ const app = express();
 const router = express.Router();
 
 app.use(compression());
+app.use(express.json());
 
 applyMiddlewares(app);
 applyRouters(router);

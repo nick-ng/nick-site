@@ -13,8 +13,9 @@ exports.up = async function(knex) {
             .references('id')
             .inTable(userTable)
             .onDelete('CASCADE');
-        table.string('uri', 1000).unique();
+        table.string('url', 1000);
         table.string('name', 255);
+        table.unique(['user_id', 'url']);
     });
 };
 

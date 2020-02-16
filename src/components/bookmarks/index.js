@@ -14,9 +14,13 @@ export default class Admin extends React.Component {
         this.state = {
             bookmarks: [],
             bookmarksFetched: false,
+            visibleEditors: {},
         };
 
-        this.addBookmark = this.addBookmark.bind(this);
+        this.toggleEditor = this.toggleEditor.bind(this);
+        this.addBookmarkHandler = this.addBookmarkHandler.bind(this);
+        this.editBookmarkHandler = this.editBookmarkHandler.bind(this);
+        this.deleteBookmarkHandler = this.deleteBookmarkHandler.bind(this);
     }
 
     async componentDidMount() {
@@ -26,6 +30,7 @@ export default class Admin extends React.Component {
     async getBookmarks() {
         this.setState({
             bookmarksFetched: false,
+            visibleEditors: {},
         });
         const res = await axios.get('api/bookmarks');
         const bookmarks = res.data.bookmarks.sort((a, b) =>
@@ -37,10 +42,28 @@ export default class Admin extends React.Component {
         });
     }
 
-    addBookmark(e) {
+    toggleEditor(id) {
+        this.setState(prevState => {
+            const { visibleEditors } = prevState;
+            return {
+                visibleEditors: Object.assign({}, visibleEditors, {
+                    [id]: !visibleEditors[id],
+                }),
+            };
+        });
+    }
+
+    addBookmarkHandler(e) {
         const newBookmark = getFormData(e.target);
         e.target.reset();
         e.preventDefault();
+
+        if (!newBookmark.name) {
+            newBookmark.name = newBookmark.url
+                .replace(/^https?:\/\//, '')
+                .replace(/\/$/, '');
+        }
+
         this.setState(
             {
                 bookmarksFetched: false,
@@ -52,29 +75,112 @@ export default class Admin extends React.Component {
         );
     }
 
+    editBookmarkHandler(e, id) {
+        const updatedBookmark = getFormData(e.target);
+        e.target.reset();
+        e.preventDefault();
+        this.setState(
+            {
+                bookmarksFetched: false,
+            },
+            async () => {
+                await axios.put(`api/bookmarks/${id}`, updatedBookmark);
+                this.getBookmarks();
+            }
+        );
+    }
+
+    deleteBookmarkHandler(id) {
+        this.setState(
+            {
+                bookmarksFetched: false,
+            },
+            async () => {
+                await axios.delete(`api/bookmarks/${id}`);
+                this.getBookmarks();
+            }
+        );
+    }
+
     render() {
-        const { bookmarks, bookmarksFetched } = this.state;
+        const { bookmarks, bookmarksFetched, visibleEditors } = this.state;
         return (
             <div className={css.container}>
                 <h2>Bookmarks</h2>
-                <form className={css.controls} onSubmit={this.addBookmark}>
+                <form
+                    className={css.controls}
+                    onSubmit={this.addBookmarkHandler}
+                >
                     <input type="text" name="url" placeholder="URL" />
                     <input type="text" name="name" placeholder="Name" />
                     <button type="submit">
                         <i className={cx('fa', 'fa-plus')}></i>
                     </button>
                 </form>
+                <hr />
                 {bookmarksFetched ? (
-                    <div>
+                    <div className={css.bookmarks}>
                         {bookmarks.length > 0 ? (
-                            bookmarks.map(({ id, uri, name }) => (
-                                <a
-                                    className={css.fadeIn}
+                            bookmarks.map(({ id, url, name }) => (
+                                <div
+                                    className={css.bookmarkRow}
                                     key={`bookmark-${id}`}
-                                    href={uri}
                                 >
-                                    {name}
-                                </a>
+                                    <a
+                                        className={css.fadeIn}
+                                        href={url}
+                                        target="_blank"
+                                    >
+                                        {name}
+                                    </a>
+                                    <i
+                                        className={cx('fa', 'fa-pencil')}
+                                        role="button"
+                                        onClick={() => this.toggleEditor(id)}
+                                    ></i>
+                                    {visibleEditors[id] && (
+                                        <form
+                                            className={css.controls}
+                                            onSubmit={e =>
+                                                this.editBookmarkHandler(e, id)
+                                            }
+                                        >
+                                            <input
+                                                type="text"
+                                                name="url"
+                                                placeholder="New URL"
+                                            />
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                placeholder="New Name"
+                                            />
+                                            <button type="submit">
+                                                <i
+                                                    className={cx(
+                                                        'fa',
+                                                        'fa-save'
+                                                    )}
+                                                ></i>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    this.deleteBookmarkHandler(
+                                                        id
+                                                    )
+                                                }
+                                            >
+                                                <i
+                                                    className={cx(
+                                                        'fa',
+                                                        'fa-trash'
+                                                    )}
+                                                ></i>
+                                            </button>
+                                        </form>
+                                    )}
+                                </div>
                             ))
                         ) : (
                             <div className={css.fadeIn}>Nothing here!</div>
