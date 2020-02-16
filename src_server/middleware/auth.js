@@ -1,18 +1,38 @@
+const db = require('../sql-database');
+
 module.exports = app => {
-    app.use((req, res, next) => {
+    app.use(async (req, res, next) => {
         const adminKey = req.header('x-admin-key');
+        if (!adminKey) {
+            return next();
+        }
+
         const identities = [];
         if (process.env.NICK_ADMIN_KEY) {
             identities.push({
-                user: 'Nick',
+                username: 'Nick',
                 key: process.env.NICK_ADMIN_KEY,
             });
         }
-        identities.forEach(identity => {
-            if (adminKey === identity.key) {
-                res.locals.identity = identity.user;
-            }
-        });
+
+        await Promise.all(
+            identities.map(async identity => {
+                if (adminKey === identity.key) {
+                    try {
+                        const user = await db.user.getOrAddUser(
+                            identity.username
+                        );
+                        res.locals.user = user;
+                    } catch (e) {
+                        console.error(
+                            `Trouble when getting ${identity.username} info`,
+                            e
+                        );
+                    }
+                }
+            })
+        );
+
         return next();
     });
 };

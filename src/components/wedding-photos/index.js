@@ -1,4 +1,7 @@
 import React from 'react';
+import axios from 'axios';
+
+import Loading from '../loading';
 
 import css from './styles.css';
 
@@ -21,8 +24,8 @@ export default class WeddingPhotos extends React.Component {
         this.setState({
             loaded: false,
         });
-        const res = await fetch('/api/wedding_photos');
-        const photos = await res.json();
+        const res = await axios.get('/api/wedding_photos');
+        const photos = res.data;
         this.setState({
             loaded: true,
             photos,
@@ -51,7 +54,7 @@ export default class WeddingPhotos extends React.Component {
                         })}
                     </div>
                 ) : (
-                    <p>Loading...</p>
+                    <Loading />
                 )}
             </div>
         );

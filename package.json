@@ -1,65 +1,65 @@
 {
-  "name": "nick-site",
-  "version": "1.0.0",
-  "description": "My website",
-  "main": "./src/entry.js",
-  "scripts": {
-    "check-prettier": "prettier -c \"**/*.js\"",
-    "test": "npm run check-prettier",
-    "start": "webpack-dev-server --inline --colors --history-api-fallback",
-    "back": "nodemon --ignore src/ --ignore dist/ --delay 2 ./server.js",
-    "front": "webpack --watch",
-    "build": "NODE_ENV=production webpack",
-    "heroku-postbuild": "npm run knex-migrate-prod && npm run build",
-    "eslint": "eslint ./src",
-    "server": "node ./server.js",
-    "dev": "npm run back & npm run front",
-    "sim-deploy": "rm -rf node_modules && npm install && npm run heroku-postbuild && npm run server",
-    "knex-migrate-stage": "knex migrate:latest --env staging",
-    "knex-migrate-prod": "knex migrate:latest --env production",
-    "knex-new-migration": "knex migrate:make name_goes_here"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nick-ng/nick-site.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/nick-ng/nick-site/issues"
-  },
-  "homepage": "https://github.com/nick-ng/nick-site",
-  "dependencies": {
-    "babel-core": "^6.22.1",
-    "babel-loader": "^6.2.10",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.22.0",
-    "classnames": "^2.2.5",
-    "compression": "^1.6.2",
-    "contentful": "^7.13.0",
-    "css-loader": "^0.26.1",
-    "dotenv": "^8.2.0",
-    "express": "^4.14.1",
-    "html-webpack-plugin": "^2.28.0",
-    "json-loader": "^0.5.4",
-    "knex": "^0.20.8",
-    "pg": "^7.17.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-router-dom": "^5.1.2",
-    "style-loader": "^0.13.1",
-    "webpack": "^2.2.1"
-  },
-  "devDependencies": {
-    "eslint": "^6.0.0",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.9.0",
-    "nodemon": "^2.0.2",
-    "prettier": "1.19.1",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.0.0"
-  }
+    "name": "nick-site",
+    "version": "1.0.0",
+    "description": "My website",
+    "main": "./src/entry.js",
+    "scripts": {
+        "check-prettier": "prettier -c \"**/*.js\"",
+        "test": "npm run check-prettier",
+        "start": "webpack-dev-server --inline --colors --history-api-fallback",
+        "back": "nodemon --ignore src/ --ignore dist/ --delay 2 ./server.js",
+        "front": "webpack --watch",
+        "build": "NODE_ENV=production webpack",
+        "heroku-postbuild": "npm run knex-migrate-prod && npm run build",
+        "eslint": "eslint ./src",
+        "server": "node ./server.js",
+        "dev": "npm run back & npm run front",
+        "sim-deploy": "rm -rf node_modules && npm install && npm run heroku-postbuild && npm run server",
+        "knex-migrate-stage": "knex migrate:latest --env staging --verbose",
+        "knex-migrate-prod": "knex migrate:latest --env production",
+        "knex-new-migration": "knex migrate:make name_goes_here"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nick-ng/nick-site.git"
+    },
+    "author": "",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/nick-ng/nick-site/issues"
+    },
+    "homepage": "https://github.com/nick-ng/nick-site",
+    "dependencies": {
+        "babel-core": "^6.22.1",
+        "babel-loader": "^6.2.10",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-react": "^6.22.0",
+        "classnames": "^2.2.6",
+        "compression": "^1.6.2",
+        "contentful": "^7.13.0",
+        "css-loader": "^0.26.1",
+        "dotenv": "^8.2.0",
+        "express": "^4.14.1",
+        "html-webpack-plugin": "^2.28.0",
+        "json-loader": "^0.5.4",
+        "knex": "^0.20.8",
+        "pg": "^7.17.1",
+        "react": "^16.0.0",
+        "react-dom": "^16.0.0",
+        "react-router-dom": "^5.1.2",
+        "style-loader": "^0.13.1",
+        "webpack": "^2.2.1"
+    },
+    "devDependencies": {
+        "eslint": "^6.0.0",
+        "eslint-config-airbnb": "^14.1.0",
+        "eslint-plugin-import": "^2.20.0",
+        "eslint-plugin-jsx-a11y": "^4.0.0",
+        "eslint-plugin-react": "^6.9.0",
+        "nodemon": "^2.0.2",
+        "prettier": "1.19.1",
+        "webpack-cli": "^3.3.10",
+        "webpack-dev-server": "^3.0.0"
+    }
 }

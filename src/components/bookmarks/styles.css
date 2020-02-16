@@ -1,0 +1,51 @@
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-name: fadeIn;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.controls > * {
+    margin-right: 3px;
+}
+
+.bookmarks {
+    display: flex;
+    flex-direction: column;
+}
+
+.bookmarkRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.bookmarkRow > a {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 0 5px;
+    border: 1px solid grey;
+    border-radius: 2px;
+    margin-right: 5px;
+    height: 30px;
+}
+
+.bookmarkRow > form {
+    margin-left: 5px;
+}
