@@ -1,7 +1,9 @@
+import { BattlePokedex } from './showdown/pokedex';
 import { BattleMovedex } from './showdown/moves';
 import typeInfo from './type-info';
 
 const { order, types } = typeInfo;
+export const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 
 // GameFreak rounds DOWN on .5
 const pokeRound = num => (num % 1 > 0.5 ? Math.ceil(num) : Math.floor(num));
@@ -92,6 +94,69 @@ export const getDamageFromObjects = (
         stab: attackerTypes.includes(moveType) ? 1.5 : 1,
         type: get2Effectiveness(moveType, defenderTypes),
         weather,
-        modifiers: [],
+        modifiers,
     });
+};
+
+export const getFinalStat = (
+    baseStat,
+    iv,
+    ev,
+    nature = 1,
+    isHP = false,
+    level = 50
+) => {
+    const ev4 = Math.floor(ev / 4);
+    const calc1 = Math.floor((2 * baseStat + iv + ev4) * level * 0.01);
+    if (isHP) {
+        return calc1 + level + 10;
+    }
+    return Math.floor((calc1 + 5) * nature);
+};
+
+const natures = {
+    hardy: {},
+    lonely: { atk: 1.1, def: 0.9 },
+    brave: { atk: 1.1, spe: 0.9 },
+    adamant: { atk: 1.1, spa: 0.9 },
+    naughty: { atk: 1.1, spd: 0.9 },
+    bold: { def: 1.1, atk: 0.9 },
+    docile: {},
+    relaxed: { def: 1.1, spe: 0.9 },
+    impish: { def: 1.1, spa: 0.9 },
+    lax: { def: 1.1, spd: 0.9 },
+    timid: { spe: 1.1, atk: 0.9 },
+    hasty: { spe: 1.1, def: 0.9 },
+    jolly: { spe: 1.1, spa: 0.9 },
+    naive: { spe: 1.1, spd: 0.9 },
+    modest: { spa: 1.1, atk: 0.9 },
+    mild: { spa: 1.1, def: 0.9 },
+    quiet: { spa: 1.1, spe: 0.9 },
+    bashful: {},
+    rash: { spa: 1.1, spd: 0.9 },
+    calm: { spd: 1.1, atk: 0.9 },
+    gentle: { spd: 1.1, def: 0.9 },
+    sassy: { spd: 1.1, spe: 0.9 },
+    careful: { spd: 1.1, spa: 0.9 },
+    quirky: {},
+};
+
+export const getNatureBoost = (natureName, statName) =>
+    natures[natureName][statName] || 1;
+
+export const getFinalStats = ({ species, ivs, evs, nature, level }) => {
+    const pokemon = BattlePokedex[species.toLocaleLowerCase('en')];
+    const { baseStats } = pokemon;
+    const finalStats = statNames.reduce((p, statName) => {
+        p[statName] = getFinalStat(
+            baseStats[statName],
+            ivs[statName],
+            evs[statName],
+            getNatureBoost(nature, statName),
+            statName === 'hp',
+            level
+        );
+        return p;
+    }, {});
+    return finalStats;
 };

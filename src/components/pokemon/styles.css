@@ -2,3 +2,13 @@
     display: flex;
     flex-direction: row;
 }
+
+.pokemonCard {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid grey;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.8em;
+}
