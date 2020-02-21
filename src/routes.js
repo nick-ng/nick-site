@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route as R } from 'react-router-dom';
 
 import css from './styles.css';
 
-import Header from './components/header';
 import Nav from './components/nav';
 import PermuteLastLayerPage from './components/permute-last-layer';
 import Bookmarks from './components/bookmarks';
@@ -12,6 +11,28 @@ import WeddingPhotos from './components/wedding-photos';
 import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
 import Admin from './components/admin';
+
+let playing1157 = false;
+
+const isIt1157 = () => {
+    const now = new Date();
+    const hour = now.getHours() % 12;
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+
+    if (hour === 11 && minutes === 56 && seconds > 15) {
+        !playing1157 &&
+            window.open(
+                'https://www.youtube.com/watch?v=ucmwSvy3Vlc',
+                '_blank'
+            );
+        playing1157 = true;
+        return;
+    }
+    playing1157 = false;
+};
+
+setInterval(isIt1157, 1000);
 
 export default function App() {
     return (

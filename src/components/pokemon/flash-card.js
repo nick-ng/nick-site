@@ -1,7 +1,7 @@
 import React from 'react';
 
 import css from './styles.css';
-import css2 from '../types.css';
+import css2 from './types.css';
 
 const FlashCard = ({ aType, dType, answer, answerHandler }) => {
     return (
