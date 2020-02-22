@@ -10,7 +10,8 @@ import Home from './components/home';
 import WeddingPhotos from './components/wedding-photos';
 import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
-import PokemonEVFinder from './components/pokemon/ev-finder';
+import PokemonEVHelper from './components/pokemon/ev-helper';
+import Test from './components/test';
 import Admin from './components/admin';
 
 let playing1157 = false;
@@ -57,11 +58,14 @@ export default function App() {
                         <R path="/location">
                             <Location />
                         </R>
-                        <R path="/pokemon/evfinder">
-                            <PokemonEVFinder />
+                        <R path="/pokemon/evhelper">
+                            <PokemonEVHelper />
                         </R>
                         <R path="/pokemon/flashcards">
                             <PokemonFlashCards />
+                        </R>
+                        <R path="/test">
+                            <Test />
                         </R>
                         <R path="/admin">
                             <Admin />

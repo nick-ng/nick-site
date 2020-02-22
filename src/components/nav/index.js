@@ -25,6 +25,9 @@ const Nav = () => (
         <NavLink icon="fa-rotate-right" to="/pll" indentLevel={1}>
             PLL Algorithms
         </NavLink>
+        <NavLink icon='fa-gamepad' to="/pokemon/evhelper">
+            EV Helper
+        </NavLink>
         {hasAdminKey() && (
             <React.Fragment>
                 <NavLink icon="fa-bookmark-o" to="/bookmarks">

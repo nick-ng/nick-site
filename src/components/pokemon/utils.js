@@ -8,6 +8,9 @@ export const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 // GameFreak rounds DOWN on .5
 const pokeRound = num => (num % 1 > 0.5 ? Math.ceil(num) : Math.floor(num));
 const product = array => array.reduce((p, c) => pokeRound(p * c), 1);
+const lowerCaseNoSpace = s => s && s.replace(/\s/g, '').toLocaleLowerCase('en');
+const strCompare = (str1, str2) =>
+    lowerCaseNoSpace(str1) === lowerCaseNoSpace(str2);
 
 export const getEffectiveness = (attackingType, defendingType) => {
     const att = attackingType.toLocaleLowerCase('en');
@@ -26,8 +29,21 @@ export const get2Effectiveness = (attackingType, defendingTypes) => {
     );
 };
 
-export const getMoveInfo = move =>
-    BattleMovedex[move.replace(/\s/g, '').toLocaleLowerCase('en')];
+export const getMoveInfo = move => {
+    if (typeof move === 'string') {
+        return BattleMovedex[lowerCaseNoSpace(move)];
+    }
+    if (move.name && !move.basePower) {
+        return Object.assign(
+            {},
+            move,
+            BattleMovedex[lowerCaseNoSpace(move.name)]
+        );
+    }
+    return Object.assign({}, move, {
+        name: move.name || `${move.category} ${move.basePower} ${move.type}`,
+    });
+};
 
 export const getDamageFromStats = (
     a,
@@ -72,8 +88,6 @@ export const getDamageFromObjects = ({
     attacker,
     defender,
     move,
-    weather = 1,
-    crit = 1,
     modifiers = [],
 }) => {
     const {
@@ -85,11 +99,19 @@ export const getDamageFromObjects = ({
         types: defenderTypes,
         finalStats: { def, spd },
     } = defender;
-    const { basePower, category, flags, type: moveType } = getMoveInfo(move);
+    const {
+        basePower,
+        category,
+        flags,
+        type: moveType,
+        weather = 1,
+        terrain = 1,
+        crit = 1,
+    } = getMoveInfo(move);
 
     let a = spa;
     let d = spd;
-    if (category.toLocaleLowerCase('en') === 'physical') {
+    if (strCompare(category, 'physical')) {
         a = atk;
         d = def;
     }
@@ -100,7 +122,7 @@ export const getDamageFromObjects = ({
         stab: attackerTypes.includes(moveType) ? 1.5 : 1,
         type: get2Effectiveness(moveType, defenderTypes),
         weather,
-        modifiers,
+        modifiers: modifiers.concat([terrain]),
     });
 };
 
@@ -151,7 +173,7 @@ export const getNatureBoost = (natureName, statName) =>
     natures[natureName][statName] || 1;
 
 export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
-    const pokedexEntry = BattlePokedex[species.toLocaleLowerCase('en')];
+    const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
     const { baseStats } = pokedexEntry;
     const finalStats = statNames.reduce((p, statName) => {
         p[statName] = getFinalStat(
@@ -159,7 +181,7 @@ export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
             ivs[statName],
             evs[statName],
             getNatureBoost(nature, statName),
-            statName === 'hp',
+            strCompare(statName, 'hp'),
             level
         );
         return p;
@@ -169,9 +191,31 @@ export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
 
 export const hydratePokemon = pokemon => {
     const { species, ivs, evs, nature, level = 50 } = pokemon;
-    const pokedexEntry = BattlePokedex[species.toLocaleLowerCase('en')];
+    const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
     return Object.assign({}, pokedexEntry, pokemon, {
         species: pokedexEntry.species,
         finalStats: getFinalStats(pokemon),
     });
+};
+
+export const getModifiers = (pokemon, move) => {
+    const { item } = pokemon;
+    const moveInfo = getMoveInfo(move);
+    const modifiers = [];
+    if (strCompare(item, 'lifeorb')) {
+        modifiers.push(5324 / 4096);
+    }
+    if (
+        strCompare(item, 'choiceband') &&
+        strCompare(moveInfo.category, 'physical')
+    ) {
+        modifiers.push(1.5);
+    }
+    if (
+        strCompare(item, 'choicespecs') &&
+        strCompare(moveInfo.category, 'special')
+    ) {
+        modifiers.push(1.5);
+    }
+    return modifiers;
 };

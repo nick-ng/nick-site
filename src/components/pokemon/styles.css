@@ -4,11 +4,55 @@
 }
 
 .pokemonCard {
-    margin: 5px;
     padding: 5px;
     border: 1px solid grey;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     font-size: 0.8em;
+}
+
+.evSpreadContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 5px;
+}
+
+.evSpreadColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow-y: auto;
+    height: 90vh;
+}
+
+.evSpreadColumn.fullHeight {
+    min-height: 90vh;
+    height: auto;
+}
+
+table.damageResult {
+    margin-top: 5px;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.damageResult th,
+.damageResult td {
+    text-align: right;
+    border: 1px solid grey;
+    padding: 5px;
+}
+
+th.left,
+td.left {
+    text-align: left;
+}
+
+.yourInput {
+    flex-basis: 300px;
+}
+
+.opponentInput {
+    flex-grow: 1;
 }
