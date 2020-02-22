@@ -26,6 +26,9 @@ export const get2Effectiveness = (attackingType, defendingTypes) => {
     );
 };
 
+export const getMoveInfo = move =>
+    BattleMovedex[move.replace(/\s/g, '').toLocaleLowerCase('en')];
+
 export const getDamageFromStats = (
     a,
     d,
@@ -65,21 +68,24 @@ export const getDamageFromStats = (
     });
 };
 
-export const getDamageFromObjects = (
+export const getDamageFromObjects = ({
     attacker,
     defender,
     move,
-    { level = 50, weather = 1, crit = 1, modifiers = [] }
-) => {
+    weather = 1,
+    crit = 1,
+    modifiers = [],
+}) => {
     const {
         types: attackerTypes,
         finalStats: { atk, spa },
+        level,
     } = attacker;
     const {
         types: defenderTypes,
         finalStats: { def, spd },
     } = defender;
-    const { basePower, category, flags, type: moveType } = move;
+    const { basePower, category, flags, type: moveType } = getMoveInfo(move);
 
     let a = spa;
     let d = spd;
@@ -144,9 +150,9 @@ const natures = {
 export const getNatureBoost = (natureName, statName) =>
     natures[natureName][statName] || 1;
 
-export const getFinalStats = ({ species, ivs, evs, nature, level }) => {
-    const pokemon = BattlePokedex[species.toLocaleLowerCase('en')];
-    const { baseStats } = pokemon;
+export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
+    const pokedexEntry = BattlePokedex[species.toLocaleLowerCase('en')];
+    const { baseStats } = pokedexEntry;
     const finalStats = statNames.reduce((p, statName) => {
         p[statName] = getFinalStat(
             baseStats[statName],
@@ -159,4 +165,13 @@ export const getFinalStats = ({ species, ivs, evs, nature, level }) => {
         return p;
     }, {});
     return finalStats;
+};
+
+export const hydratePokemon = pokemon => {
+    const { species, ivs, evs, nature, level = 50 } = pokemon;
+    const pokedexEntry = BattlePokedex[species.toLocaleLowerCase('en')];
+    return Object.assign({}, pokedexEntry, pokemon, {
+        species: pokedexEntry.species,
+        finalStats: getFinalStats(pokemon),
+    });
 };
