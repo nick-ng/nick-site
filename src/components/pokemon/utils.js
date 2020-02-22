@@ -1,11 +1,16 @@
+import { BattlePokedex } from './showdown/pokedex';
 import { BattleMovedex } from './showdown/moves';
 import typeInfo from './type-info';
 
 const { order, types } = typeInfo;
+export const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 
 // GameFreak rounds DOWN on .5
 const pokeRound = num => (num % 1 > 0.5 ? Math.ceil(num) : Math.floor(num));
 const product = array => array.reduce((p, c) => pokeRound(p * c), 1);
+const lowerCaseNoSpace = s => s && s.replace(/\s/g, '').toLocaleLowerCase('en');
+const strCompare = (str1, str2) =>
+    lowerCaseNoSpace(str1) === lowerCaseNoSpace(str2);
 
 export const getEffectiveness = (attackingType, defendingType) => {
     const att = attackingType.toLocaleLowerCase('en');
@@ -22,6 +27,22 @@ export const get2Effectiveness = (attackingType, defendingTypes) => {
             p * getEffectiveness(attackingType, defendingType),
         1
     );
+};
+
+export const getMoveInfo = move => {
+    if (typeof move === 'string') {
+        return BattleMovedex[lowerCaseNoSpace(move)];
+    }
+    if (move.name && !move.basePower) {
+        return Object.assign(
+            {},
+            move,
+            BattleMovedex[lowerCaseNoSpace(move.name)]
+        );
+    }
+    return Object.assign({}, move, {
+        name: move.name || `${move.category} ${move.basePower} ${move.type}`,
+    });
 };
 
 export const getDamageFromStats = (
@@ -63,25 +84,34 @@ export const getDamageFromStats = (
     });
 };
 
-export const getDamageFromObjects = (
+export const getDamageFromObjects = ({
     attacker,
     defender,
     move,
-    { level = 50, weather = 1, crit = 1, modifiers = [] }
-) => {
+    modifiers = [],
+}) => {
     const {
         types: attackerTypes,
         finalStats: { atk, spa },
+        level,
     } = attacker;
     const {
         types: defenderTypes,
         finalStats: { def, spd },
     } = defender;
-    const { basePower, category, flags, type: moveType } = move;
+    const {
+        basePower,
+        category,
+        flags,
+        type: moveType,
+        weather = 1,
+        terrain = 1,
+        crit = 1,
+    } = getMoveInfo(move);
 
     let a = spa;
     let d = spd;
-    if (category.toLocaleLowerCase('en') === 'physical') {
+    if (strCompare(category, 'physical')) {
         a = atk;
         d = def;
     }
@@ -92,6 +122,100 @@ export const getDamageFromObjects = (
         stab: attackerTypes.includes(moveType) ? 1.5 : 1,
         type: get2Effectiveness(moveType, defenderTypes),
         weather,
-        modifiers: [],
+        modifiers: modifiers.concat([terrain]),
     });
+};
+
+export const getFinalStat = (
+    baseStat,
+    iv,
+    ev,
+    nature = 1,
+    isHP = false,
+    level = 50
+) => {
+    const ev4 = Math.floor(ev / 4);
+    const calc1 = Math.floor((2 * baseStat + iv + ev4) * level * 0.01);
+    if (isHP) {
+        return calc1 + level + 10;
+    }
+    return Math.floor((calc1 + 5) * nature);
+};
+
+const natures = {
+    hardy: {},
+    lonely: { atk: 1.1, def: 0.9 },
+    brave: { atk: 1.1, spe: 0.9 },
+    adamant: { atk: 1.1, spa: 0.9 },
+    naughty: { atk: 1.1, spd: 0.9 },
+    bold: { def: 1.1, atk: 0.9 },
+    docile: {},
+    relaxed: { def: 1.1, spe: 0.9 },
+    impish: { def: 1.1, spa: 0.9 },
+    lax: { def: 1.1, spd: 0.9 },
+    timid: { spe: 1.1, atk: 0.9 },
+    hasty: { spe: 1.1, def: 0.9 },
+    jolly: { spe: 1.1, spa: 0.9 },
+    naive: { spe: 1.1, spd: 0.9 },
+    modest: { spa: 1.1, atk: 0.9 },
+    mild: { spa: 1.1, def: 0.9 },
+    quiet: { spa: 1.1, spe: 0.9 },
+    bashful: {},
+    rash: { spa: 1.1, spd: 0.9 },
+    calm: { spd: 1.1, atk: 0.9 },
+    gentle: { spd: 1.1, def: 0.9 },
+    sassy: { spd: 1.1, spe: 0.9 },
+    careful: { spd: 1.1, spa: 0.9 },
+    quirky: {},
+};
+
+export const getNatureBoost = (natureName, statName) =>
+    natures[natureName][statName] || 1;
+
+export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
+    const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
+    const { baseStats } = pokedexEntry;
+    const finalStats = statNames.reduce((p, statName) => {
+        p[statName] = getFinalStat(
+            baseStats[statName],
+            ivs[statName],
+            evs[statName],
+            getNatureBoost(nature, statName),
+            strCompare(statName, 'hp'),
+            level
+        );
+        return p;
+    }, {});
+    return finalStats;
+};
+
+export const hydratePokemon = pokemon => {
+    const { species, ivs, evs, nature, level = 50 } = pokemon;
+    const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
+    return Object.assign({}, pokedexEntry, pokemon, {
+        species: pokedexEntry.species,
+        finalStats: getFinalStats(pokemon),
+    });
+};
+
+export const getModifiers = (pokemon, move) => {
+    const { item } = pokemon;
+    const moveInfo = getMoveInfo(move);
+    const modifiers = [];
+    if (strCompare(item, 'lifeorb')) {
+        modifiers.push(5324 / 4096);
+    }
+    if (
+        strCompare(item, 'choiceband') &&
+        strCompare(moveInfo.category, 'physical')
+    ) {
+        modifiers.push(1.5);
+    }
+    if (
+        strCompare(item, 'choicespecs') &&
+        strCompare(moveInfo.category, 'special')
+    ) {
+        modifiers.push(1.5);
+    }
+    return modifiers;
 };
