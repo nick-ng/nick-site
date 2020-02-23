@@ -219,3 +219,84 @@ export const getModifiers = (pokemon, move) => {
     }
     return modifiers;
 };
+
+export const getValidEVs = (level = 50) => {
+    const validEVs = [];
+    let counter = 0;
+    do {
+        if (level === 50) {
+            validEVs.push(Math.max(8 * counter - 4, 0));
+        } else {
+            validEVs.push(4 * counter);
+        }
+        counter++;
+    } while (validEVs[validEVs.length - 1] < 252);
+    return validEVs;
+};
+
+export const getCalcQueue = (yourPokemon, opponents) => {
+    const queue = [];
+    const yourPokemonHydrated = hydratePokemon(yourPokemon);
+    opponents.forEach(opponent => {
+        opponent.natures.forEach(nature => {
+            opponent.evSpreads.forEach(evSpread => {
+                const { name: evSpreadName, evs } = evSpread;
+                opponent.items.forEach(item => {
+                    opponent.moves.forEach(move => {
+                        const moveInfo = getMoveInfo(move);
+                        const hydratedOpponent = hydratePokemon({
+                            species: opponent.species,
+                            ivs: opponent.ivs,
+                            evs,
+                            nature,
+                            item,
+                            level: opponent.level,
+                        });
+                        const damageParams = {
+                            display: `${
+                                hydratedOpponent.species
+                            } ${nature} ${evSpreadName} ${item} ${moveInfo.display ||
+                                moveInfo.name} vs ${yourPokemonHydrated.display ||
+                                yourPokemonHydrated.species}`,
+                            attacker: hydratedOpponent,
+                            defender: yourPokemonHydrated,
+                            move,
+                            weather: 1,
+                            crit: 1,
+                            modifiers: getModifiers(hydratedOpponent, move),
+                        };
+                        queue.push(damageParams);
+                    });
+                });
+            });
+        });
+    });
+    return queue;
+};
+
+export const processQueue = (queue) => {
+    return queue.map(item => {
+        const {
+            display,
+            move,
+            defender: {
+                finalStats: { hp },
+            },
+        } = item;
+        const damageRange = getDamageFromObjects(item);
+        let kos = 0;
+        damageRange.forEach(damage => {
+            if (damage >= hp) {
+                kos = kos + 1;
+            }
+        });
+        const koChance = kos / damageRange.length;
+        return {
+            display,
+            move,
+            koChance,
+            maxDamage: damageRange[damageRange.length - 1],
+            hp,
+        };
+    });
+};

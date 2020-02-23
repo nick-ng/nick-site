@@ -1,12 +1,15 @@
 import React from 'react';
 import sortBy from 'lodash/sortBy';
 import reverse from 'lodash/reverse';
+import chunk from 'lodash/chunk';
 import cx from 'classnames';
 
 import {
     getDamageFromObjects,
     getModifiers,
     getMoveInfo,
+    getCalcQueue,
+    processQueue,
     hydratePokemon,
 } from './utils';
 import PokemonCard from './pokemon-card';
@@ -15,6 +18,7 @@ import css from './styles.css';
 
 const YOUR_LOCAL_STORAGE_KEY = 'ev_finder_your_pokemon';
 const OPPONENT_LOCAL_STORAGE_KEY = 'ev_finder_opponent_pokemon';
+const MAX_EVS = 508;
 
 const ivs = {
     hp: 31,
@@ -128,102 +132,116 @@ export default class PokemonEVHelper extends React.Component {
             opponentError: null,
             opponents: opponentInput ? opponents : EXAMPLE_OPPONENTS,
             processed: false,
+            processedBruteForce: false,
+            progress: null,
             queue: [],
             results: [],
+            defensiveEVSpreads50: [],
         };
 
         this.updateQueue = this.updateQueue.bind(this);
-        this.processQueue = this.processQueue.bind(this);
+        this.processQueueHandler = this.processQueueHandler.bind(this);
+        this.bruteForceHandler = this.bruteForceHandler.bind(this);
         this.yourInputHandler = this.yourInputHandler.bind(this);
         this.opponentInputHandler = this.opponentInputHandler.bind(this);
         this.yourResetHandler = this.yourResetHandler.bind(this);
         this.opponentResetHandler = this.opponentResetHandler.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.updateQueue();
-    }
-
-    updateQueue(callback = () => {}) {
-        const { yourPokemon, opponents } = this.state;
-        const queue = [];
-        const yourPokemonHydrated = hydratePokemon(yourPokemon);
-        opponents.forEach(opponent => {
-            opponent.natures.forEach(nature => {
-                opponent.evSpreads.forEach(evSpread => {
-                    const { name: evSpreadName, evs } = evSpread;
-                    opponent.items.forEach(item => {
-                        opponent.moves.forEach(move => {
-                            const moveInfo = getMoveInfo(move);
-                            const hydratedOpponent = hydratePokemon({
-                                species: opponent.species,
-                                ivs: opponent.ivs,
-                                evs,
-                                nature,
-                                item,
-                                level: opponent.level,
-                            });
-                            const damageParams = {
-                                display: `${
-                                    hydratedOpponent.species
-                                } ${nature} ${evSpreadName} ${item} ${moveInfo.display ||
-                                    moveInfo.name} vs ${
-                                    yourPokemonHydrated.species
-                                }`,
-                                attacker: hydratedOpponent,
-                                defender: yourPokemonHydrated,
-                                move,
-                                weather: 1,
-                                crit: 1,
-                                modifiers: getModifiers(hydratedOpponent, move),
-                            };
-                            queue.push(damageParams);
-                        });
-                    });
-                });
-            });
+        const res = await fetch('/defensive-ev-spreads-50.json');
+        const defensiveEVSpreads50 = await res.json();
+        this.setState({
+            defensiveEVSpreads50,
         });
-        this.setState(
-            {
-                processed: false,
-                queue,
-            },
-            callback
-        );
     }
 
-    async processQueue() {
-        const { queue } = this.state;
+    updateQueue(bruteForce = false) {
+        const { yourPokemon, opponents } = this.state;
+        const queue = getCalcQueue(yourPokemon, opponents);
+        this.setState({
+            processed: false,
+            processedBruteForce: false,
+            queue,
+        });
+    }
 
-        const results = await Promise.all(
-            queue.map(item => {
-                const {
-                    display,
-                    move,
-                    defender: {
-                        finalStats: { hp },
-                    },
-                } = item;
-                const damageRange = getDamageFromObjects(item);
-                let kos = 0;
-                damageRange.forEach(damage => {
-                    if (damage >= hp) {
-                        kos = kos + 1;
-                    }
-                });
-                const koChance = kos / damageRange.length;
-                return {
-                    display,
-                    move,
-                    koChance,
-                    maxDamage: damageRange[damageRange.length - 1],
-                    hp,
-                };
-            })
-        );
+    processQueueHandler() {
+        const {
+            queue,
+            yourPokemon: { nature, evs },
+        } = this.state;
+
         this.setState({
             processed: true,
-            results,
+            results: [
+                {
+                    evSpreadName: `${nature} ${evs.hp}/${evs.atk}/${evs.def}/${evs.spa}/${evs.spd}/${evs.spe}`,
+                    calculations: processQueue(queue),
+                },
+            ],
+        });
+    }
+
+    async bruteForceHandler() {
+        const {
+            queue,
+            yourPokemon,
+            opponents,
+            defensiveEVSpreads50,
+        } = this.state;
+        let fewestOHKOs = Infinity;
+        const goodResults = [];
+        const evChunks = chunk(
+            defensiveEVSpreads50,
+            Math.max(5, 1000 / queue.length)
+        );
+        await [evChunks[0]].reduce(
+            (p, chunk, i) =>
+                p.then(
+                    () =>
+                        new Promise(resolve => {
+                            this.setState({
+                                progress: `Progress: ${(
+                                    (i / evChunks.length) *
+                                    100
+                                ).toFixed(1)}%`,
+                            });
+                            for (const data of chunk) {
+                                const { evs, total } = data;
+                                // 10 Make your pokemon with this ev spread
+                                const tempPokemon = Object.assign(
+                                    {},
+                                    yourPokemon,
+                                    {
+                                        display: `${yourPokemon.species} ${yourPokemon.nature} ${evs.hp}/x/${evs.def}/x/${evs.spd}/x`,
+                                        evs,
+                                    }
+                                );
+                                const tempQueue = getCalcQueue(
+                                    tempPokemon,
+                                    opponents
+                                );
+                                // 20 Get results for that pokemon against opponents
+                                const calculations = processQueue(tempQueue);
+                                // 30 Filter out un-interesting results
+                                // 40 Push good results into goodResults
+                                goodResults.push({
+                                    evSpreadName: `${yourPokemon.nature} ${evs.hp}/x/${evs.def}/x/${evs.spd}/x`,
+                                    calculations,
+                                });
+                            }
+                            setTimeout(resolve, 10);
+                        })
+                ),
+            Promise.resolve()
+        );
+
+        this.setState({
+            processedBruteForce: true,
+            progress: null,
+            results: goodResults,
         });
     }
 
@@ -302,6 +320,8 @@ export default class PokemonEVHelper extends React.Component {
     render() {
         const {
             processed,
+            processedBruteForce,
+            progress,
             queue,
             results,
             yourPokemon,
@@ -309,6 +329,7 @@ export default class PokemonEVHelper extends React.Component {
             yourError,
             opponentInput,
             opponentError,
+            defensiveEVSpreads50,
         } = this.state;
         return (
             <div>
@@ -316,54 +337,76 @@ export default class PokemonEVHelper extends React.Component {
                 <div className={css.evSpreadContainer}>
                     <div className={css.evSpreadColumn}>
                         <PokemonCard pokemon={yourPokemon} />
-                        {!processed && (
+                        <div className={css.buttonRow}>
                             <button
-                                onClick={this.processQueue}
+                                disabled={processed}
+                                onClick={this.processQueueHandler}
                             >{`Process ${queue.length}`}</button>
-                        )}
-                        {results.length > 0 && (
-                            <table className={css.damageResult}>
-                                <thead>
-                                    <tr>
-                                        <th className={css.left}>Calc</th>
-                                        <th>OHKO %</th>
-                                        <th>Max Damage</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {reverse(
-                                        sortBy(
-                                            results.filter(
-                                                a => a.maxDamage > 0
-                                            ),
-                                            ['koChance', 'maxDamage']
-                                        )
-                                    ).map(
-                                        ({
-                                            display,
-                                            koChance,
-                                            maxDamage,
-                                            hp,
-                                        }) => {
-                                            return (
-                                                <tr key={display}>
-                                                    <td className={css.left}>
-                                                        {display}
-                                                    </td>
-                                                    <td>{`${koChance *
-                                                        100}%`}</td>
-                                                    <td>{`${maxDamage} / ${hp}`}</td>
-                                                </tr>
-                                            );
-                                        }
-                                    )}
-                                </tbody>
-                            </table>
-                        )}
+                            <button
+                                disabled={processedBruteForce}
+                                onClick={this.bruteForceHandler}
+                            >{`Brute Force ${queue.length *
+                                defensiveEVSpreads50.length}`}</button>
+                        </div>
+                        {progress && <div>{progress}</div>}
+                        {results.length > 0 &&
+                            results.map(result => (
+                                <div>
+                                    <label>{result.evSpreadName}</label>
+                                    <table className={css.damageResult}>
+                                        <thead>
+                                            <tr>
+                                                <th className={css.left}>
+                                                    Calc
+                                                </th>
+                                                <th>OHKO %</th>
+                                                <th>Max Damage</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {reverse(
+                                                sortBy(
+                                                    result.calculations.filter(
+                                                        a => a.maxDamage > 0
+                                                    ),
+                                                    ['koChance', 'maxDamage']
+                                                )
+                                            )
+                                                .slice(
+                                                    0,
+                                                    processedBruteForce ? 5 : -1
+                                                )
+                                                .map(
+                                                    ({
+                                                        display,
+                                                        koChance,
+                                                        maxDamage,
+                                                        hp,
+                                                    }) => {
+                                                        return (
+                                                            <tr key={display}>
+                                                                <td
+                                                                    className={
+                                                                        css.left
+                                                                    }
+                                                                >
+                                                                    {display}
+                                                                </td>
+                                                                <td>{`${koChance *
+                                                                    100}%`}</td>
+                                                                <td>{`${maxDamage} / ${hp}`}</td>
+                                                            </tr>
+                                                        );
+                                                    }
+                                                )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ))}
                     </div>
                     <div className={cx(css.evSpreadColumn, css.fullHeight)}>
                         <label>
-                            Your Pokemon{' '}
+                            Your Pokemon
                             <button onClick={this.yourResetHandler}>
                                 Reset
                             </button>
@@ -376,7 +419,7 @@ export default class PokemonEVHelper extends React.Component {
                         {yourError && <div>{yourError}</div>}
                         <hr />
                         <label>
-                            Opponents{' '}
+                            Opponents
                             <button onClick={this.opponentResetHandler}>
                                 Reset
                             </button>

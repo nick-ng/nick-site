@@ -31,8 +31,17 @@
     height: auto;
 }
 
+.buttonRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+}
+
+.buttonRow button {
+    flex-grow: 1;
+}
+
 table.damageResult {
-    margin-top: 5px;
     border-collapse: collapse;
     font-size: 0.9em;
 }
