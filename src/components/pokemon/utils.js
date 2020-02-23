@@ -300,3 +300,44 @@ export const processQueue = queue => {
         };
     });
 };
+
+export const processQueue2 = (yourPokemon, opponents) => {
+    const results = [];
+    const yourPokemonHydrated = hydratePokemon(yourPokemon);
+    opponents.forEach(opponent => {
+        opponent.natures.forEach(nature => {
+            opponent.evSpreads.forEach(evSpread => {
+                const { name: evSpreadName, evs } = evSpread;
+                opponent.items.forEach(item => {
+                    const subResults = opponent.moves.map(move => {
+                        const moveInfo = getMoveInfo(move);
+                        const hydratedOpponent = hydratePokemon({
+                            species: opponent.species,
+                            ivs: opponent.ivs,
+                            evs,
+                            nature,
+                            item,
+                            level: opponent.level,
+                        });
+                        const damageParams = {
+                            display: `${
+                                hydratedOpponent.species
+                            } ${nature} ${evSpreadName} ${item} ${moveInfo.display ||
+                                moveInfo.name} vs ${yourPokemonHydrated.display ||
+                                yourPokemonHydrated.species}`,
+                            attacker: hydratedOpponent,
+                            defender: yourPokemonHydrated,
+                            move,
+                            weather: 1,
+                            crit: 1,
+                            modifiers: getModifiers(hydratedOpponent, move),
+                        };
+                        return processQueue(damageParams);
+                    });
+                    let mostDamage = { maxDamage: 0 };
+                });
+            });
+        });
+    });
+    return results;
+};
