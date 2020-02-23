@@ -44,9 +44,7 @@ const millisecondsUntilAnniversary = () => {
 
     for (let i = 0; i < 10000000; i++) {
         // eslint-disable-line no-plusplus
-        const nextAnniversary = new Date(weddingAnniversary).setFullYear(
-            currentYear + i
-        );
+        const nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear + i);
         if (nextAnniversary > new Date()) {
             return nextAnniversary - new Date();
         }
@@ -58,9 +56,7 @@ const ordinalAnniversary = () => {
 
     for (let i = 0; i < 10000000; i++) {
         // eslint-disable-line no-plusplus
-        const nextAnniversary = new Date(weddingAnniversary).setFullYear(
-            anniversaryYear + i
-        );
+        const nextAnniversary = new Date(weddingAnniversary).setFullYear(anniversaryYear + i);
         if (nextAnniversary > new Date()) {
             return getGetOrdinal(i);
         }
@@ -119,9 +115,7 @@ export default class AnniversaryCountdown extends React.Component {
                 ? Math.floor(Math.pow(Math.log10(factor), 1.2)) // eslint-disable-line
                 : precision;
             const dd =
-                actualPrecision > 0
-                    ? `.${(time % 10).toFixed(actualPrecision).slice(2)}`
-                    : '';
+                actualPrecision > 0 ? `.${(time % 10).toFixed(actualPrecision).slice(2)}` : '';
 
             this.setState({
                 timeString: `${ii}${dd} ${conversionFactors[timeFormat].name}`,
@@ -137,8 +131,6 @@ export default class AnniversaryCountdown extends React.Component {
 
     render() {
         const { ordinal, timeString } = this.state;
-        return (
-            <p>{`Only ${timeString} until our ${ordinal} wedding anniversary!`}</p>
-        );
+        return <p>{`Only ${timeString} until our ${ordinal} wedding anniversary!`}</p>;
     }
 }

@@ -40,11 +40,7 @@ exports.up = function(knex) {
                     .onDelete('CASCADE');
             })
         )
-        .then(() =>
-            knex
-                .insert([{ name: 'image' }, { name: 'video' }])
-                .into(mediaTypeTable)
-        );
+        .then(() => knex.insert([{ name: 'image' }, { name: 'video' }]).into(mediaTypeTable));
 };
 
 exports.down = function(knex) {

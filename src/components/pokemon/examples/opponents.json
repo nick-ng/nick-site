@@ -1,0 +1,166 @@
+[
+    {
+        "species": "excadrill",
+        "ivs": { "hp": 31, "atk": 31, "def": 31, "spa": 31, "spd": 31, "spe": 31 },
+        "evSpreads": [
+            {
+                "name": "Jolly",
+                "evs": {
+                    "nature": "jolly",
+                    "hp": 4,
+                    "atk": 252,
+                    "def": 0,
+                    "spa": 0,
+                    "spd": 0,
+                    "spe": 252
+                }
+            },
+            {
+                "name": "Adamant",
+                "evs": {
+                    "nature": "adamant",
+                    "hp": 4,
+                    "atk": 252,
+                    "def": 0,
+                    "spa": 0,
+                    "spd": 0,
+                    "spe": 252
+                }
+            }
+        ],
+        "items": ["focussash", "lifeorb", "choiceband"],
+        "dynamax": false,
+        "moves": ["ironhead", "rockslide", "highhorsepower", "earthquake"],
+        "level": 50
+    },
+    {
+        "species": "togekiss",
+        "ivs": { "hp": 31, "atk": 31, "def": 31, "spa": 31, "spd": 31, "spe": 31 },
+        "evSpreads": [
+            {
+                "name": "Timid",
+                "evs": {
+                    "nature": "timid",
+                    "hp": 4,
+                    "atk": 0,
+                    "def": 0,
+                    "spa": 252,
+                    "spd": 0,
+                    "spe": 252
+                }
+            },
+            {
+                "name": "Bold",
+                "evs": {
+                    "nature": "bold",
+                    "hp": 236,
+                    "atk": 0,
+                    "def": 196,
+                    "spa": 12,
+                    "spd": 12,
+                    "spe": 52
+                }
+            }
+        ],
+        "items": ["pinchberry"],
+        "dynamax": false,
+        "moves": ["dazzlinggleam", "airslash", "heatwave", "flamethrower"],
+        "level": 50
+    },
+    {
+        "species": "arcanine",
+        "ivs": { "hp": 31, "atk": 31, "def": 31, "spa": 31, "spd": 31, "spe": 31 },
+        "evSpreads": [
+            {
+                "name": "Timid",
+                "evs": {
+                    "nature": "timid",
+                    "hp": 196,
+                    "atk": 0,
+                    "def": 44,
+                    "spa": 44,
+                    "spd": 4,
+                    "spe": 220
+                }
+            },
+            {
+                "name": "Jolly",
+                "evs": {
+                    "nature": "jolly",
+                    "hp": 0,
+                    "atk": 252,
+                    "def": 0,
+                    "spa": 0,
+                    "spd": 4,
+                    "spe": 252
+                }
+            }
+        ],
+        "items": ["pinchberry"],
+        "dynamax": false,
+        "moves": ["flamethrower", "flareblitz"],
+        "level": 50
+    },
+    {
+        "species": "duraludon",
+        "ivs": { "hp": 31, "atk": 31, "def": 31, "spa": 31, "spd": 31, "spe": 31 },
+        "evSpreads": [
+            {
+                "name": "Timid",
+                "evs": {
+                    "nature": "timid",
+                    "hp": 0,
+                    "atk": 0,
+                    "def": 0,
+                    "spa": 252,
+                    "spd": 4,
+                    "spe": 252
+                }
+            },
+            {
+                "name": "Modest",
+                "evs": {
+                    "nature": "modest",
+                    "hp": 196,
+                    "atk": 0,
+                    "def": 4,
+                    "spa": 140,
+                    "spd": 108,
+                    "spe": 60
+                }
+            }
+        ],
+        "items": ["assaultvest", "lifeorb"],
+        "dynamax": false,
+        "moves": ["flashcannon", "dracometeor", "thunderbolt", "darkpulse", "dragonpulse"],
+        "level": 50
+    },
+    {
+        "species": "barraskewda",
+        "ivs": { "hp": 31, "atk": 31, "def": 31, "spa": 31, "spd": 31, "spe": 31 },
+        "evSpreads": [
+            {
+                "name": "Jolly",
+                "evs": {
+                    "nature": "jolly",
+                    "hp": 4,
+                    "atk": 252,
+                    "def": 0,
+                    "spa": 0,
+                    "spd": 0,
+                    "spe": 252
+                }
+            }
+        ],
+        "items": ["lifeorb", "choiceband"],
+        "dynamax": false,
+        "moves": [
+            "Liquidation",
+            "Close Combat",
+            "Crunch",
+            "Poison Jab",
+            { "name": "Liquidation", "display": "Liquidation (Rain)", "weather": 1.5 }
+        ],
+        "level": 50
+    }
+]

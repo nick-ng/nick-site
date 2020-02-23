@@ -15,9 +15,7 @@ export default class Location extends React.Component {
     }
 
     componentDidMount() {
-        const geolocationWatchId = navigator.geolocation.watchPosition(
-            this.addLocationToHistory
-        );
+        const geolocationWatchId = navigator.geolocation.watchPosition(this.addLocationToHistory);
 
         this.setState({
             geolocationWatchId,
@@ -73,16 +71,14 @@ export default class Location extends React.Component {
 
         data.reverse();
         const lastDatum = data[0];
-        const totalDistance = data
-            .map(d => d.distance)
-            .reduce((a, c) => a + c, 0);
+        const totalDistance = data.map(d => d.distance).reduce((a, c) => a + c, 0);
 
         return (
             <div>
                 {lastDatum && (
-                    <h2>{`${(lastDatum.speed * 3.6).toFixed(
+                    <h2>{`${(lastDatum.speed * 3.6).toFixed(1)} km/h, ${totalDistance.toFixed(
                         1
-                    )} km/h, ${totalDistance.toFixed(1)} m`}</h2>
+                    )} m`}</h2>
                 )}
                 <table>
                     <thead>

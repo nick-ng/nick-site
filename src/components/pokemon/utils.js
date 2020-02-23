@@ -9,8 +9,9 @@ export const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const pokeRound = num => (num % 1 > 0.5 ? Math.ceil(num) : Math.floor(num));
 const product = array => array.reduce((p, c) => pokeRound(p * c), 1);
 const lowerCaseNoSpace = s => s && s.replace(/\s/g, '').toLocaleLowerCase('en');
-const strCompare = (str1, str2) =>
-    lowerCaseNoSpace(str1) === lowerCaseNoSpace(str2);
+const strCompare = (str1, str2) => lowerCaseNoSpace(str1) === lowerCaseNoSpace(str2);
+
+export const getTotalEVs = evs => statNames.reduce((p, name) => p + evs[name], 0);
 
 export const getEffectiveness = (attackingType, defendingType) => {
     const att = attackingType.toLocaleLowerCase('en');
@@ -23,22 +24,17 @@ export const getEffectiveness = (attackingType, defendingType) => {
 
 export const get2Effectiveness = (attackingType, defendingTypes) => {
     return defendingTypes.reduce(
-        (p, defendingType) =>
-            p * getEffectiveness(attackingType, defendingType),
+        (p, defendingType) => p * getEffectiveness(attackingType, defendingType),
         1
     );
 };
 
-export const getMoveInfo = move => {
+export const getMoveInfo = (move, dynamax) => {
     if (typeof move === 'string') {
         return BattleMovedex[lowerCaseNoSpace(move)];
     }
     if (move.name && !move.basePower) {
-        return Object.assign(
-            {},
-            move,
-            BattleMovedex[lowerCaseNoSpace(move.name)]
-        );
+        return Object.assign({}, move, BattleMovedex[lowerCaseNoSpace(move.name)]);
     }
     return Object.assign({}, move, {
         name: move.name || `${move.category} ${move.basePower} ${move.type}`,
@@ -70,9 +66,7 @@ export const getDamageFromStats = (
         1,
     ].map(r => {
         const baseDamage = Math.floor(
-            Math.floor((Math.floor(2 * level * 0.2 + 2) * basePower * a) / d) /
-                50 +
-                2
+            Math.floor((Math.floor(2 * level * 0.2 + 2) * basePower * a) / d) / 50 + 2
         );
 
         let damage = product([baseDamage, weather, crit]);
@@ -84,20 +78,17 @@ export const getDamageFromStats = (
     });
 };
 
-export const getDamageFromObjects = ({
-    attacker,
-    defender,
-    move,
-    modifiers = [],
-}) => {
+export const getDamageFromObjects = ({ attacker, defender, move, modifiers = [] }) => {
     const {
         types: attackerTypes,
         finalStats: { atk, spa },
         level,
+        dynamax,
     } = attacker;
     const {
         types: defenderTypes,
         finalStats: { def, spd },
+        ability: defenderAbility,
     } = defender;
     const {
         basePower,
@@ -107,12 +98,22 @@ export const getDamageFromObjects = ({
         weather = 1,
         terrain = 1,
         crit = 1,
-    } = getMoveInfo(move);
+        target = 'normal',
+    } = getMoveInfo(move, dynamax);
+
+    if (target.toLocaleLowerCase('en').includes('all')) {
+        modifiers.push(0.75);
+    }
+
+    let intimidate = 1;
+    if (strCompare(defenderAbility, 'intimidate')) {
+        intimidate = 2 / 3;
+    }
 
     let a = spa;
     let d = spd;
     if (strCompare(category, 'physical')) {
-        a = atk;
+        a = Math.floor(atk * intimidate);
         d = def;
     }
 
@@ -126,14 +127,7 @@ export const getDamageFromObjects = ({
     });
 };
 
-export const getFinalStat = (
-    baseStat,
-    iv,
-    ev,
-    nature = 1,
-    isHP = false,
-    level = 50
-) => {
+export const getFinalStat = (baseStat, iv, ev, nature = 1, isHP = false, level = 50) => {
     const ev4 = Math.floor(ev / 4);
     const calc1 = Math.floor((2 * baseStat + iv + ev4) * level * 0.01);
     if (isHP) {
@@ -169,10 +163,9 @@ const natures = {
     quirky: {},
 };
 
-export const getNatureBoost = (natureName, statName) =>
-    natures[natureName][statName] || 1;
+export const getNatureBoost = (natureName, statName) => natures[natureName][statName] || 1;
 
-export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
+export const getFinalStats = ({ species, ivs, evs, level = 50 }) => {
     const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
     const { baseStats } = pokedexEntry;
     const finalStats = statNames.reduce((p, statName) => {
@@ -180,7 +173,7 @@ export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
             baseStats[statName],
             ivs[statName],
             evs[statName],
-            getNatureBoost(nature, statName),
+            getNatureBoost(evs.nature, statName),
             strCompare(statName, 'hp'),
             level
         );
@@ -190,7 +183,7 @@ export const getFinalStats = ({ species, ivs, evs, nature, level = 50 }) => {
 };
 
 export const hydratePokemon = pokemon => {
-    const { species, ivs, evs, nature, level = 50 } = pokemon;
+    const { species, ivs, evs, level = 50 } = pokemon;
     const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
     return Object.assign({}, pokedexEntry, pokemon, {
         species: pokedexEntry.species,
@@ -205,16 +198,10 @@ export const getModifiers = (pokemon, move) => {
     if (strCompare(item, 'lifeorb')) {
         modifiers.push(5324 / 4096);
     }
-    if (
-        strCompare(item, 'choiceband') &&
-        strCompare(moveInfo.category, 'physical')
-    ) {
+    if (strCompare(item, 'choiceband') && strCompare(moveInfo.category, 'physical')) {
         modifiers.push(1.5);
     }
-    if (
-        strCompare(item, 'choicespecs') &&
-        strCompare(moveInfo.category, 'special')
-    ) {
+    if (strCompare(item, 'choicespecs') && strCompare(moveInfo.category, 'special')) {
         modifiers.push(1.5);
     }
     return modifiers;
@@ -237,105 +224,112 @@ export const getValidEVs = (level = 50) => {
 export const getCalcQueue = (yourPokemon, opponents) => {
     const queue = [];
     const yourPokemonHydrated = hydratePokemon(yourPokemon);
+
     opponents.forEach(opponent => {
-        opponent.natures.forEach(nature => {
-            opponent.evSpreads.forEach(evSpread => {
-                const { name: evSpreadName, evs } = evSpread;
-                opponent.items.forEach(item => {
-                    opponent.moves.forEach(move => {
-                        const moveInfo = getMoveInfo(move);
-                        const hydratedOpponent = hydratePokemon({
-                            species: opponent.species,
-                            ivs: opponent.ivs,
-                            evs,
-                            nature,
-                            item,
-                            level: opponent.level,
-                        });
-                        const damageParams = {
-                            display: `${
-                                hydratedOpponent.species
-                            } ${nature} ${evSpreadName} ${item} ${moveInfo.display ||
-                                moveInfo.name} vs ${yourPokemonHydrated.display ||
-                                yourPokemonHydrated.species}`,
-                            attacker: hydratedOpponent,
-                            defender: yourPokemonHydrated,
-                            move,
-                            weather: 1,
-                            crit: 1,
-                            modifiers: getModifiers(hydratedOpponent, move),
-                        };
-                        queue.push(damageParams);
+        opponent.evSpreads.forEach(evSpread => {
+            const { name: evSpreadName, evs } = evSpread;
+            opponent.items.forEach(item => {
+                opponent.moves.forEach(move => {
+                    const moveInfo = getMoveInfo(move);
+                    const nature = evs.nature;
+                    const hydratedOpponent = hydratePokemon({
+                        species: opponent.species,
+                        ivs: opponent.ivs,
+                        evs,
+                        nature: evs.nature,
+                        item,
+                        level: opponent.level,
                     });
+                    const damageParams = {
+                        display: `${
+                            hydratedOpponent.species
+                        } ${nature} ${evSpreadName} ${item} ${moveInfo.display ||
+                            moveInfo.name} vs ${yourPokemonHydrated.display ||
+                            yourPokemonHydrated.species}`,
+                        attacker: hydratedOpponent,
+                        defender: yourPokemonHydrated,
+                        move,
+                        weather: 1,
+                        crit: 1,
+                        modifiers: getModifiers(hydratedOpponent, move),
+                    };
+                    queue.push(damageParams);
                 });
             });
         });
     });
+
     return queue;
 };
 
-export const processQueue = queue => {
-    return queue.map(item => {
-        const {
-            display,
-            move,
-            defender: {
-                finalStats: { hp },
-            },
-        } = item;
-        const damageRange = getDamageFromObjects(item);
-        let kos = 0;
-        damageRange.forEach(damage => {
-            if (damage >= hp) {
-                kos = kos + 1;
-            }
-        });
-        const koChance = kos / damageRange.length;
-        return {
-            display,
-            move,
-            koChance,
-            maxDamage: damageRange[damageRange.length - 1],
-            hp,
-        };
+export const processItem = item => {
+    const {
+        display,
+        move,
+        defender: {
+            finalStats: { hp },
+        },
+    } = item;
+    const damageRange = getDamageFromObjects(item);
+    let kos = 0;
+    damageRange.forEach(damage => {
+        if (damage >= hp) {
+            kos = kos + 1;
+        }
     });
+    const koChance = kos / damageRange.length;
+    return {
+        display,
+        move,
+        koChance,
+        koChanceR: -koChance,
+        maxDamage: damageRange[damageRange.length - 1],
+        maxDamageR: -damageRange[damageRange.length - 1],
+        hp,
+    };
+};
+
+export const processQueue = queue => {
+    return queue.map(processItem);
 };
 
 export const processQueue2 = (yourPokemon, opponents) => {
     const results = [];
     const yourPokemonHydrated = hydratePokemon(yourPokemon);
     opponents.forEach(opponent => {
-        opponent.natures.forEach(nature => {
-            opponent.evSpreads.forEach(evSpread => {
-                const { name: evSpreadName, evs } = evSpread;
-                opponent.items.forEach(item => {
-                    const subResults = opponent.moves.map(move => {
-                        const moveInfo = getMoveInfo(move);
-                        const hydratedOpponent = hydratePokemon({
-                            species: opponent.species,
-                            ivs: opponent.ivs,
-                            evs,
-                            nature,
-                            item,
-                            level: opponent.level,
-                        });
-                        const damageParams = {
-                            display: `${
-                                hydratedOpponent.species
-                            } ${nature} ${evSpreadName} ${item} ${moveInfo.display ||
-                                moveInfo.name} vs ${yourPokemonHydrated.display ||
-                                yourPokemonHydrated.species}`,
-                            attacker: hydratedOpponent,
-                            defender: yourPokemonHydrated,
-                            move,
-                            weather: 1,
-                            crit: 1,
-                            modifiers: getModifiers(hydratedOpponent, move),
-                        };
-                        return processQueue(damageParams);
+        opponent.evSpreads.forEach(evSpread => {
+            const { name: evSpreadName, evs } = evSpread;
+            opponent.items.forEach(item => {
+                const subResults = opponent.moves.map(move => {
+                    const moveInfo = getMoveInfo(move);
+                    const hydratedOpponent = hydratePokemon({
+                        species: opponent.species,
+                        ivs: opponent.ivs,
+                        evs,
+                        nature: evs.nature,
+                        item,
+                        level: opponent.level,
                     });
-                    let mostDamage = { maxDamage: 0 };
+                    const damageParams = {
+                        display: `${
+                            hydratedOpponent.species
+                        } ${evSpreadName} ${item} ${moveInfo.display || moveInfo.name}`,
+                        attacker: hydratedOpponent,
+                        defender: yourPokemonHydrated,
+                        move,
+                        weather: 1,
+                        crit: 1,
+                        modifiers: getModifiers(hydratedOpponent, move),
+                    };
+                    return processItem(damageParams);
                 });
+                let mostDamageResult = { maxDamage: 0 };
+                subResults.forEach(subResult => {
+                    if (subResult.maxDamage > mostDamageResult.maxDamage) {
+                        mostDamageResult = subResult;
+                    }
+                });
+                results.push(mostDamageResult);
             });
         });
     });

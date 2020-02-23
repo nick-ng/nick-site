@@ -14,7 +14,7 @@
 
 .evSpreadContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 3fr 1fr;
     grid-column-gap: 5px;
 }
 
@@ -22,13 +22,15 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    overflow-y: auto;
-    height: 90vh;
 }
 
 .evSpreadColumn.fullHeight {
     min-height: 90vh;
     height: auto;
+}
+
+.evSpreadColumn p {
+    font-size: 0.8em;
 }
 
 .buttonRow {
@@ -50,7 +52,7 @@ table.damageResult {
 .damageResult td {
     text-align: right;
     border: 1px solid grey;
-    padding: 5px;
+    padding: 1px 5px;
 }
 
 th.left,
@@ -64,4 +66,18 @@ td.left {
 
 .opponentInput {
     flex-grow: 1;
+}
+
+.sortControls {
+    border: 1px solid grey;
+    padding: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    grid-gap: 5px;
+}
+
+.sortControls .sortControl {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

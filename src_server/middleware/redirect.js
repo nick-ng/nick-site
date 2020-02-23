@@ -3,9 +3,7 @@ module.exports = app => {
         if (req.subdomains.length === 1) {
             switch (req.subdomains[0].toLowerCase()) {
                 case 'yt':
-                    return res.redirect(
-                        'https://www.youtube.com/feed/subscriptions'
-                    );
+                    return res.redirect('https://www.youtube.com/feed/subscriptions');
                 default:
             }
         }

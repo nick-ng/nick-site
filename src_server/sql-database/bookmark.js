@@ -65,10 +65,7 @@ const addOrUpdateBookmarkForUser = db => async (userId, url, name) => {
             try {
                 await updateBookmarkForUser(db)(userId, url, name);
             } catch (e) {
-                console.error(
-                    `Trouble when updating bookmark for ${userId}`,
-                    e
-                );
+                console.error(`Trouble when updating bookmark for ${userId}`, e);
                 return 500;
             }
             return 205;

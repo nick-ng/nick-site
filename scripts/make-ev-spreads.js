@@ -29,34 +29,27 @@ const getAllDefensiveSpreads = async (level = 50) => {
     const spa = 0;
     const spe = 0;
 
-    fs.writeFileSync(getFilePath(level), '[');
+    const allEVs = [];
 
     for (const hp of validEVs) {
         for (const def of validEVs) {
             for (const spd of validEVs) {
                 const total = hp + def + spd;
                 if (total <= maxEVs) {
-                    const a = JSON.stringify({
-                        evs: {
-                            hp,
-                            atk,
-                            def,
-                            spa,
-                            spd,
-                            spe,
-                        },
-                        total,
+                    allEVs.push({
+                        hp,
+                        atk,
+                        def,
+                        spa,
+                        spd,
+                        spe,
                     });
-                    await appendFilePromise(getFilePath(level), a + ',\n');
                 }
             }
         }
     }
 
-    return appendFilePromise(
-        getFilePath(level),
-        '{"evs":{"hp":0,"atk":0,"def":0,"spa":0,"spd":0,"spe":0},"total":0}]\n'
-    );
+    fs.writeFileSync(getFilePath(level), JSON.stringify(allEVs));
 };
 
 getAllDefensiveSpreads(50);

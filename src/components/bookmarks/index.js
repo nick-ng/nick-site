@@ -33,9 +33,7 @@ export default class Admin extends React.Component {
             visibleEditors: {},
         });
         const res = await axios.get('api/bookmarks');
-        const bookmarks = res.data.bookmarks.sort((a, b) =>
-            a.name.localeCompare(b.name)
-        );
+        const bookmarks = res.data.bookmarks.sort((a, b) => a.name.localeCompare(b.name));
         this.setState({
             bookmarks,
             bookmarksFetched: true,
@@ -59,9 +57,7 @@ export default class Admin extends React.Component {
         e.preventDefault();
 
         if (!newBookmark.name) {
-            newBookmark.name = newBookmark.url
-                .replace(/^https?:\/\//, '')
-                .replace(/\/$/, '');
+            newBookmark.name = newBookmark.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
         }
 
         this.setState(
@@ -107,10 +103,7 @@ export default class Admin extends React.Component {
         return (
             <div className={css.container}>
                 <h2>Bookmarks</h2>
-                <form
-                    className={css.controls}
-                    onSubmit={this.addBookmarkHandler}
-                >
+                <form className={css.controls} onSubmit={this.addBookmarkHandler}>
                     <input type="text" name="url" placeholder="URL" />
                     <input type="text" name="name" placeholder="Name" />
                     <button type="submit">
@@ -122,15 +115,8 @@ export default class Admin extends React.Component {
                     <div className={css.bookmarks}>
                         {bookmarks.length > 0 ? (
                             bookmarks.map(({ id, url, name }) => (
-                                <div
-                                    className={css.bookmarkRow}
-                                    key={`bookmark-${id}`}
-                                >
-                                    <a
-                                        className={css.fadeIn}
-                                        href={url}
-                                        target="_blank"
-                                    >
+                                <div className={css.bookmarkRow} key={`bookmark-${id}`}>
+                                    <a className={css.fadeIn} href={url} target="_blank">
                                         {name}
                                     </a>
                                     <i
@@ -141,42 +127,18 @@ export default class Admin extends React.Component {
                                     {visibleEditors[id] && (
                                         <form
                                             className={css.controls}
-                                            onSubmit={e =>
-                                                this.editBookmarkHandler(e, id)
-                                            }
+                                            onSubmit={e => this.editBookmarkHandler(e, id)}
                                         >
-                                            <input
-                                                type="text"
-                                                name="url"
-                                                placeholder="New URL"
-                                            />
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                placeholder="New Name"
-                                            />
+                                            <input type="text" name="url" placeholder="New URL" />
+                                            <input type="text" name="name" placeholder="New Name" />
                                             <button type="submit">
-                                                <i
-                                                    className={cx(
-                                                        'fa',
-                                                        'fa-save'
-                                                    )}
-                                                ></i>
+                                                <i className={cx('fa', 'fa-save')}></i>
                                             </button>
                                             <button
                                                 type="button"
-                                                onClick={() =>
-                                                    this.deleteBookmarkHandler(
-                                                        id
-                                                    )
-                                                }
+                                                onClick={() => this.deleteBookmarkHandler(id)}
                                             >
-                                                <i
-                                                    className={cx(
-                                                        'fa',
-                                                        'fa-trash'
-                                                    )}
-                                                ></i>
+                                                <i className={cx('fa', 'fa-trash')}></i>
                                             </button>
                                         </form>
                                     )}
