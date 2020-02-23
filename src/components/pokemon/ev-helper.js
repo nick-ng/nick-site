@@ -351,7 +351,7 @@ export default class PokemonEVHelper extends React.Component {
                         {progress && <div>{progress}</div>}
                         {results.length > 0 &&
                             results.map(result => (
-                                <div>
+                                <div key={result.evSpreadName}>
                                     <label>{result.evSpreadName}</label>
                                     <table className={css.damageResult}>
                                         <thead>
