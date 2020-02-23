@@ -1,0 +1,9 @@
+{
+    "species": "Togekiss",
+    "ivs": { "hp": 31, "atk": 31, "def": 31, "spa": 31, "spd": 31, "spe": 31 },
+    "evs": { "nature": "bold", "hp": 236, "atk": 0, "def": 196, "spa": 12, "spd": 12, "spe": 52 },
+    "item": "scopelens",
+    "ability": "superluck",
+    "moves": ["dazzlinggleam", "airslash", "heatwave", "protect"],
+    "level": 50
+}

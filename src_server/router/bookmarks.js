@@ -16,11 +16,7 @@ module.exports = router => {
         const { user } = res.locals;
         const { name, url } = req.body;
         if (typeof name === 'string' && typeof url === 'string') {
-            const code = await bookmark.addOrUpdateBookmarkForUser(
-                user.id,
-                url,
-                name
-            );
+            const code = await bookmark.addOrUpdateBookmarkForUser(user.id, url, name);
             return res.sendStatus(code);
         }
         res.sendStatus(400);
@@ -31,12 +27,7 @@ module.exports = router => {
         const { name, url } = req.body;
         const { id } = req.params;
         try {
-            const result = await bookmark.updateBookmarkById(
-                user.id,
-                id,
-                url,
-                name
-            );
+            const result = await bookmark.updateBookmarkById(user.id, id, url, name);
 
             return res.sendStatus(result ? 205 : 304);
         } catch (e) {
@@ -53,10 +44,7 @@ module.exports = router => {
 
             return res.sendStatus(result ? 205 : 304);
         } catch (e) {
-            console.error(
-                `Trouble when DELETEing bookmark for ${user.name}`,
-                e
-            );
+            console.error(`Trouble when DELETEing bookmark for ${user.name}`, e);
             return res.sendStatus(500);
         }
     });

@@ -23,11 +23,7 @@ const isIt1157 = () => {
     const seconds = now.getSeconds();
 
     if (hour === 11 && minutes === 56 && seconds > 15) {
-        !playing1157 &&
-            window.open(
-                'https://www.youtube.com/watch?v=ucmwSvy3Vlc',
-                '_blank'
-            );
+        !playing1157 && window.open('https://www.youtube.com/watch?v=ucmwSvy3Vlc', '_blank');
         playing1157 = true;
         return;
     }

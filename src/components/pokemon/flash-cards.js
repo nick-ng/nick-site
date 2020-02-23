@@ -19,13 +19,7 @@ export default class PokemonFlashCards extends React.Component {
         return (
             <div>
                 {order.map(type => {
-                    return (
-                        <FlashCard
-                            key={`card-${type}`}
-                            aType={type}
-                            dType={type}
-                        />
-                    );
+                    return <FlashCard key={`card-${type}`} aType={type} dType={type} />;
                 })}
             </div>
         );

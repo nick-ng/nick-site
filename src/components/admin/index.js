@@ -35,11 +35,7 @@ export default class Admin extends React.Component {
                 <h2>Admin Panel</h2>
                 <label>
                     Admin Key:
-                    <input
-                        value={adminKey}
-                        type="password"
-                        onChange={this.adminKeyChangeHandler}
-                    />
+                    <input value={adminKey} type="password" onChange={this.adminKeyChangeHandler} />
                 </label>
             </div>
         );

@@ -8023,13 +8023,7 @@ let BattlePokedex = {
         weightkg: 0.3,
         color: 'Red',
         eggGroups: ['Amorphous'],
-        otherFormes: [
-            'rotomheat',
-            'rotomwash',
-            'rotomfrost',
-            'rotomfan',
-            'rotommow',
-        ],
+        otherFormes: ['rotomheat', 'rotomwash', 'rotomfrost', 'rotomfan', 'rotommow'],
     },
     rotomheat: {
         num: 479,
@@ -10992,12 +10986,7 @@ let BattlePokedex = {
         weightkg: 82.5,
         color: 'Purple',
         eggGroups: ['Undiscovered'],
-        otherFormes: [
-            'genesectdouse',
-            'genesectshock',
-            'genesectburn',
-            'genesectchill',
-        ],
+        otherFormes: ['genesectdouse', 'genesectshock', 'genesectburn', 'genesectchill'],
     },
     genesectdouse: {
         num: 649,
@@ -11389,12 +11378,7 @@ let BattlePokedex = {
         color: 'White',
         evos: ['floette'],
         eggGroups: ['Fairy'],
-        otherForms: [
-            'flabebeblue',
-            'flabebeorange',
-            'flabebewhite',
-            'flabebeyellow',
-        ],
+        otherForms: ['flabebeblue', 'flabebeorange', 'flabebewhite', 'flabebeyellow'],
     },
     floette: {
         num: 670,
@@ -11411,12 +11395,7 @@ let BattlePokedex = {
         evoLevel: 19,
         evos: ['florges'],
         eggGroups: ['Fairy'],
-        otherForms: [
-            'floetteblue',
-            'floetteorange',
-            'floettewhite',
-            'floetteyellow',
-        ],
+        otherForms: ['floetteblue', 'floetteorange', 'floettewhite', 'floetteyellow'],
         otherFormes: ['floetteeternal'],
     },
     floetteeternal: {
@@ -11448,12 +11427,7 @@ let BattlePokedex = {
         evoType: 'useItem',
         evoItem: 'Shiny Stone',
         eggGroups: ['Fairy'],
-        otherForms: [
-            'florgesblue',
-            'florgesorange',
-            'florgeswhite',
-            'florgesyellow',
-        ],
+        otherForms: ['florgesblue', 'florgesorange', 'florgeswhite', 'florgesyellow'],
     },
     skiddo: {
         num: 672,
@@ -15067,8 +15041,7 @@ let BattlePokedex = {
         color: 'Gray',
         prevo: 'yamaskgalar',
         evoType: 'other',
-        evoCondition:
-            'Have 49+ HP lost and walk under stone sculpture in Dusty Bowl',
+        evoCondition: 'Have 49+ HP lost and walk under stone sculpture in Dusty Bowl',
         eggGroups: ['Mineral', 'Amorphous'],
     },
     milcery: {
@@ -16374,11 +16347,7 @@ let BattlePokedex = {
         weightkg: 61,
         color: 'White',
         eggGroups: ['Undiscovered'],
-        otherForms: [
-            'pokestargiant2',
-            'pokestargiantpropo1',
-            'pokestargiantpropo2',
-        ],
+        otherForms: ['pokestargiant2', 'pokestargiantpropo1', 'pokestargiantpropo2'],
     },
     pokestarhumanoid: {
         num: -5007,

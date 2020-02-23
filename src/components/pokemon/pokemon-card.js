@@ -27,31 +27,27 @@ const evDisplay = evs =>
 
 const PokemonCard = props => {
     const { pokemon, showControls = false } = props;
-    const {
-        species,
-        ivs,
-        evs,
-        nature,
-        item,
-        ability,
-        moves,
-        level = 50,
-    } = pokemon;
-    const dex = BattlePokedex[species.toLocaleLowerCase('en')];
-    const finalStats = getFinalStats(pokemon);
+    const { species, ivs, evs, item, ability, moves, level = 50 } = pokemon;
 
-    return (
-        <div className={css.pokemonCard}>
-            <div>{`${dex.species} @ ${item || 'No Item'}`}</div>
-            <div>{`Ability: ${ability}`}</div>
-            <div>{`Level: ${level}`}</div>
-            <div>{`EVs: ${evDisplay(evs)}`}</div>
-            <div>{`${capitalizeFirstLetter(nature)} Nature`}</div>
-            {moves.map(move => (
-                <div key={`${species}-${move}`}>{`- ${move}`}</div>
-            ))}
-        </div>
-    );
+    try {
+        const dex = BattlePokedex[species.toLocaleLowerCase('en')];
+        const finalStats = getFinalStats(pokemon);
+
+        return (
+            <div className={css.pokemonCard}>
+                <div>{`${dex.species} @ ${item || 'No Item'}`}</div>
+                <div>{`Ability: ${ability}`}</div>
+                <div>{`Level: ${level}`}</div>
+                <div>{`EVs: ${evDisplay(evs)}`}</div>
+                <div>{`${capitalizeFirstLetter(evs.nature)} Nature`}</div>
+                {moves.map(move => (
+                    <div key={`${species}-${move}`}>{`- ${move}`}</div>
+                ))}
+            </div>
+        );
+    } catch (e) {
+        return <div className={css.pokemonCard}>There's a problem with your pokemon.</div>;
+    }
 };
 
 export default PokemonCard;
