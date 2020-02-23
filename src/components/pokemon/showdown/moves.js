@@ -1305,7 +1305,8 @@ let BattleMovedex = {
         basePowerCallback(pokemon, target, move) {
             // @ts-ignore
             return (
-                5 + Math.floor(move.allies.shift().template.baseStats.atk / 10)
+                (5 +
+                Math.floor(move.allies.shift().template.baseStats.atk / 10))
             );
         },
         category: 'Physical',
@@ -2339,7 +2340,7 @@ let BattleMovedex = {
                 pokemon.setType(
                     pokemon
                         .getTypes(true)
-                        .map(type => (type === 'Fire' ? '???' : type))
+                        .map(type => ((type === 'Fire' ? '???' : type)))
                 );
                 this.add(
                     '-start',
@@ -2456,8 +2457,8 @@ let BattleMovedex = {
         flags: { protect: 1, reflectable: 1, mirror: 1 },
         onTryImmunity(pokemon, source) {
             return (
-                (pokemon.gender === 'M' && source.gender === 'F') ||
-                (pokemon.gender === 'F' && source.gender === 'M')
+                ((pokemon.gender === 'M' && source.gender === 'F') ||
+                (pokemon.gender === 'F' && source.gender === 'M'))
             );
         },
         boosts: {
@@ -3581,7 +3582,7 @@ let BattleMovedex = {
         basePower: 0,
         basePowerCallback(pokemon, target) {
             return (
-                Math.floor(
+                (Math.floor(
                     Math.floor(
                         (120 *
                             (100 *
@@ -3590,7 +3591,7 @@ let BattleMovedex = {
                             1) /
                             4096
                     ) / 100
-                ) || 1
+                ) || 1)
             );
         },
         category: 'Physical',
@@ -3977,7 +3978,7 @@ let BattleMovedex = {
         volatileStatus: 'protect',
         onPrepareHit(pokemon) {
             return (
-                !!this.queue.willAct() && this.runEvent('StallMove', pokemon)
+                (!!this.queue.willAct() && this.runEvent('StallMove', pokemon))
             );
         },
         onHit(pokemon) {
@@ -11092,7 +11093,7 @@ let BattleMovedex = {
         volatileStatus: 'kingsshield',
         onTryHit(pokemon) {
             return (
-                !!this.queue.willAct() && this.runEvent('StallMove', pokemon)
+                (!!this.queue.willAct() && this.runEvent('StallMove', pokemon))
             );
         },
         onHit(pokemon) {
@@ -12542,7 +12543,7 @@ let BattleMovedex = {
         volatileStatus: 'maxguard',
         onPrepareHit(pokemon) {
             return (
-                !!this.queue.willAct() && this.runEvent('StallMove', pokemon)
+                (!!this.queue.willAct() && this.runEvent('StallMove', pokemon))
             );
         },
         onHit(pokemon) {
@@ -13749,7 +13750,7 @@ let BattleMovedex = {
                     }
                     if (
                         showMsg &&
-                        !/** @type {ActiveMove} */ (effect).secondaries
+                        !(/** @type {ActiveMove} */ (effect).secondaries)
                     ) {
                         this.add('-activate', target, 'move: Mist');
                     }
@@ -14534,7 +14535,7 @@ let BattleMovedex = {
         volatileStatus: 'obstruct',
         onTryHit(pokemon) {
             return (
-                !!this.queue.willAct() && this.runEvent('StallMove', pokemon)
+                (!!this.queue.willAct() && this.runEvent('StallMove', pokemon))
             );
         },
         onHit(pokemon) {
@@ -15837,7 +15838,7 @@ let BattleMovedex = {
         volatileStatus: 'protect',
         onPrepareHit(pokemon) {
             return (
-                !!this.queue.willAct() && this.runEvent('StallMove', pokemon)
+                (!!this.queue.willAct() && this.runEvent('StallMove', pokemon))
             );
         },
         onHit(pokemon) {
@@ -23679,7 +23680,7 @@ let BattleMovedex = {
         basePower: 0,
         basePowerCallback(pokemon, target) {
             return (
-                Math.floor(
+                (Math.floor(
                     Math.floor(
                         (120 *
                             (100 *
@@ -23688,7 +23689,7 @@ let BattleMovedex = {
                             1) /
                             4096
                     ) / 100
-                ) || 1
+                ) || 1)
             );
         },
         category: 'Special',

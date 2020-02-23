@@ -274,7 +274,7 @@ export const getCalcQueue = (yourPokemon, opponents) => {
     return queue;
 };
 
-export const processQueue = (queue) => {
+export const processQueue = queue => {
     return queue.map(item => {
         const {
             display,

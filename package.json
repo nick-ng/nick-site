@@ -6,9 +6,10 @@
     "scripts": {
         "back": "nodemon --ignore src/ --ignore dist/ --delay 2 ./server.js",
         "build": "NODE_ENV=production webpack",
-        "check-prettier": "prettier -c \"**/*.js\"",
+        "prettier-check": "prettier -c \"**/*.js\"",
         "dev": "npm run back & npm run front",
         "eslint": "eslint ./src",
+        "prettier-fix": "prettier --write \"**/*.js\"",
         "front": "webpack --watch",
         "heroku-postbuild": "npm run knex-migrate-prod && npm run build",
         "knex-migrate-prod": "knex migrate:latest --env production",
@@ -17,7 +18,7 @@
         "server": "node ./server.js",
         "sim-deploy": "rm -rf node_modules && npm install && npm run heroku-postbuild && npm run server",
         "start": "webpack-dev-server --inline --colors --history-api-fallback",
-        "test": "npm run check-prettier",
+        "test": "npm run prettier-check",
         "update-pokemon-moves": "wget -O ./src/components/pokemon/showdown/moves.js https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/moves.js",
         "update-pokemon-pokedex": "wget -O ./src/components/pokemon/showdown/pokedex.js https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.js",
         "update-pokemon": "npm run update-pokemon-pokedex && npm run update-pokemon-moves"

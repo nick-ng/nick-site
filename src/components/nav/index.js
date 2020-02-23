@@ -25,7 +25,7 @@ const Nav = () => (
         <NavLink icon="fa-rotate-right" to="/pll" indentLevel={1}>
             PLL Algorithms
         </NavLink>
-        <NavLink icon='fa-gamepad' to="/pokemon/evhelper">
+        <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink>
         {hasAdminKey() && (
