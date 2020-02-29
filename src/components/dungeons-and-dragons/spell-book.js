@@ -19,8 +19,6 @@ export default class SpellBook extends React.Component {
             chosenSpellLevel: null,
             chosenSpellId: null,
         };
-
-        // this.getCurrentSpellList = this.getCurrentSpellList.bind(this);
     }
 
     async componentDidMount() {
@@ -117,7 +115,7 @@ export default class SpellBook extends React.Component {
         return (
             <div>
                 <h2>{capFirst(casterClass)} Spell Book</h2>
-                {isSpellInfoLoading && isSpellListLoading ? (
+                {isSpellInfoLoading || isSpellListLoading ? (
                     <p>Loading...</p>
                 ) : (
                     <div className={css.spellBook}>
