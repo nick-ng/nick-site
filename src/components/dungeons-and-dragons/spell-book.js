@@ -90,15 +90,8 @@ export default class SpellBook extends React.Component {
     }
 
     spellHandler(spellId) {
-        this.setState(prevState => {
-            if (prevState.chosenSpellId === spellId) {
-                return {
-                    chosenSpellId: null,
-                };
-            }
-            return {
-                chosenSpellId: spellId,
-            };
+        this.setState({
+            chosenSpellId: spellId,
         });
     }
 
