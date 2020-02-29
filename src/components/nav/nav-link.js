@@ -9,6 +9,8 @@ import css from './styles.css';
 
 const INDENT_PX = 10;
 
+const hasAdminKey = () => Boolean(localStorage.getItem('adminKey'));
+
 const NavLink = props => {
     const { indentLevel = 0, icon, children } = props;
     const otherProps = objectWithoutProperties(props, ['indentLevel', 'icon', 'children']);
@@ -30,5 +32,7 @@ const NavLink = props => {
         </NavLinkRRD>
     );
 };
+
+export const AdminNav = props => (hasAdminKey() ? NavLink(props) : null);
 
 export default NavLink;

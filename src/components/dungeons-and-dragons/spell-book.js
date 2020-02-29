@@ -71,9 +71,11 @@ export default class SpellBook extends React.Component {
     getCurrentSpellList() {
         const { chosenSpellLevel, spellList } = this.state;
         if (chosenSpellLevel) {
-            return spellList[chosenSpellLevel];
+            return spellList[chosenSpellLevel].sort();
         }
-        return Object.values(spellList).reduce((p, spellSublist) => p.concat(spellSublist), []);
+        return Object.values(spellList)
+            .reduce((p, spellSublist) => p.concat(spellSublist), [])
+            .sort();
     }
 
     spellLevelHandler(spellLevel) {

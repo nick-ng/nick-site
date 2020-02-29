@@ -1,4 +1,14 @@
 {
+    "aaa": {
+        "name": "",
+        "school": "",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "30 feet",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": ""
+    },
     "druidcraft": {
         "name": "Druidcraft",
         "school": "transmutation",
@@ -38,5 +48,205 @@
         "components": "V, S",
         "duration": "Instantaneous",
         "description": "A creature you touch regains a number of hit points equal to **1d8** + your **spell casting ability modifier**. This spell has no effect on undead or constructs.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the healing increases by **1d8** for each slot level above 1st."
+    },
+    "guidance": {
+        "name": "Guidance",
+        "school": "divination",
+        "level": 0,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S",
+        "duration": "Concentration, up to 1 minute",
+        "description": "You touch one willing creature. Once before the spell ends, the target can roll a **d4** and add the number rolled to one ability check of its choice. It can roll the die before or after making the ability check. The spell then ends."
+    },
+    "mending": {
+        "name": "Mending",
+        "school": "transmutation",
+        "level": 0,
+        "castingTime": "1 minute",
+        "range": "touch",
+        "components": "V, S, M (two lodestones)",
+        "duration": "Instantaneous",
+        "description": "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage.\n\nThis spell can physically repair a magic item or construct,, but the spell can't restore magic to such an object."
+    },
+    "produceFlame": {
+        "name": "Produce Flame",
+        "school": "conjuration",
+        "level": 0,
+        "castingTime": "1 action",
+        "range": "Self",
+        "components": "V, S",
+        "duration": "10 minutes",
+        "description": "A flickering flame appears in your hand. The flame remains there for the duration and harms neither you nor your equipment. The flame sheds bright light in a **10-foot** radius and dim light for an additional **10 feet**. The spell ends if you dismiss it as an action or if you cast it again.\n\nYou can also attack with the flame, although doing so ends the spell. When you cast this spell, or as an action on a later turn, you can hurl the flame at a creature within **30 feet** of you. Make a ranged spell attack. On a hit, the target takes **1d8** **fire** damage.\n\nThis spell's damage increases by 1d8 when you reach **5th** level (**2d8**), **11th** level (**3d8**), and **17th** level (**4d8**)."
+    },
+    "shillelagh": {
+        "name": "Shillelagh",
+        "school": "transmutation",
+        "level": 0,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S, M (mistletoe, a shamrock leaf, and a club or quarterstaff)",
+        "duration": "1 minute",
+        "description": "The wood of a club or quarterstaff you are holding is imbued with nature's power. For the duration, you can use your **spellcasting ability** instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon's damage die becomes a **d8**. The weapon also becomes magical, if it isn't already. The spell ends if you cast it again or if you let go of the weapon."
+    },
+    "thornWhip": {
+        "name": "Thorn Whip",
+        "school": "transmutation",
+        "level": 0,
+        "castingTime": "1 action",
+        "range": "30 feet",
+        "components": "V, S, M (the stem of a plant with thorns)",
+        "duration": "Instantaneous",
+        "description": "You create a long, vine-like whip covered in thorns that lashes out at your command toward a creature in range. Make a **melee spell attack** against the target. If the attack hits, the creature takes **1d6** piercing damage, and if the creature is Large or smaller, you pull the creature up to **10 feet** closer to you.\n\nThis spell's damage increases by 1d6 when you reach **5th** level (**2d6**), **11th** level (**3d6**), and **17th** level (**4d6**)."
+    },
+    "animalFriendship": {
+        "name": "Animal Friendship",
+        "school": "enchantment",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "30 feet",
+        "components": "V, S, M (a morsel of food)",
+        "duration": "24 hours",
+        "description": "This spell lets you convince a beast that you mean it no harm. Choose a beast that you can see within range. It must see and hear your. If the beast's **Intelligence** is **4** or higher, the spell fails. Otherwise, the beast must succeed on a **Wisdom** saving throw or be charmed by you for the spell's duration. If you or one of your companions harms the target, the spell ends.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, you can affect one additional beast for each slot level above 1st."
+    },
+    "charmPerson": {
+        "name": "Charm Person",
+        "school": "enchantment",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "30 feet",
+        "components": "V, S",
+        "duration": "1 hour",
+        "description": "You attempt to charm a humanoid you can see within range. It must make a **Wisdom** saving throw, and does so with advantage if you or your companions are fighting it. If it fails the saving throw, it is charmed by you until the spell ends or until you or your companions do anything harmful to it. The charmed creature regards you as a friendly acquaintance. When the spell ends, the creature knows it was charmed by you.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd or higher, you can target one additional creature for each slot level above 1st. The creature must be within 30 feet of each other when you target them."
+    },
+    "createOrDestroyWater": {
+        "name": "Create or Destroy Water",
+        "school": "transmutation",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "30 feet",
+        "components": "V, S, M (a drop of water if creating water or a few grains of sand if destroying it",
+        "duration": "Instantaneous",
+        "description": "You either create or destroy water.\n\n**Create Water.** You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot cube within range, estinguishing exposed flames in the area.\n\n**Destroy Water.** You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot cube within range.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, you create or destroy 10 additional gallons of water. or the size of the cube increases by 5 feet, for each slot level above the 1st."
+    },
+    "detectMagic": {
+        "name": "Detect Magic",
+        "school": "divination (ritual)",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "Self",
+        "components": "V, S",
+        "duration": "Concentration, up to 10 minutes",
+        "description": "For the duration, you sense the presence of magic within 30 feet of you. If you sense magic in this way, you can use your action to see a faint aura around any visible creature or object in the area that bears magic, and you learn its school of magic, if any.\n\nThe spell can penetrate most barriers, but is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt."
+    },
+    "detectPoisonAndDisease": {
+        "name": "Detect Poison and Disease",
+        "school": "divination (ritual)",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "Self",
+        "components": "V, S, M (a yew leaf)",
+        "duration": "Concentration, up to 10 minutes",
+        "description": "For the duration, you can sense the presence and location of poisons, poisonous creatures and diseases within 30 feet of you. You also identify the kind of poison, poisonous creature, or disease in each case.\n\nThe spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt."
+    },
+    "entangle": {
+        "name": "Entangle",
+        "school": "conjuration",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "90 feet",
+        "components": "V, S",
+        "duration": "Concentration, up to 1 minute",
+        "description": "Grasping weeds and vines sprout from the ground in a 20-foot square starting from a point within range. For the duration, these plants turn the ground in the area into difficult terrain.\n\nA creature in the area when you cast the spell must succeed on a **Strength** saving throw or be restrained by the entangling plants until the spell ends. A creature restrained by the plants can use its action to make a **Strength** check against your spell save DC. On a success, it frees itself.\n\nWhen the spell ends, the conjured plants wilt away."
+    },
+    "faerieFire": {
+        "name": "Faerie Fire",
+        "school": "evocation",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "60 feet",
+        "components": "V",
+        "duration": "Concentration, up to 1 minute",
+        "description": "Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast is also outlined in light if it fails a **Dexterity** saving throw. For the duration, objects and affected creatures shed dim light in a 10-foot radius.\n\nAny attack roll against an affected creature or object has advantage if the attacker can see it, and the affected creature or object can't benefit from being invisible."
+    },
+    "fogCloud": {
+        "name": "Fog Cloud",
+        "school": "conjuration",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "120 feet",
+        "components": "V, S",
+        "duration": "Concentration, up to 1 hour",
+        "description": "You create a 20-foot-radius sphere of fog centered on a point within range. The sphere spreads around corners, and its area is heavily obscured. It lasts for the duration or until a wind of moderate or greater speed (at least 10 miles per hour) disperses it.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the radius of the fog increases by 20 feet for each slot level above 1st."
+    },
+    "goodberry": {
+        "name": "Goodberry",
+        "school": "transmutation",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S, M (a sprig of mistletoe)",
+        "duration": "Instantaneous",
+        "description": "Up to ten berries appear in your hand and are infused with magic for the duration. A creature can use its action to eat one berry. Eating a berry restores 1 hit point, and the berry provides enough nourishment to sustain a creature for one day.\n\nThe berries lose their potency if they have not been consumed within 24 hours of the casting of this spell."
+    },
+    "healingWord": {
+        "name": "Healing Word",
+        "school": "evocation",
+        "level": 1,
+        "castingTime": "1 bonus action",
+        "range": "60 feet",
+        "components": "V",
+        "duration": "Instantaneous",
+        "description": "A creature of your choice that you can see within range regains hit points equal to **1d4 + your spellcasting ability modifier**. This spell has no effect on undead or constructs.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the healing increases by **1d4** for each slot level above 1st."
+    },
+    "jump": {
+        "name": "Jump",
+        "school": "transmutation",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S, M (a grasshopper's hind leg)",
+        "duration": "1 minute",
+        "description": "You touch a creature. The creature's jump distance is tripled until the spell ends."
+    },
+    "longstrider": {
+        "name": "Longstrider",
+        "school": "transmutation",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S, M (a pnich of dirt)",
+        "duration": "1 hour",
+        "description": "You touch a creature. The target's speed increases by 10 feet until the spell ends."
+    },
+    "purifyFoodAndDrink": {
+        "name": "Purify Food and Drink",
+        "school": "transmutation (ritual)",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "10 feet",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": "All nonmagical food and drink within a 5-foot-radius sphere centered on a point of your choice within range is purified and rendered free of poison and disease."
+    },
+    "speakWithAnimals": {
+        "name": "Speak with Animals",
+        "school": "divination (ritual)",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "Self",
+        "components": "V, S",
+        "duration": "10 minutes",
+        "description": "You gain the ability to comprehend and verbally communicate with beasts for the duration. The knowledge and awareness of many beasts is limited by their intelligence, but at minimum, beasts can give you information about nearby locations and monsters, including whatever they can perceive or have perceived within the past day. You might be able to persuade a beast to perform a small favor for you, at the DM's discretion."
+    },
+    "thunderwave": {
+        "name": "Thunderwave",
+        "school": "evocation",
+        "level": 1,
+        "castingTime": "1 action",
+        "range": "Self (15-foot cube",
+        "components": "V, S",
+        "duration": "Instantaneous",
+        "description": "A wave of thunderous force sweeps out from you. Each creature in a 15-foot cube originatin from you must make a **Constitution** saving throw. On a failed save, a creature takes **2d8** **thunder** damage and is pushed 10 feet away from you. On a successful save, the creature takes half as much damage and isn't pushed.\n\nIn addition, unsecured objects that are completely within the area of effect are automatically pushed 10 feet away from you by the spell's effect, and the spell emits a thunderous boom audible out to 300 feet.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the damage increases by **1d8** for each slot level above 1st."
     }
 }
