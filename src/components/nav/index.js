@@ -28,6 +28,12 @@ const Nav = () => (
         <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink>
+        <NavLink icon="fa-pencil" to="/dnd/druidspellbook">
+            Druid Spells
+        </NavLink>
+        <NavLink icon="fa-pencil" to="/dnd/wizardspellbook">
+            Wizard Spells
+        </NavLink>
         {hasAdminKey() && (
             <React.Fragment>
                 <NavLink icon="fa-bookmark-o" to="/bookmarks">

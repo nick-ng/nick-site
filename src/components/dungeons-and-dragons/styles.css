@@ -1,0 +1,58 @@
+.bold {
+    font-weight: bold;
+}
+
+.spellCard {
+    border: 1px solid grey;
+    padding: 5px;
+}
+
+.spellCard h4,
+.spellCard p {
+    margin: 0 0 3px;
+}
+.spellCard ul {
+    margin: 5px 0 0;
+}
+
+.spellCard .spellLevel {
+    font-size: 0.8em;
+}
+
+.spellInfoTable {
+    border-collapse: collapse;
+}
+
+.spellInfoGrid {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: start;
+    grid-column-gap: 10px;
+    margin-bottom: 10px;
+}
+
+.spellBook {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-column-gap: 10px;
+}
+
+.spellBook .spellLevels,
+.spellBook .spellNames {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.spellBook button {
+    padding: 20px 20px;
+    background-color: white;
+    color: black;
+    border: 1px solid grey;
+}
+
+.spellBook button.selected {
+    background-color: darkslategrey;
+    color: white;
+    border: 1px solid darkslategrey;
+}
