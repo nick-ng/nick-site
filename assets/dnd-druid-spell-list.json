@@ -1,0 +1,30 @@
+{
+    "0": [
+        "druidcraft",
+        "guidance",
+        "mending",
+        "poisonSpray",
+        "produceFlame",
+        "resistance",
+        "shillelagh",
+        "thornWhip"
+    ],
+    "1": [
+        "animalFriendship",
+        "charmPerson",
+        "createOrDestroyWater",
+        "cureWounds",
+        "detectMagic",
+        "detectPoisonAndDisease",
+        "entangle",
+        "faerieFire",
+        "fogCloud",
+        "goodberry",
+        "healingWord",
+        "jump",
+        "longstrider",
+        "purifyFoodAndDrink",
+        "speakWithAnimals",
+        "thunderwave"
+    ]
+}

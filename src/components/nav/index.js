@@ -1,11 +1,9 @@
 import React from 'react';
 
 import Header from '../header';
-import NavLink from './nav-link';
+import NavLink, { AdminNav } from './nav-link';
 
 import css from './styles.css';
-
-const hasAdminKey = () => Boolean(localStorage.getItem('adminKey'));
 
 const Nav = () => (
     <div className={css.navContainer}>
@@ -28,16 +26,18 @@ const Nav = () => (
         <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink>
-        {hasAdminKey() && (
-            <React.Fragment>
-                <NavLink icon="fa-bookmark-o" to="/bookmarks">
-                    Bookmarks
-                </NavLink>
-                <NavLink icon="fa-tachometer" to="/location">
-                    Location
-                </NavLink>
-            </React.Fragment>
-        )}
+        <NavLink icon="fa-pencil" to="/dnd/druidspellbook">
+            Druid Spells
+        </NavLink>
+        <AdminNav icon="fa-pencil" to="/dnd/wizardspellbook">
+            Wizard Spells
+        </AdminNav>
+        <AdminNav icon="fa-bookmark-o" to="/bookmarks">
+            Bookmarks
+        </AdminNav>
+        <AdminNav icon="fa-tachometer" to="/location">
+            Location
+        </AdminNav>
     </div>
 );
 

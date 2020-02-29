@@ -52,6 +52,7 @@
         "pg": "^7.17.1",
         "react": "^16.0.0",
         "react-dom": "^16.0.0",
+        "react-markdown": "^4.3.1",
         "react-router-dom": "^5.1.2",
         "style-loader": "^0.13.1",
         "webpack": "^2.2.1"
