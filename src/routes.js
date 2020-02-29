@@ -64,6 +64,9 @@ export default function App() {
                         <R path="/dnd/druidspellbook">
                             <DnDSpellBook casterClass="druid" />
                         </R>
+                        <R path="/dnd/paladinspellbook">
+                            <DnDSpellBook casterClass="paladin" />
+                        </R>
                         <R path="/dnd/wizardspellbook">
                             <DnDSpellBook casterClass="wizard" />
                         </R>
