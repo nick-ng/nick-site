@@ -29,6 +29,9 @@ const Nav = () => (
         <NavLink icon="fa-pencil" to="/dnd/druidspellbook">
             Druid Spells
         </NavLink>
+        <NavLink icon="fa-pencil" to="/dnd/paladinspellbook">
+            Paladin Spells
+        </NavLink>
         <AdminNav icon="fa-pencil" to="/dnd/wizardspellbook">
             Wizard Spells
         </AdminNav>

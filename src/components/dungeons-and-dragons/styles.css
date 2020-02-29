@@ -19,6 +19,10 @@
     font-size: 0.8em;
 }
 
+.spellCard .spellDescription > *:last-child {
+    margin-bottom: 0;
+}
+
 .spellInfoTable {
     border-collapse: collapse;
 }
@@ -28,7 +32,7 @@
     grid-template-columns: auto auto;
     justify-content: start;
     grid-column-gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .spellBook {

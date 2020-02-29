@@ -41,7 +41,7 @@ const SpellCard = props => {
                 <div>Duration:</div>
                 <div>{duration}</div>
             </div>
-            <ReactMarkdown>{description}</ReactMarkdown>
+            <ReactMarkdown className={css.spellDescription}>{description}</ReactMarkdown>
         </div>
     );
 };
