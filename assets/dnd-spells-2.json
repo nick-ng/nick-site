@@ -1,0 +1,62 @@
+{
+    "aaaa": {
+        "name": "Aaaa!",
+        "school": "enchantment",
+        "level": 2,
+        "castingTime": "1 action",
+        "range": "Self",
+        "components": "V, S",
+        "duration": "800 days",
+        "description": "Your penis becomes tiny."
+    },
+    "animalMessenger": {
+        "name": "Animal Messenger",
+        "school": "enchantment (ritual)",
+        "level": 2,
+        "castingTime": "1 action",
+        "range": "30 feet",
+        "components": "V, S, M (a morsel of food)",
+        "duration": "24 hours",
+        "description": "By means of this spell, you use an animal to deliver a message. Choose a **Tiny** beast you can see within range, such as a squirrel, a blue jay, or a bat. You specify a location, which you must have visited, an a recipient who matches a general description, such as \"a man or woman dressed in the uniform of the town guard\" or \"a red-haired dwarf wearing a pointed hat.\". You also speak a message of up to **twenty-five** words. The target beast travels for the duration of the spell toward the specified location, covering about 50 miles per 24 hours for a flying messenger, or 25 miles for other animals.\n\nWhen the messenger arrives, it delivers your message to the creature that you described, replicating the sound of your voice. The messenger speaks only to a creature matching the description you gave. If the messenger doesn't reach its destination before the spell ends, the message is lost, and the beast makes its way back to where you cast the spell.\n\n**At Higher Levels.** If you cast this spell using a slot of 3rd level or higher, the duration of the spell increases by 48 hours for each slot level above 2nd."
+    },
+    "barkskin": {
+        "name": "Barkskin",
+        "school": "transmutation",
+        "level": 2,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S, M (a handful of oak bark)",
+        "duration": "Concentration, up to 1 hour",
+        "description": "You touch a willing creature. Until the spell ends, the target's skin has a rough, bark-like appearance, and the target's AC can't be less than 16, regardless of what kind of armor it is wearing."
+    },
+    "beastSense": {
+        "name": "Beast Sense",
+        "school": "divination (ritual)",
+        "level": 2,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "S",
+        "duration": "Concentration, up to 1 hour",
+        "description": "You touch a willing beast. For the duration of the spell, you can use your action to see through the beast's eyes and hear what it hears, and continue to do so until you use your action to return to your normal senses. While perceiving through the beast's senses, you gain the benefits of any special senses possessed by that creature, though you are blinded and deafened to your own surroundings."
+    },
+    "darkvision": {
+        "name": "Darkvision",
+        "school": "transmutation",
+        "level": 2,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S, M (either a pinch of dried carrot or an agate)",
+        "duration": "8 hours",
+        "description": "You touch a willing creature to grant it the ability to see in the dark. For the duration, that creature has **darkvision** out to a range of 60 feet.\n\n**Darkvision.** You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+    },
+    "enhanceAbility": {
+        "name": "Enhance Ability",
+        "school": "transmutation",
+        "level": 2,
+        "castingTime": "1 action",
+        "range": "Touch",
+        "components": "V, S, M (fur or a feather from a beast)",
+        "duration": "Concentration, up to 1 hour.",
+        "description": "You touch a creature and bestow upon it a magical enhancement. Choose one of the following effects; the target gains the effect until the spell ends.\n\n**Bear's Endurance.** The target has advantage on **Constitution** checks. It also gains **2d6** temporary hit points, which are lost when the spell ends.\n\n**Bull's Strength.** The target has advantage on **Strength** checks, and his or her carrying capacity doubles.\n\n**Cat's Grace.** The target has advantage on **Dexterity** checks. It also doesn't take damage from falling 20 feet or less if it isn't incapacitated.\n\n**Eagle's Splendor.** The target has advantage on **Carisma** checks.\n\n**Fox's Cunning.** The target has advantage on **Intelligence** checks.\n\n**Owl's Wisdom.** The target has advantage on **Wisdom** checks.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, you can target one additional creature for each slot level above 2nd."
+    }
+}

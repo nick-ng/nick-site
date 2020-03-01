@@ -37,25 +37,28 @@
 
 .spellBook {
     display: grid;
-    grid-template-columns: auto auto 1fr;
-    grid-column-gap: 10px;
+    grid-template-columns: 1fr 2fr 9fr;
+    grid-gap: 2px;
 }
 
 .spellBook .spellLevels,
 .spellBook .spellNames {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 64px;
+    grid-gap: 2px;
 }
 
 .spellBook button {
-    padding: 20px 20px;
+    padding: 5px;
+    width: 100%;
     background-color: white;
     color: black;
     border: 1px solid grey;
 }
 
 .spellBook button.selected {
+    font-weight: bold;
     background-color: darkslategrey;
     color: white;
     border: 1px solid darkslategrey;

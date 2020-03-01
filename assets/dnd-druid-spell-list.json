@@ -26,5 +26,25 @@
         "purifyFoodAndDrink",
         "speakWithAnimals",
         "thunderwave"
+    ],
+    "2": [
+        "animalMessenger",
+        "barkskin",
+        "beastSense",
+        "darkvision",
+        "enhanceAbility",
+        "findTraps",
+        "flameBlade",
+        "flameingSphere",
+        "gustOfWind",
+        "heatMetal",
+        "holdPerson",
+        "lesserRestoration",
+        "locateAnimalsOrPlants",
+        "locateObject",
+        "moonbeam",
+        "passWithoutTrace",
+        "protectionFromPoison",
+        "spikeGrowth"
     ]
 }

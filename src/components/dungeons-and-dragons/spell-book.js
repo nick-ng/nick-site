@@ -14,6 +14,7 @@ export default class SpellBook extends React.Component {
         this.state = {
             spellInfo: {},
             isSpellInfoLoading: false,
+            isSpellInfo2Loading: false,
             spellList: {},
             isSpellListLoading: false,
             chosenSpellLevel: null,
@@ -23,6 +24,7 @@ export default class SpellBook extends React.Component {
 
     async componentDidMount() {
         this.fetchSpellInfo();
+        this.fetchSpellInfo2();
         this.fetchSpellList();
     }
 
@@ -40,9 +42,30 @@ export default class SpellBook extends React.Component {
             },
             async () => {
                 const res = await axios.get('/dnd-spells.json');
-                this.setState({
-                    spellInfo: res.data,
-                    isSpellInfoLoading: false,
+                this.setState(prevState => {
+                    const { spellInfo } = prevState;
+                    return {
+                        spellInfo: Object.assign({}, spellInfo, res.data),
+                        isSpellInfoLoading: false,
+                    };
+                });
+            }
+        );
+    }
+
+    fetchSpellInfo2() {
+        this.setState(
+            {
+                isSpellInfo2Loading: true,
+            },
+            async () => {
+                const res = await axios.get('/dnd-spells-2.json');
+                this.setState(prevState => {
+                    const { spellInfo } = prevState;
+                    return {
+                        spellInfo: Object.assign({}, spellInfo, res.data),
+                        isSpellInfo2Loading: false,
+                    };
                 });
             }
         );
@@ -90,15 +113,8 @@ export default class SpellBook extends React.Component {
     }
 
     spellHandler(spellId) {
-        this.setState(prevState => {
-            if (prevState.chosenSpellId === spellId) {
-                return {
-                    chosenSpellId: null,
-                };
-            }
-            return {
-                chosenSpellId: spellId,
-            };
+        this.setState({
+            chosenSpellId: spellId,
         });
     }
 
@@ -110,12 +126,14 @@ export default class SpellBook extends React.Component {
             chosenSpellLevel,
             chosenSpellId,
             isSpellInfoLoading,
+            isSpellInfo2Loading,
             isSpellListLoading,
         } = this.state;
+
         return (
             <div>
                 <h2>{capFirst(casterClass)} Spell Book</h2>
-                {isSpellInfoLoading || isSpellListLoading ? (
+                {isSpellInfoLoading || isSpellListLoading || isSpellInfo2Loading ? (
                     <p>Loading...</p>
                 ) : (
                     <div className={css.spellBook}>
