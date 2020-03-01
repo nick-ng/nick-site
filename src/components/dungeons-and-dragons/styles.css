@@ -45,13 +45,12 @@
 .spellBook .spellNames {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: min-content;
+    grid-auto-rows: 64px;
     grid-gap: 2px;
 }
 
 .spellBook button {
     padding: 5px;
-    height: 64px;
     width: 100%;
     background-color: white;
     color: black;

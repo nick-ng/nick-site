@@ -1,12 +1,12 @@
 {
     "aaa": {
-        "name": "",
-        "school": "",
+        "name": "Aaa!",
+        "school": "transmutation",
         "level": 1,
         "castingTime": "1 action",
-        "range": "30 feet",
+        "range": "Self",
         "components": "V, S",
-        "duration": "Instantaneous",
+        "duration": "4 hours",
         "description": ""
     },
     "druidcraft": {
