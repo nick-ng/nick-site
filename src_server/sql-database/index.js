@@ -1,6 +1,7 @@
 const knex = require('knex');
 
 const bookmark = require('./bookmark');
+const countdown = require('./countdown');
 const user = require('./user');
 
 const db = knex({
@@ -11,5 +12,6 @@ const db = knex({
 
 module.exports = {
     bookmark: bookmark(db),
+    countdown: countdown(db),
     user: user(db),
 };

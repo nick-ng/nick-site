@@ -17,12 +17,12 @@ const Nav = () => (
         <NavLink icon="fa-camera-retro" to="/wedding/photos" indentLevel={1}>
             Photos
         </NavLink>
-        <NavLink icon="fa-cube" to="/pll">
-            Rubik's Cube
-        </NavLink>
-        <NavLink icon="fa-rotate-right" to="/pll" indentLevel={1}>
-            PLL Algorithms
-        </NavLink>
+        <AdminNav icon="fa-bookmark-o" to="/bookmarks">
+            Bookmarks
+        </AdminNav>
+        <AdminNav icon="fa-clock-o" to="/countdowns">
+            Countdowns
+        </AdminNav>
         <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink>
@@ -35,9 +35,12 @@ const Nav = () => (
         <AdminNav icon="fa-pencil" to="/dnd/wizardspellbook">
             Wizard Spells
         </AdminNav>
-        <AdminNav icon="fa-bookmark-o" to="/bookmarks">
-            Bookmarks
-        </AdminNav>
+        <NavLink icon="fa-cube" to="/pll">
+            Rubik's Cube
+        </NavLink>
+        <NavLink icon="fa-rotate-right" to="/pll" indentLevel={1}>
+            PLL Algorithms
+        </NavLink>
         <AdminNav icon="fa-tachometer" to="/location">
             Location
         </AdminNav>
