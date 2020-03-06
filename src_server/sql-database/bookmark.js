@@ -1,5 +1,4 @@
 const bookmarkTable = 'bookmark';
-const bookmarkColumns = ['id', 'user_id', 'url', 'name'];
 
 const getBookmarksForUser = db => userId => {
     return db

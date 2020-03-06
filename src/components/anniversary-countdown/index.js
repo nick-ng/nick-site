@@ -64,6 +64,26 @@ const ordinalAnniversary = () => {
     return 0;
 };
 
+export const getNextAnniversary = () => {
+    const currentYear = new Date().getFullYear();
+
+    for (let i = 0; i < 10000000; i++) {
+        // eslint-disable-line no-plusplus
+        const nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear + i);
+        if (nextAnniversary > new Date()) {
+            return {
+                date: nextAnniversary,
+                ordinal: ordinalAnniversary(),
+            };
+        }
+    }
+
+    return {
+        date: new Date(),
+        ordinal: '',
+    };
+};
+
 export default class AnniversaryCountdown extends React.Component {
     constructor(props) {
         super(props);

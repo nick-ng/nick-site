@@ -1,0 +1,73 @@
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-name: fadeIn;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.controls > * {
+    margin-right: 3px;
+}
+
+.countdowns {
+    display: flex;
+    flex-direction: column;
+}
+
+.countdownColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    border-bottom: 2px solid grey;
+}
+
+.countdownColumn:first-child {
+    margin-top: 0;
+}
+
+.countdownColumn:last-child {
+    border-bottom: none;
+}
+
+.countdownColumn .countdownTimer {
+    text-align: text-bottom;
+}
+
+.countdownTimer.overdue,
+.countdownRow > label.overdue {
+    color: red;
+}
+
+.countdownRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.countdownRow > label {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin-right: 5px;
+    height: 32px;
+}
+
+.countdownRow > form {
+    margin-left: 5px;
+}
