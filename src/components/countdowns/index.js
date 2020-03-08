@@ -36,7 +36,7 @@ const getStyleMargin = secondsLeft => {
     const a = getSize(secondsLeft) - 1;
 
     return {
-        margin: `calc(5px - ${a / 5}em) 0 -${a / 5}em`,
+        margin: `0 0 -${a / 5}em`,
     };
 };
 
@@ -209,27 +209,28 @@ export default class Admin extends React.Component {
                                                 className={cx(css.countdownTimer, {
                                                     [css.overdue]: days < 0,
                                                 })}
+                                                style={getStyleMargin(secondsLeft)}
                                             >
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {days}
                                                 </span>
                                                 &nbsp;
-                                                <label>{`day${getS(days)}`}</label>,&nbsp;
+                                                <label>d,&nbsp;</label>
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {`${hours}`.padStart(2, '0')}
                                                 </span>
                                                 &nbsp;
-                                                <label>{`hour${getS(hours)}`}</label>,&nbsp;
+                                                <label>h,&nbsp;</label>
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {`${minutes}`.padStart(2, '0')}
                                                 </span>
                                                 &nbsp;
-                                                <label>{`minute${getS(minutes)}`}</label>,&nbsp;
+                                                <label>m,&nbsp;</label>
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {`${seconds}`.padStart(2, '0')}
                                                 </span>
                                                 &nbsp;
-                                                <label>{`second${getS(seconds)}`}</label>
+                                                <label>s</label>
                                             </div>
                                             <div
                                                 className={css.countdownRow}
