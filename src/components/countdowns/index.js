@@ -214,23 +214,25 @@ export default class Admin extends React.Component {
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {days}
                                                 </span>
-                                                &nbsp;
-                                                <label>d,&nbsp;</label>
+                                                <label style={getStyleText2(secondsLeft)}>
+                                                    d,&nbsp;
+                                                </label>
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {`${hours}`.padStart(2, '0')}
                                                 </span>
-                                                &nbsp;
-                                                <label>h,&nbsp;</label>
+                                                <label style={getStyleText2(secondsLeft)}>
+                                                    h,&nbsp;
+                                                </label>
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {`${minutes}`.padStart(2, '0')}
                                                 </span>
-                                                &nbsp;
-                                                <label>m,&nbsp;</label>
+                                                <label style={getStyleText2(secondsLeft)}>
+                                                    m,&nbsp;
+                                                </label>
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {`${seconds}`.padStart(2, '0')}
                                                 </span>
-                                                &nbsp;
-                                                <label>s</label>
+                                                <label style={getStyleText2(secondsLeft)}>s</label>
                                             </div>
                                             <div
                                                 className={css.countdownRow}

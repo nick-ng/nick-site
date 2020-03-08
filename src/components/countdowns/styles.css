@@ -48,6 +48,10 @@
     text-align: text-bottom;
 }
 
+.countdownColumn .countdownTimer span {
+    font-family: monospace;
+}
+
 .countdownTimer.overdue,
 .countdownRow > label.overdue {
     color: red;
