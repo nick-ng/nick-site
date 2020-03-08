@@ -209,7 +209,6 @@ export default class Admin extends React.Component {
                                                 className={cx(css.countdownTimer, {
                                                     [css.overdue]: days < 0,
                                                 })}
-                                                style={getStyleMargin(secondsLeft)}
                                             >
                                                 <span style={getStyleText(secondsLeft)}>
                                                     {days}
