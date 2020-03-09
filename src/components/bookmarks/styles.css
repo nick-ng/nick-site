@@ -14,13 +14,13 @@
 }
 
 .controls {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: min-content min-content min-content;
+    gap: 3px
 }
 
-.controls > * {
-    margin-right: 3px;
+.controls > input {
+    width: 20vw;
 }
 
 .bookmarks {
