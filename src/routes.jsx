@@ -16,24 +16,6 @@ import DnDSpellBook from './components/dungeons-and-dragons/spell-book';
 import Test from './components/test';
 import Admin from './components/admin';
 
-let playing1157 = false;
-
-const isIt1157 = () => {
-    const now = new Date();
-    const hour = now.getHours() % 12;
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-
-    if (hour === 11 && minutes === 56 && seconds > 15) {
-        !playing1157 && window.open('https://www.youtube.com/watch?v=ucmwSvy3Vlc', '_blank');
-        playing1157 = true;
-        return;
-    }
-    playing1157 = false;
-};
-
-setInterval(isIt1157, 1000);
-
 export default function App() {
     return (
         <Router>
