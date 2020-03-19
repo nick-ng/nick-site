@@ -102,13 +102,14 @@ export default class Admin extends React.Component {
                     const minutes = Math.abs(Math.floor((secondsLeft % 3600) / 60));
                     const seconds = Math.abs(Math.floor(secondsLeft % 60));
 
-                    return Object.assign({}, countdown, {
+                    return {
+                        ...countdown,
                         days,
                         hours,
                         minutes,
                         seconds,
                         secondsLeft,
-                    });
+                    };
                 })
                 // .filter(countdown => countdown.days > -5)
                 .sort((a, b) => a.secondsLeft - b.secondsLeft);
@@ -123,9 +124,10 @@ export default class Admin extends React.Component {
         this.setState(prevState => {
             const { visibleEditors } = prevState;
             return {
-                visibleEditors: Object.assign({}, visibleEditors, {
+                visibleEditors: {
+                    visibleEditors,
                     [id]: !visibleEditors[id],
-                }),
+                },
             };
         });
     }

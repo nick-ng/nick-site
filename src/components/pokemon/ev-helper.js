@@ -128,10 +128,14 @@ export default class PokemonEVHelper extends React.Component {
                             for (const evs of chunk) {
                                 const total = getTotalEVs(evs);
                                 const spare = MAX_EVS - total;
-                                const tempPokemon = Object.assign({}, yourPokemon, {
+                                const tempPokemon = {
+                                    ...yourPokemon,
                                     display: `${yourPokemon.species} ${yourPokemon.evs.nature} ${evs.hp}/x/${evs.def}/x/${evs.spd}/x`,
-                                    evs: Object.assign({}, evs, { nature: yourPokemon.evs.nature }),
-                                });
+                                    evs: {
+                                        ...evs,
+                                        nature: yourPokemon.evs.nature,
+                                    },
+                                };
                                 const calculations = processQueue2(tempPokemon, opponents);
                                 const a = calculations.reduce((p, calc) => p + calc.koChance, 0);
                                 const averageKoChance = a / calculations.length;

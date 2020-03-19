@@ -1,6 +1,6 @@
 import { BattlePokedex } from './showdown/pokedex';
 import { BattleMovedex } from './showdown/moves';
-import typeInfo from './type-info';
+import typeInfo from './type-info.json';
 
 const { order, types } = typeInfo;
 export const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
@@ -34,11 +34,15 @@ export const getMoveInfo = (move, dynamax) => {
         return BattleMovedex[lowerCaseNoSpace(move)];
     }
     if (move.name && !move.basePower) {
-        return Object.assign({}, move, BattleMovedex[lowerCaseNoSpace(move.name)]);
+        return {
+            ...move,
+            ...BattleMovedex[lowerCaseNoSpace(move.name)],
+        };
     }
-    return Object.assign({}, move, {
+    return {
+        ...move,
         name: move.name || `${move.category} ${move.basePower} ${move.type}`,
-    });
+    };
 };
 
 export const getDamageFromStats = (
@@ -185,10 +189,12 @@ export const getFinalStats = ({ species, ivs, evs, level = 50 }) => {
 export const hydratePokemon = pokemon => {
     const { species, ivs, evs, level = 50 } = pokemon;
     const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
-    return Object.assign({}, pokedexEntry, pokemon, {
+    return {
+        ...pokedexEntry,
+        ...pokemon,
         species: pokedexEntry.species,
         finalStats: getFinalStats(pokemon),
-    });
+    };
 };
 
 export const getModifiers = (pokemon, move) => {
