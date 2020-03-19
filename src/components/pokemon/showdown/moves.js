@@ -29,7 +29,7 @@ sound: Has no effect on Pokemon with the Soundproof Ability.
 'use strict';
 
 /**@type {{[k: string]: MoveData}} */
-let BattleMovedex = {
+export let BattleMovedex = {
     '10000000voltthunderbolt': {
         num: 719,
         accuracy: true,
@@ -23021,5 +23021,3 @@ let BattleMovedex = {
         contestType: 'Cool',
     },
 };
-
-exports.BattleMovedex = BattleMovedex;

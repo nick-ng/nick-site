@@ -45,7 +45,10 @@ export default class SpellBook extends React.Component {
                 this.setState(prevState => {
                     const { spellInfo } = prevState;
                     return {
-                        spellInfo: Object.assign({}, spellInfo, res.data),
+                        spellInfo: {
+                            ...spellInfo,
+                            ...res.data,
+                        },
                         isSpellInfoLoading: false,
                     };
                 });
@@ -63,7 +66,10 @@ export default class SpellBook extends React.Component {
                 this.setState(prevState => {
                     const { spellInfo } = prevState;
                     return {
-                        spellInfo: Object.assign({}, spellInfo, res.data),
+                        spellInfo: {
+                            ...spellInfo,
+                            ...res.data,
+                        },
                         isSpellInfo2Loading: false,
                     };
                 });

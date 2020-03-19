@@ -44,9 +44,10 @@ export default class Admin extends React.Component {
         this.setState(prevState => {
             const { visibleEditors } = prevState;
             return {
-                visibleEditors: Object.assign({}, visibleEditors, {
+                visibleEditors: {
+                    ...visibleEditors,
                     [id]: !visibleEditors[id],
-                }),
+                },
             };
         });
     }

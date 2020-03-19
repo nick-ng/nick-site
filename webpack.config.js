@@ -1,60 +1,54 @@
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const plugins = [
-    new HtmlWebpackPlugin({
-        title: 'Nick Ng',
-        favicon: `${__dirname}/favicon.ico`,
-        template: './index.html',
-        inject: 'true',
-    }),
-];
-if (process.env.NODE_ENV === 'production') {
-    console.log('Production build!'); // eslint-disable-line no-console
-    plugins.push(new webpack.optimize.UglifyJsPlugin());
-    plugins.push(
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify('production'),
-            },
-        })
-    );
-}
-
 module.exports = {
+    mode: process.env.NODE_ENV || 'production',
     devtool: 'source-map',
-    entry: './src/entry.js',
+    entry: './src/entry.jsx',
     output: {
         path: `${__dirname}/dist`,
         filename: 'bundle.js',
         publicPath: '/',
     },
+    resolve: {
+        extensions: ['.js', '.jsx'],
+    },
     module: {
-        loaders: [
+        rules: [
+            { test: /\.css$/, use: 'style-loader' },
             {
                 test: /\.css$/,
-                loader: 'style-loader',
-            },
-            {
-                test: /\.css$/,
-                loader: 'css-loader',
-                options: {
-                    modules: {
-                        mode: 'local',
-                        localIdentName: '[path][name]__[local]--[hash:base64:5]',
+                use: {
+                    loader: 'css-loader',
+                    options: {
+                        modules: {
+                            mode: 'local',
+                            localIdentName: '[path][name]_[local]-[hash:base64:7]',
+                        },
                     },
                 },
             },
             {
-                test: /\.js?$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/,
-            },
-            {
-                test: /\.json$/,
-                loader: 'json-loader',
+                test: /\.m?js(x?)$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-react', '@babel/preset-env'],
+                        plugins: [
+                            '@babel/plugin-syntax-dynamic-import',
+                            '@babel/transform-runtime',
+                        ],
+                    },
+                },
             },
         ],
     },
-    plugins,
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: 'Nick Ng',
+            favicon: `${__dirname}/favicon.ico`,
+            template: './index.html',
+            inject: 'true',
+        }),
+    ],
 };

@@ -4,13 +4,15 @@ import axios from 'axios';
 axios.interceptors.request.use(config => {
     const adminKey = localStorage.getItem('adminKey');
     if (adminKey) {
-        const headers = Object.assign(config.headers, {
+        const headers = {
+            ...config.headers,
             'x-admin-key': adminKey,
-        });
+        };
 
-        return Object.assign(config, {
+        return {
+            ...config,
             headers,
-        });
+        };
     }
     return config;
 });
