@@ -18,7 +18,7 @@ const evaluateAnswer = (aType, dType, answer) => {
     }
 };
 
-const FlashCard = ({ aType, dType, answer, answerHandler }) => {
+const PokemonFlashCard = ({ aType, dType, answer, answerHandler }) => {
     const evaluation = evaluateAnswer(aType, dType, answer);
     return (
         <div className={css.cardContainer}>
@@ -42,4 +42,4 @@ const FlashCard = ({ aType, dType, answer, answerHandler }) => {
     );
 };
 
-export default FlashCard;
+export default PokemonFlashCard;
