@@ -19,7 +19,7 @@
         "dark",
         "fairy"
     ],
-    "types": {
+    "matchUps": {
         "normal": {
             "normal": 1,
             "fighting": 1,

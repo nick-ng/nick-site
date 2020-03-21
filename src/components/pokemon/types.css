@@ -3,6 +3,7 @@
 }
 
 .fighting {
+    color: white;
     background-color: #c03028;
 }
 
@@ -11,6 +12,7 @@
 }
 
 .poison {
+    color: white;
     background-color: #a040a0;
 }
 
@@ -27,6 +29,7 @@
 }
 
 .ghost {
+    color: white;
     background-color: #705898;
 }
 
@@ -59,10 +62,12 @@
 }
 
 .dragon {
+    color: white;
     background-color: #7038f8;
 }
 
 .dark {
+    color: white;
     background-color: #705848;
 }
 

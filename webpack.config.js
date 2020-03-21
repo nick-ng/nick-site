@@ -1,5 +1,11 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+let siteTitle = 'Nick Ng';
+
+if (process.env.NODE_ENV !== 'production') {
+    siteTitle = `${siteTitle} - ${process.env.NODE_ENV || 'dev'}`;
+}
+
 module.exports = {
     mode: process.env.NODE_ENV || 'production',
     devtool: 'source-map',
@@ -36,6 +42,7 @@ module.exports = {
                         presets: ['@babel/preset-react', '@babel/preset-env'],
                         plugins: [
                             '@babel/plugin-syntax-dynamic-import',
+                            '@babel/plugin-proposal-class-properties',
                             '@babel/transform-runtime',
                         ],
                     },
@@ -45,7 +52,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Nick Ng',
+            title: siteTitle,
             favicon: `${__dirname}/favicon.ico`,
             template: './index.html',
             inject: 'true',
