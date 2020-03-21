@@ -10,7 +10,7 @@ module.exports = {
         publicPath: '/',
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.tsx', '.ts', '.jsx', '.js'],
     },
     module: {
         rules: [
@@ -26,6 +26,11 @@ module.exports = {
                         },
                     },
                 },
+            },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
             },
             {
                 test: /\.m?js(x?)$/,
