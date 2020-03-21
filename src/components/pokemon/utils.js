@@ -2,7 +2,7 @@ import { BattlePokedex } from './showdown/pokedex';
 import { BattleMovedex } from './showdown/moves';
 import typeInfo from './type-info.json';
 
-const { order, types } = typeInfo;
+const { order, matchUps } = typeInfo;
 export const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 
 // GameFreak rounds DOWN on .5
@@ -17,7 +17,7 @@ export const getEffectiveness = (attackingType, defendingType) => {
     const att = attackingType.toLocaleLowerCase('en');
     const def = defendingType.toLocaleLowerCase('en');
     if (order.includes(att) && order.includes(def)) {
-        return types[att][def];
+        return matchUps[att][def];
     }
     return -1;
 };

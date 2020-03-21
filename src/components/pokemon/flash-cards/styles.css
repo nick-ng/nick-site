@@ -1,0 +1,75 @@
+.pokemonFlashCards {
+    display: flex;
+    flex-direction: column;
+}
+
+.cardContainer {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid gray;
+    width: 350px;
+    font-weight: bold;
+}
+
+@media screen and (max-device-width: 750px) {
+    .cardContainer {
+        width: 100%;
+    }
+}
+
+.question {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    flex-basis: 200px;
+}
+
+.question > div {
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.question > .role {
+    padding: 0 10px;
+}
+
+.question > .type {
+    justify-content: center;
+    text-transform: capitalize;
+}
+
+.answerHistory {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.answer,
+.answerSelector {
+    flex-grow: 1;
+}
+
+.answer {
+    text-transform: capitalize;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.answer.correct {
+    background-color: lime;
+}
+
+.answer.wrong {
+    background-color: pink;
+}
+
+.answerSelector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.answerSelector > button {
+    font-weight: bold;
+    font-size: 18px;
+}

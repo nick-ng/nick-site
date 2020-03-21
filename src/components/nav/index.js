@@ -23,6 +23,9 @@ const Nav = () => (
         <AdminNav icon="fa-clock-o" to="/countdowns">
             Countdowns
         </AdminNav>
+        <NavLink icon="fa-gamepad" to="/pokemon/flashcards">
+            Flash Cards
+        </NavLink>
         <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink>

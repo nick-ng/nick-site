@@ -1,6 +1,5 @@
 import React from 'react';
 
-import pokemonTypes from './type-info.json';
 import { BattlePokedex } from './showdown/pokedex';
 import { getDamageFromStats, getFinalStat, getFinalStats } from './utils';
 
