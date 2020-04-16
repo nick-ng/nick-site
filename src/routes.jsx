@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Switch, Route as R } from 'react-router-dom';
 import css from './styles.css';
 
 import Nav from './components/nav';
-import PermuteLastLayerPage from './components/permute-last-layer';
+import OrientLastLayer from './components/rubiks-cube/orient-last-layer';
+import PermuteLastLayerPage from './components/rubiks-cube/permute-last-layer';
 import Bookmarks from './components/bookmarks';
 import Countdowns from './components/countdowns';
 import Home from './components/home';
@@ -32,6 +33,9 @@ export default function App() {
                         <R path="/pll">
                             <PermuteLastLayerPage />
                         </R>
+                        <R path="/oll">
+                            <OrientLastLayer />
+                        </R>
                         <R path="/bookmarks">
                             <Bookmarks />
                         </R>
@@ -48,13 +52,13 @@ export default function App() {
                             <PokemonFlashCards />
                         </R>
                         <R path="/dnd/druidspellbook">
-                            <DnDSpellBook casterClass="druid" />
+                            <DnDSpellBook casterClass="druid" key="druid" />
                         </R>
                         <R path="/dnd/paladinspellbook">
-                            <DnDSpellBook casterClass="paladin" />
+                            <DnDSpellBook casterClass="paladin" key="paladin" />
                         </R>
                         <R path="/dnd/wizardspellbook">
-                            <DnDSpellBook casterClass="wizard" />
+                            <DnDSpellBook casterClass="wizard" key="wizard" />
                         </R>
                         <R path="/test">
                             <Test />

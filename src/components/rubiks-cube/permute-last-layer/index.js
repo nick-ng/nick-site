@@ -1,6 +1,6 @@
 import React from 'react';
 
-import css from './styles.css';
+import css from '../styles.css';
 
 const PLL_GFYCATS = {
     f: {
