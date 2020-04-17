@@ -6,6 +6,7 @@ import css from './styles.css';
 import Nav from './components/nav';
 import OrientLastLayer from './components/rubiks-cube/orient-last-layer';
 import PermuteLastLayerPage from './components/rubiks-cube/permute-last-layer';
+import CubeTimer from './components/rubiks-cube/timer';
 import Bookmarks from './components/bookmarks';
 import Countdowns from './components/countdowns';
 import Home from './components/home';
@@ -35,6 +36,9 @@ export default function App() {
                         </R>
                         <R path="/oll">
                             <OrientLastLayer />
+                        </R>
+                        <R path="/cubetimer">
+                            <CubeTimer />
                         </R>
                         <R path="/bookmarks">
                             <Bookmarks />

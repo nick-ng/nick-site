@@ -47,6 +47,9 @@ const Nav = () => (
         <NavLink icon="fa-rotate-right" to="/oll" indentLevel={1}>
             OLL Algorithms
         </NavLink>
+        <NavLink icon="fa-clock-o" to="/cubetimer" indentLevel={1}>
+            Cube Timer
+        </NavLink>
         <AdminNav icon="fa-tachometer" to="/location">
             Location
         </AdminNav>

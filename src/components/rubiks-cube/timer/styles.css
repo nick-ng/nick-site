@@ -1,0 +1,31 @@
+.cubeTimer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timerDisplay {
+    flex-basis: 20vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.timerTime {
+    font-family: monospace;
+    font-size: 15vw;
+}
+
+.timerStatus {
+    font-size: 1.5em;
+    text-transform: capitalize;
+}
+
+.cubeTimer button {
+    width: 100%;
+}
+
+.cubeScrambleHelper {
+    margin: 10px 0;
+}
