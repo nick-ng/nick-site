@@ -1,9 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+import { v4 as uuid } from 'uuid';
 
 import css from './styles.css';
 
 import ScrambleHelper from './scramble';
+import TimerHistory from './history';
+
+const LOCAL_STORAGE_KEY = 'CUBE_TIMER_STORAGE';
 
 export default class CubeTimer extends React.Component {
     constructor(props) {
@@ -13,14 +17,19 @@ export default class CubeTimer extends React.Component {
             key1Pressed: false,
             key2Pressed: false,
             key1: 'Numpad1',
-            key2: 'Numpad5',
+            key2: 'Numpad9',
+            key12: 'Space',
             timerState: 'standby',
             timerStart: null,
             timerEnd: null,
+            timerTimeout: null,
             timerInterval: null,
             timerProgress: null,
+            timerHistory: localStorage.getItem(LOCAL_STORAGE_KEY) || '[]',
             scramble: '',
             cubeString: '',
+            nextScramble: '',
+            nextCubeString: '',
         };
     }
 
@@ -48,16 +57,31 @@ export default class CubeTimer extends React.Component {
     }
 
     getNewScramble = async () => {
-        const res = await axios.get('/api/cube-3x3-scramble');
-        const { scramble, cubeString } = res.data;
+        const { nextScramble, nextCubeString } = this.state;
+
+        if (nextScramble && nextCubeString) {
+            this.setState({
+                scramble: nextScramble,
+                cubeString: nextCubeString,
+            });
+        } else {
+            const res = await axios.get('/api/cube-3x3-scramble');
+            const { scramble, cubeString } = res.data;
+            this.setState({
+                scramble,
+                cubeString,
+            });
+        }
+        const res2 = await axios.get('/api/cube-3x3-scramble');
+        const { scramble: scramble2, cubeString: cubeString2 } = res2.data;
         this.setState({
-            scramble,
-            cubeString,
+            nextScramble: scramble2,
+            nextCubeString: cubeString2,
         });
     };
 
     handleKeyDown = event => {
-        const { key1, key2 } = this.state;
+        const { key1, key2, key12 } = this.state;
         const { code } = event;
         switch (code) {
             case key1:
@@ -76,13 +100,22 @@ export default class CubeTimer extends React.Component {
                     this.updateTimerState
                 );
                 break;
+            case key12:
+                this.setState(
+                    {
+                        key1Pressed: true,
+                        key2Pressed: true,
+                    },
+                    this.updateTimerState
+                );
+                break;
             default:
             // do nothing
         }
     };
 
     handleKeyUp = event => {
-        const { key1, key2 } = this.state;
+        const { key1, key2, key12 } = this.state;
         const { code } = event;
         switch (code) {
             case key1:
@@ -96,6 +129,15 @@ export default class CubeTimer extends React.Component {
             case key2:
                 this.setState(
                     {
+                        key2Pressed: false,
+                    },
+                    this.updateTimerState
+                );
+                break;
+            case key12:
+                this.setState(
+                    {
+                        key1Pressed: false,
                         key2Pressed: false,
                     },
                     this.updateTimerState
@@ -117,11 +159,33 @@ export default class CubeTimer extends React.Component {
     };
 
     updateTimerState = () => {
-        const { key1Pressed, key2Pressed, timerState } = this.state;
+        const { key1Pressed, key2Pressed, timerState, timerTimeout } = this.state;
         if (timerState === 'standby' && key1Pressed && key2Pressed) {
+            this.setState(
+                {
+                    timerState: 'wait',
+                },
+                () => {
+                    const timerTimeout = setTimeout(() => {
+                        this.setState(
+                            {
+                                timerState: 'ready',
+                                timerProgress: 0,
+                                timerTimeout: null,
+                            },
+                            this.updateTimerState
+                        );
+                    }, 1000);
+                    this.setState({
+                        timerTimeout,
+                    });
+                }
+            );
+        } else if (timerState === 'wait' && (!key1Pressed || !key2Pressed)) {
+            clearTimeout(timerTimeout);
             this.setState({
-                timerState: 'ready',
-                timerProgress: 0,
+                timerState: 'standby',
+                timerTimeout: null,
             });
         } else if (timerState === 'ready' && (!key1Pressed || !key2Pressed)) {
             this.setState({
@@ -129,20 +193,24 @@ export default class CubeTimer extends React.Component {
                 timerStart: new Date(),
             });
         } else if (timerState === 'run' && key1Pressed && key2Pressed) {
-            this.setState({
-                timerState: 'stop',
-                timerEnd: new Date(),
-            });
+            this.setState(
+                {
+                    timerState: 'stop',
+                    timerEnd: new Date(),
+                },
+                this.storeTime
+            );
         }
     };
 
-    handleResetTimer = () => {
+    handleResetTimer = e => {
         this.setState({
             timerState: 'standby',
             scramble: '',
             cubeString: '',
         });
         this.getNewScramble();
+        e.target.blur();
     };
 
     getTime = () => {
@@ -163,8 +231,35 @@ export default class CubeTimer extends React.Component {
         return '0';
     };
 
+    storeTime = () => {
+        const { scramble, cubeString, timerHistory } = this.state;
+        const timerHistoryObj = JSON.parse(timerHistory);
+        timerHistoryObj.push({
+            id: uuid(),
+            scramble,
+            cubeString,
+            time: this.getTime(),
+            createdAt: new Date(),
+        });
+        const newTimeHistory = JSON.stringify(timerHistoryObj);
+        this.setState({
+            timerHistory: newTimeHistory,
+        });
+        localStorage.setItem(LOCAL_STORAGE_KEY, newTimeHistory);
+    };
+
+    removeTime = id => {
+        const { timerHistory } = this.state;
+        const timerHistoryObj = JSON.parse(timerHistory);
+        const newTimeHistory = JSON.stringify(timerHistoryObj.filter(a => a.id !== id));
+        this.setState({
+            timerHistory: newTimeHistory,
+        });
+        localStorage.setItem(LOCAL_STORAGE_KEY, newTimeHistory);
+    };
+
     render() {
-        const { timerState, scramble, cubeString } = this.state;
+        const { timerHistory, timerState, scramble, cubeString } = this.state;
 
         return (
             <div className={css.cubeTimer}>
@@ -179,6 +274,10 @@ export default class CubeTimer extends React.Component {
                 </div>
                 <button onClick={this.handleResetTimer}>Reset</button>
                 <ScrambleHelper cubeString={cubeString} scramble={scramble} />
+                <TimerHistory
+                    timerHistory={JSON.parse(timerHistory)}
+                    removeTime={this.removeTime}
+                />
             </div>
         );
     }

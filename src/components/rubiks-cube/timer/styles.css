@@ -5,7 +5,7 @@
 }
 
 .timerDisplay {
-    flex-basis: 20vw;
+    flex-basis: 15vw;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -14,7 +14,7 @@
 
 .timerTime {
     font-family: monospace;
-    font-size: 15vw;
+    font-size: 10vw;
 }
 
 .timerStatus {

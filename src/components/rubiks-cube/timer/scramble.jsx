@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import chunk from 'lodash/chunk';
 
 import css from './styles.css';
