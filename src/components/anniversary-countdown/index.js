@@ -1,6 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 
-const weddingAnniversary = new Date('2018-09-23T00:00:00+1200');
+const WEDDING_ANNIVERSARY = new Date('2018-09-23T00:00:00+1200');
+
+const MonoSpan = styled.span`
+    font-family: monospace;
+`;
 
 const conversionFactors = [
     {
@@ -44,7 +49,7 @@ const millisecondsUntilAnniversary = () => {
 
     for (let i = 0; i < 10000000; i++) {
         // eslint-disable-line no-plusplus
-        const nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear + i);
+        const nextAnniversary = new Date(WEDDING_ANNIVERSARY).setFullYear(currentYear + i);
         if (nextAnniversary > new Date()) {
             return nextAnniversary - new Date();
         }
@@ -52,11 +57,11 @@ const millisecondsUntilAnniversary = () => {
 };
 
 const ordinalAnniversary = () => {
-    const anniversaryYear = weddingAnniversary.getFullYear();
+    const anniversaryYear = WEDDING_ANNIVERSARY.getFullYear();
 
     for (let i = 0; i < 10000000; i++) {
         // eslint-disable-line no-plusplus
-        const nextAnniversary = new Date(weddingAnniversary).setFullYear(anniversaryYear + i);
+        const nextAnniversary = new Date(WEDDING_ANNIVERSARY).setFullYear(anniversaryYear + i);
         if (nextAnniversary > new Date()) {
             return getGetOrdinal(i);
         }
@@ -69,7 +74,7 @@ export const getNextAnniversary = () => {
 
     for (let i = 0; i < 10000000; i++) {
         // eslint-disable-line no-plusplus
-        const nextAnniversary = new Date(weddingAnniversary).setFullYear(currentYear + i);
+        const nextAnniversary = new Date(WEDDING_ANNIVERSARY).setFullYear(currentYear + i);
         if (nextAnniversary > new Date()) {
             return {
                 date: nextAnniversary,
@@ -94,6 +99,7 @@ export default class AnniversaryCountdown extends React.Component {
             timeFormat: parseInt(urlParams.get('tf'), 10),
             precision: parseInt(urlParams.get('p'), 10),
             timeString: '',
+            timeUnit: '',
             ordinal: '0th',
             intervalId: null,
         };
@@ -138,19 +144,26 @@ export default class AnniversaryCountdown extends React.Component {
                 actualPrecision > 0 ? `.${(time % 10).toFixed(actualPrecision).slice(2)}` : '';
 
             this.setState({
-                timeString: `${ii}${dd} ${conversionFactors[timeFormat].name}`,
+                timeString: `${ii}${dd}`,
+                timeUnit: conversionFactors[timeFormat].name,
             });
         } else {
             this.setState({
                 timeString: `${milliseconds.toLocaleString({
                     useGrouping: true,
-                })} milliseconds`,
+                })}`,
+                timeUnit: 'milliseconds',
             });
         }
     }
 
     render() {
-        const { ordinal, timeString } = this.state;
-        return <p>{`Only ${timeString} until our ${ordinal} wedding anniversary!`}</p>;
+        const { ordinal, timeString, timeUnit } = this.state;
+        return (
+            <p>
+                Only <MonoSpan>{timeString}</MonoSpan> <span>{timeUnit}</span> until our{' '}
+                <span>{ordinal}</span> wedding anniversary!
+            </p>
+        );
     }
 }
