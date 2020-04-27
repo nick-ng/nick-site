@@ -14,6 +14,7 @@ import WeddingPhotos from './components/wedding-photos';
 import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
 import PokemonEVHelper from './components/pokemon/ev-helper';
+import PokemonNotes from './components/pokemon/notes';
 import DnDSpellBook from './components/dungeons-and-dragons/spell-book';
 import Test from './components/test';
 import Admin from './components/admin';
@@ -54,6 +55,9 @@ export default function App() {
                         </R>
                         <R path="/pokemon/flashcards">
                             <PokemonFlashCards />
+                        </R>
+                        <R path="/pokemon/notes">
+                            <PokemonNotes />
                         </R>
                         <R path="/dnd/druidspellbook">
                             <DnDSpellBook casterClass="druid" key="druid" />

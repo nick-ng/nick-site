@@ -29,6 +29,9 @@ const Nav = () => (
         <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink>
+        <NavLink icon="fa-gamepad" to="/pokemon/notes">
+            Pokemon Notes
+        </NavLink>
         <NavLink icon="fa-pencil" to="/dnd/druidspellbook">
             Druid Spells
         </NavLink>
