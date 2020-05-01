@@ -2,6 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import chunk from 'lodash/chunk';
 
+const Button = styled.button`
+    padding: 5px 10px;
+    border: solid 1px grey;
+    border-radius: 3px;
+    color: ${({ invertColours }) => (invertColours ? 'white' : 'black')};
+    background-color: ${({ invertColours }) => (invertColours ? 'darkslategrey' : 'white')};
+    ${props => (props.invertColours ? 'font-weight: bold;' : '')}
+`;
+
 const TimerHistoryContainer = styled.div`
     margin-top: 10px;
     display: grid;
@@ -14,6 +23,21 @@ const AO5 = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+`;
+
+const AO5Header = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1em 0;
+
+    h3 {
+        margin: 0;
+    }
+
+    ${Button} {
+        margin-left: 1em;
+    }
 `;
 
 const Times = styled.div`
@@ -64,16 +88,7 @@ const ScrambleTooltip = styled.div`
     }
 `;
 
-const Button = styled.button`
-    padding: 5px 10px;
-    border: solid 1px grey;
-    border-radius: 3px;
-    color: ${({ invertColours }) => (invertColours ? 'white' : 'black')};
-    background-color: ${({ invertColours }) => (invertColours ? 'darkslategrey' : 'white')};
-    ${props => (props.invertColours ? 'font-weight: bold;' : '')}
-`;
-
-const TimerHistory = ({ removeTime, timerHistory, togglePenalty }) => {
+const TimerHistory = ({ removeTime, storeTime, timerHistory, togglePenalty }) => {
     const ao5s = chunk(
         timerHistory.sort((a, b) => {
             const dateA = new Date(a.createdAt);
@@ -113,7 +128,18 @@ const TimerHistory = ({ removeTime, timerHistory, togglePenalty }) => {
 
                 return (
                     <AO5 key={ao5.map(a => a.id).join('-')}>
-                        <h3>{average}</h3>
+                        <AO5Header>
+                            <h3>{average}</h3>
+                            {ao5.length < 5 && (
+                                <Button
+                                    onClick={() => {
+                                        storeTime(9999, 5 - ao5.length);
+                                    }}
+                                >
+                                    New AO5
+                                </Button>
+                            )}
+                        </AO5Header>
                         <Times>
                             {ao5.map(({ id, time, scramble, penalty }) => (
                                 <>
