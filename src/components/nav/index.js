@@ -26,9 +26,9 @@ const Nav = () => (
         <NavLink icon="fa-gamepad" to="/pokemon/flashcards">
             Flash Cards
         </NavLink>
-        <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
+        {/* <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
-        </NavLink>
+        </NavLink> */}
         <NavLink icon="fa-gamepad" to="/pokemon/notes">
             Pokemon Notes
         </NavLink>
