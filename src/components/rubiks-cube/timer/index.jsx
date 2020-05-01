@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
 import css from './styles.css';
@@ -8,6 +9,21 @@ import ScrambleHelper from './scramble';
 import TimerHistory from './history';
 
 const LOCAL_STORAGE_KEY = 'CUBE_TIMER_STORAGE';
+const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
+
+const LabelH = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`;
+
+const TimerDisplay = styled.div`
+    flex-basis: 15vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`;
 
 export default class CubeTimer extends React.Component {
     constructor(props) {
@@ -30,6 +46,8 @@ export default class CubeTimer extends React.Component {
             cubeString: '',
             nextScramble: '',
             nextCubeString: '',
+            manualEntry: localStorage.getItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY) || false,
+            manualValue: '',
         };
     }
 
@@ -231,14 +249,14 @@ export default class CubeTimer extends React.Component {
         return '0';
     };
 
-    storeTime = () => {
+    storeTime = (time = null) => {
         const { scramble, cubeString, timerHistory } = this.state;
         const timerHistoryObj = JSON.parse(timerHistory);
         timerHistoryObj.push({
             id: uuid(),
             scramble,
             cubeString,
-            time: this.getTime(),
+            time: typeof time === 'number' ? time : this.getTime(),
             createdAt: new Date(),
         });
         const newTimeHistory = JSON.stringify(timerHistoryObj);
@@ -258,25 +276,87 @@ export default class CubeTimer extends React.Component {
         localStorage.setItem(LOCAL_STORAGE_KEY, newTimeHistory);
     };
 
+    togglePenalty = id => {
+        const { timerHistory } = this.state;
+        const timerHistoryObj = JSON.parse(timerHistory);
+        const penaltyTime = timerHistoryObj.filter(a => a.id === id)[0];
+        penaltyTime.penalty = !penaltyTime.penalty;
+        const newTimeHistory = JSON.stringify(
+            timerHistoryObj.filter(a => a.id !== id).concat(penaltyTime)
+        );
+        this.setState({
+            timerHistory: newTimeHistory,
+        });
+        localStorage.setItem(LOCAL_STORAGE_KEY, newTimeHistory);
+    };
+
+    toggleManualEntry = () => {
+        this.setState(prevState => {
+            localStorage.setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, !prevState.manualEntry);
+            return {
+                manualEntry: !prevState.manualEntry,
+            };
+        });
+    };
+
+    handleManualInput = event => {
+        this.setState({
+            manualValue: event.target.value,
+        });
+    };
+
+    handleManualEntrySubmit = event => {
+        event.preventDefault();
+
+        const { manualValue } = this.state;
+        if (parseFloat(manualValue)) {
+            this.storeTime(parseFloat(manualValue));
+            this.handleResetTimer();
+        } else if ('dnf'.localeCompare(manualValue, 'en', { sensitivity: 'accent' }) === 0) {
+            this.storeTime(9999);
+            this.handleResetTimer();
+        }
+    };
+
     render() {
-        const { timerHistory, timerState, scramble, cubeString } = this.state;
+        const {
+            timerHistory,
+            timerState,
+            scramble,
+            cubeString,
+            manualEntry,
+            manualValue,
+        } = this.state;
 
         return (
             <div className={css.cubeTimer}>
                 <h2>Cube Timer</h2>
-                <p>Press Numpad 1 and 5 together to start and stop.</p>
-                <div className={css.timerDisplay}>
-                    {['run', 'stop'].includes(timerState) ? (
-                        <span className={css.timerTime}>{this.getFormatedTime()}</span>
+                <LabelH>
+                    <input type="checkbox" checked={manualEntry} onClick={this.toggleManualEntry} />
+                    Manual Entry
+                </LabelH>
+                <TimerDisplay>
+                    {manualEntry ? (
+                        <form onSubmit={this.handleManualEntrySubmit}>
+                            <input onChange={this.handleManualInput} value={manualValue} />
+                        </form>
                     ) : (
-                        <span className={css.timerStatus}>{timerState}</span>
+                        <>
+                            <p>Press space to start and stop.</p>
+                            {['run', 'stop'].includes(timerState) ? (
+                                <span className={css.timerTime}>{this.getFormatedTime()}</span>
+                            ) : (
+                                <span className={css.timerStatus}>{timerState}</span>
+                            )}
+                        </>
                     )}
-                </div>
-                <button onClick={this.handleResetTimer}>Reset</button>
+                </TimerDisplay>
+                <button onClick={this.handleResetTimer}>Next Scramble</button>
                 <ScrambleHelper cubeString={cubeString} scramble={scramble} />
                 <TimerHistory
                     timerHistory={JSON.parse(timerHistory)}
                     removeTime={this.removeTime}
+                    togglePenalty={this.togglePenalty}
                 />
             </div>
         );
