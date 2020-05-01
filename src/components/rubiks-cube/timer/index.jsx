@@ -234,7 +234,9 @@ export default class CubeTimer extends React.Component {
             cubeString: '',
         });
         this.getNewScramble();
-        e.target.blur();
+        if (e) {
+            e.target.blur();
+        }
     };
 
     getTime = () => {
@@ -255,17 +257,26 @@ export default class CubeTimer extends React.Component {
         return '0';
     };
 
-    storeTime = (time = null) => {
+    storeTime = (time = null, n = 1) => {
         const { scramble, cubeString, timerHistory } = this.state;
         const timerHistoryObj = JSON.parse(timerHistory);
-        timerHistoryObj.push({
-            id: uuid(),
-            scramble,
-            cubeString,
-            time: typeof time === 'number' ? time : this.getTime(),
-            createdAt: new Date(),
-        });
-        const newTimeHistory = JSON.stringify(timerHistoryObj);
+        for (let i = 0; i < n; i++) {
+            timerHistoryObj.push({
+                id: uuid(),
+                scramble: i === 0 ? scramble : '',
+                cubeString: i === 0 ? cubeString : '',
+                time: typeof time === 'number' ? time : this.getTime(),
+                createdAt: new Date(),
+            });
+        }
+        const newTimeHistoryObj = timerHistoryObj
+            .sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                return dateA - dateB;
+            })
+            .slice(0, 10000);
+        const newTimeHistory = JSON.stringify(newTimeHistoryObj);
         this.setState({
             timerHistory: newTimeHistory,
         });
@@ -372,6 +383,7 @@ export default class CubeTimer extends React.Component {
                     timerHistory={JSON.parse(timerHistory)}
                     removeTime={this.removeTime}
                     togglePenalty={this.togglePenalty}
+                    storeTime={this.storeTime}
                 />
             </div>
         );

@@ -10,7 +10,7 @@
         "dev": "concurrently npm:back npm:front",
         "eslint": "eslint ./src",
         "prettier-fix": "prettier --write \"**/*.js\"",
-        "front": "webpack --watch",
+        "front": "webpack --watch --display verbose",
         "heroku-postbuild": "npm run knex-migrate-prod && npm run build",
         "knex-migrate-prod": "knex migrate:latest --env production",
         "knex-migrate-stage": "knex migrate:latest --env staging --verbose",
