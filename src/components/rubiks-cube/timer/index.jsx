@@ -18,11 +18,17 @@ const LabelH = styled.div`
 `;
 
 const TimerDisplay = styled.div`
-    flex-basis: 15vw;
+    flex-basis: 8em;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+`;
+
+const ManualEntryInput = styled.input`
+    font-size: 5em;
+    text-align: center;
+    width: 30vw;
 `;
 
 export default class CubeTimer extends React.Component {
@@ -312,9 +318,15 @@ export default class CubeTimer extends React.Component {
         if (parseFloat(manualValue)) {
             this.storeTime(parseFloat(manualValue));
             this.handleResetTimer();
+            this.setState({
+                manualValue: '',
+            });
         } else if ('dnf'.localeCompare(manualValue, 'en', { sensitivity: 'accent' }) === 0) {
             this.storeTime(9999);
             this.handleResetTimer();
+            this.setState({
+                manualValue: '',
+            });
         }
     };
 
@@ -338,7 +350,10 @@ export default class CubeTimer extends React.Component {
                 <TimerDisplay>
                     {manualEntry ? (
                         <form onSubmit={this.handleManualEntrySubmit}>
-                            <input onChange={this.handleManualInput} value={manualValue} />
+                            <ManualEntryInput
+                                onChange={this.handleManualInput}
+                                value={manualValue}
+                            />
                         </form>
                     ) : (
                         <>

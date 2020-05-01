@@ -5,20 +5,28 @@ import chunk from 'lodash/chunk';
 const TimerHistoryContainer = styled.div`
     margin-top: 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 25px;
+    grid-template-columns: auto auto auto auto auto;
+    justify-content: space-around;
+    align-self: stretch;
 `;
 
 const AO5 = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
+`;
+
+const Times = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 0.5em;
+    align-items: center;
 `;
 
 const Time = styled.div`
+    justify-self: end;
     position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    white-space: nowrap;
     color: ${props => {
         if (props.fastest) {
             return 'red';
@@ -57,18 +65,27 @@ const ScrambleTooltip = styled.div`
 `;
 
 const Button = styled.button`
-    margin-left: 10px;
+    padding: 5px 10px;
+    border: solid 1px grey;
+    border-radius: 3px;
+    color: ${({ invertColours }) => (invertColours ? 'white' : 'black')};
+    background-color: ${({ invertColours }) => (invertColours ? 'darkslategrey' : 'white')};
+    ${props => (props.invertColours ? 'font-weight: bold;' : '')}
 `;
 
 const TimerHistory = ({ removeTime, timerHistory, togglePenalty }) => {
     const ao5s = chunk(
-        timerHistory.sort((a, b) => -new Date(a.createdAt) + new Date(b.createdAt)),
+        timerHistory.sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            return dateA - dateB;
+        }),
         5
     ).reverse();
 
     return (
         <TimerHistoryContainer>
-            {ao5s.map(ao5 => {
+            {ao5s.slice(0, 5).map(ao5 => {
                 let average = null;
                 let fastestId = null;
                 let slowestId = null;
@@ -89,26 +106,40 @@ const TimerHistory = ({ removeTime, timerHistory, togglePenalty }) => {
                         3
                     ).toFixed(2);
                 } else {
-                    average = ao5.reduce((a, c) => a + c.time / ao5.length, 0).toFixed(2);
+                    average = ao5
+                        .reduce((a, c) => a + (c.time + (c.penalty ? 2 : 0)) / ao5.length, 0)
+                        .toFixed(2);
                 }
 
                 return (
                     <AO5 key={ao5.map(a => a.id).join('-')}>
                         <h3>{average}</h3>
-                        {ao5.map(({ id, time, scramble, penalty }) => (
-                            <Time key={id} fastest={id === fastestId} slowest={id === slowestId}>
-                                <ScrambleTooltip>
-                                    <span>{scramble}</span>
-                                </ScrambleTooltip>
-                                <span>
-                                    {time < 9001
-                                        ? `${time.toFixed(2)}${penalty ? ' + 2' : ''}`
-                                        : 'DNF'}
-                                </span>
-                                <Button onClick={() => togglePenalty(id)}>+2</Button>
-                                <Button onClick={() => removeTime(id)}>X</Button>
-                            </Time>
-                        ))}
+                        <Times>
+                            {ao5.map(({ id, time, scramble, penalty }) => (
+                                <>
+                                    <Time
+                                        key={`time-${id}`}
+                                        fastest={id === fastestId}
+                                        slowest={id === slowestId}
+                                    >
+                                        {time < 9001 ? time.toFixed(2) : 'DNF'}
+                                        <ScrambleTooltip>
+                                            <span>{scramble}</span>
+                                        </ScrambleTooltip>
+                                    </Time>
+                                    <Button
+                                        key={`penalty-toggle-${id}`}
+                                        onClick={() => togglePenalty(id)}
+                                        invertColours={penalty}
+                                    >
+                                        +2
+                                    </Button>
+                                    <Button key={`remove-${id}`} onClick={() => removeTime(id)}>
+                                        X
+                                    </Button>
+                                </>
+                            ))}
+                        </Times>
                     </AO5>
                 );
             })}
