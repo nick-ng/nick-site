@@ -8,8 +8,8 @@ import css from './styles.css';
 import ScrambleHelper from './scramble';
 import TimerHistory from './history';
 
-const LOCAL_STORAGE_KEY = 'CUBE_TIMER_STORAGE';
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
+const BASE_LOCAL_STORAGE_KEY = 'CUBE_TIMER_STORAGE';
 
 const LabelH = styled.div`
     display: flex;
@@ -35,6 +35,16 @@ export default class CubeTimer extends React.Component {
     constructor(props) {
         super(props);
 
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.get('store')) {
+            this.currentLocalStorageKey = `${BASE_LOCAL_STORAGE_KEY}-${urlParams
+                .get('store')
+                .toUpperCase()}`;
+        } else {
+            this.currentLocalStorageKey = BASE_LOCAL_STORAGE_KEY;
+        }
+
         this.state = {
             key1Pressed: false,
             key2Pressed: false,
@@ -47,7 +57,7 @@ export default class CubeTimer extends React.Component {
             timerTimeout: null,
             timerInterval: null,
             timerProgress: null,
-            timerHistory: localStorage.getItem(LOCAL_STORAGE_KEY) || '[]',
+            timerHistory: localStorage.getItem(this.currentLocalStorageKey) || '[]',
             scramble: '',
             cubeString: '',
             nextScramble: '',
@@ -280,7 +290,7 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: newTimeHistory,
         });
-        localStorage.setItem(LOCAL_STORAGE_KEY, newTimeHistory);
+        localStorage.setItem(this.currentLocalStorageKey, newTimeHistory);
     };
 
     removeTime = id => {
@@ -290,7 +300,7 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: newTimeHistory,
         });
-        localStorage.setItem(LOCAL_STORAGE_KEY, newTimeHistory);
+        localStorage.setItem(this.currentLocalStorageKey, newTimeHistory);
     };
 
     togglePenalty = id => {
@@ -304,7 +314,7 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: newTimeHistory,
         });
-        localStorage.setItem(LOCAL_STORAGE_KEY, newTimeHistory);
+        localStorage.setItem(this.currentLocalStorageKey, newTimeHistory);
     };
 
     toggleManualEntry = () => {
