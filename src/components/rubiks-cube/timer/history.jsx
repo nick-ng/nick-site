@@ -42,7 +42,7 @@ const AO5Header = styled.div`
 
 const Times = styled.div`
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
     gap: 0.5em;
     align-items: center;
 `;
@@ -88,7 +88,7 @@ const ScrambleTooltip = styled.div`
     }
 `;
 
-const TimerHistory = ({ removeTime, storeTime, timerHistory, togglePenalty }) => {
+const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePenalty }) => {
     const ao5s = chunk(
         timerHistory.sort((a, b) => {
             const dateA = new Date(a.createdAt);
@@ -160,8 +160,16 @@ const TimerHistory = ({ removeTime, storeTime, timerHistory, togglePenalty }) =>
                                     >
                                         +2
                                     </Button>
-                                    <Button key={`remove-${id}`} onClick={() => removeTime(id)}>
-                                        X
+                                    <Button key={`edit-${id}`} onClick={() => editTime(id)}>
+                                        <i className="fa fa-pencil" />
+                                    </Button>
+                                    <Button
+                                        key={`remove-${id}`}
+                                        onClick={() =>
+                                            removeTime(id, time < 9001 ? time.toFixed(2) : 'DNF')
+                                        }
+                                    >
+                                        <i className="fa fa-times" />
                                     </Button>
                                 </>
                             ))}
