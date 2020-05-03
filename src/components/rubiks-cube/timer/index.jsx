@@ -7,9 +7,9 @@ import css from './styles.css';
 
 import ScrambleHelper from './scramble';
 import TimerHistory from './history';
+import SessionSelector, { getSessionStorageKey } from './session-selector';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
-const BASE_LOCAL_STORAGE_KEY = 'CUBE_TIMER_STORAGE';
 
 const LabelH = styled.div`
     display: flex;
@@ -25,6 +25,14 @@ const TimerDisplay = styled.div`
     align-items: center;
 `;
 
+const InfoRow = styled.div`
+    align-self: stretch;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    justify-content: space-between;
+    padding: 0.2em 0em;
+`;
+
 const ManualEntryInput = styled.input`
     font-size: 5em;
     text-align: center;
@@ -35,15 +43,7 @@ export default class CubeTimer extends React.Component {
     constructor(props) {
         super(props);
 
-        const urlParams = new URLSearchParams(window.location.search);
-
-        if (urlParams.get('store')) {
-            this.currentLocalStorageKey = `${BASE_LOCAL_STORAGE_KEY}-${urlParams
-                .get('store')
-                .toUpperCase()}`;
-        } else {
-            this.currentLocalStorageKey = BASE_LOCAL_STORAGE_KEY;
-        }
+        const currentLocalStorageKey = getSessionStorageKey();
 
         this.state = {
             key1Pressed: false,
@@ -57,7 +57,8 @@ export default class CubeTimer extends React.Component {
             timerTimeout: null,
             timerInterval: null,
             timerProgress: null,
-            timerHistory: localStorage.getItem(this.currentLocalStorageKey) || '[]',
+            currentLocalStorageKey,
+            timerHistory: localStorage.getItem(currentLocalStorageKey) || '[]',
             scramble: '',
             cubeString: '',
             nextScramble: '',
@@ -268,7 +269,7 @@ export default class CubeTimer extends React.Component {
     };
 
     storeTime = (time = null, n = 1) => {
-        const { scramble, cubeString, timerHistory } = this.state;
+        const { scramble, cubeString, currentLocalStorageKey, timerHistory } = this.state;
         const timerHistoryObj = JSON.parse(timerHistory);
         for (let i = 0; i < n; i++) {
             timerHistoryObj.push({
@@ -290,21 +291,23 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: newTimeHistory,
         });
-        localStorage.setItem(this.currentLocalStorageKey, newTimeHistory);
+        localStorage.setItem(currentLocalStorageKey, newTimeHistory);
     };
 
-    removeTime = id => {
-        const { timerHistory } = this.state;
-        const timerHistoryObj = JSON.parse(timerHistory);
-        const newTimeHistory = JSON.stringify(timerHistoryObj.filter(a => a.id !== id));
-        this.setState({
-            timerHistory: newTimeHistory,
-        });
-        localStorage.setItem(this.currentLocalStorageKey, newTimeHistory);
+    removeTime = (id, time = '') => {
+        if (confirm(`Delete time of ${time}?`)) {
+            const { currentLocalStorageKey, timerHistory } = this.state;
+            const timerHistoryObj = JSON.parse(timerHistory);
+            const newTimeHistory = JSON.stringify(timerHistoryObj.filter(a => a.id !== id));
+            this.setState({
+                timerHistory: newTimeHistory,
+            });
+            localStorage.setItem(currentLocalStorageKey, newTimeHistory);
+        }
     };
 
     togglePenalty = id => {
-        const { timerHistory } = this.state;
+        const { currentLocalStorageKey, timerHistory } = this.state;
         const timerHistoryObj = JSON.parse(timerHistory);
         const penaltyTime = timerHistoryObj.filter(a => a.id === id)[0];
         penaltyTime.penalty = !penaltyTime.penalty;
@@ -314,7 +317,33 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: newTimeHistory,
         });
-        localStorage.setItem(this.currentLocalStorageKey, newTimeHistory);
+        localStorage.setItem(currentLocalStorageKey, newTimeHistory);
+    };
+
+    editTime = id => {
+        const { currentLocalStorageKey, timerHistory } = this.state;
+        const timerHistoryObj = JSON.parse(timerHistory);
+        const time = timerHistoryObj.filter(a => a.id === id)[0];
+
+        const newTimeString = prompt('Enter the correct time.');
+        let newTime = null;
+
+        if (parseFloat(newTimeString)) {
+            newTime = parseFloat(newTimeString);
+        } else if ('dnf'.localeCompare(newTimeString, 'en', { sensitivity: 'accent' }) === 0) {
+            newTime = 9999;
+        }
+
+        if (newTime) {
+            time.time = newTime;
+            const newTimeHistory = JSON.stringify(
+                timerHistoryObj.filter(a => a.id !== id).concat(time)
+            );
+            this.setState({
+                timerHistory: newTimeHistory,
+            });
+            localStorage.setItem(currentLocalStorageKey, newTimeHistory);
+        }
     };
 
     toggleManualEntry = () => {
@@ -388,12 +417,16 @@ export default class CubeTimer extends React.Component {
                     )}
                 </TimerDisplay>
                 <button onClick={this.handleResetTimer}>Next Scramble</button>
-                <ScrambleHelper cubeString={cubeString} scramble={scramble} />
+                <InfoRow>
+                    <SessionSelector />
+                    <ScrambleHelper cubeString={cubeString} scramble={scramble} />
+                </InfoRow>
                 <TimerHistory
                     timerHistory={JSON.parse(timerHistory)}
                     removeTime={this.removeTime}
                     togglePenalty={this.togglePenalty}
                     storeTime={this.storeTime}
+                    editTime={this.editTime}
                 />
             </div>
         );
