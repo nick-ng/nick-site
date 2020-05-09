@@ -132,7 +132,10 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
                             <h3>{average}</h3>
                             {ao5.length < 5 && (
                                 <Button
-                                    onClick={() => {
+                                    onClick={e => {
+                                        if (e) {
+                                            e.target.blur();
+                                        }
                                         storeTime(9999, 5 - ao5.length);
                                     }}
                                 >
@@ -155,19 +158,35 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
                                     </Time>
                                     <Button
                                         key={`penalty-toggle-${id}`}
-                                        onClick={() => togglePenalty(id)}
+                                        onClick={e => {
+                                            if (e) {
+                                                e.target.blur();
+                                            }
+                                            togglePenalty(id);
+                                        }}
                                         invertColours={penalty}
                                     >
                                         +2
                                     </Button>
-                                    <Button key={`edit-${id}`} onClick={() => editTime(id)}>
+                                    <Button
+                                        key={`edit-${id}`}
+                                        onClick={e => {
+                                            if (e) {
+                                                e.target.blur();
+                                            }
+                                            editTime(id);
+                                        }}
+                                    >
                                         <i className="fa fa-pencil" />
                                     </Button>
                                     <Button
                                         key={`remove-${id}`}
-                                        onClick={() =>
-                                            removeTime(id, time < 9001 ? time.toFixed(2) : 'DNF')
-                                        }
+                                        onClick={e => {
+                                            if (e) {
+                                                e.target.blur();
+                                            }
+                                            removeTime(id, time < 9001 ? time.toFixed(2) : 'DNF');
+                                        }}
                                     >
                                         <i className="fa fa-times" />
                                     </Button>
