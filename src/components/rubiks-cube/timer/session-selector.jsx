@@ -51,15 +51,22 @@ const SessionSelector = () => {
     const currentSession = getCurrentSession();
     return (
         <Container>
-            <SessionLink href={`/cubetimer`} current={currentSession === ''}>
-                Default
-            </SessionLink>
+            {currentSession === '' ? (
+                <SessionLink as="span" current>
+                    Default
+                </SessionLink>
+            ) : (
+                <SessionLink href={`/cubetimer`}>Default</SessionLink>
+            )}
             {listSessions().map(sessionName => {
-                return (
+                return currentSession === sessionName ? (
+                    <SessionLink as="span" key={`session-${sessionName}`} current>
+                        {sessionName}
+                    </SessionLink>
+                ) : (
                     <SessionLink
                         key={`session-${sessionName}`}
                         href={`/cubetimer?session=${sessionName}`}
-                        current={currentSession === sessionName}
                     >
                         {sessionName}
                     </SessionLink>

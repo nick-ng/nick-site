@@ -63,7 +63,7 @@ export default class CubeTimer extends React.Component {
             cubeString: '',
             nextScramble: '',
             nextCubeString: '',
-            manualEntry: localStorage.getItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY) || false,
+            manualEntry: localStorage.getItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY) || 'false',
             manualValue: '',
         };
     }
@@ -346,11 +346,18 @@ export default class CubeTimer extends React.Component {
         }
     };
 
-    toggleManualEntry = () => {
+    toggleManualEntry = e => {
+        if (e) {
+            e.target.blur();
+        }
         this.setState(prevState => {
-            localStorage.setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, !prevState.manualEntry);
+            let newManualEntry = 'true';
+            if (prevState.manualEntry === 'true') {
+                newManualEntry = 'false';
+            }
+            localStorage.setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, newManualEntry);
             return {
-                manualEntry: !prevState.manualEntry,
+                manualEntry: newManualEntry,
             };
         });
     };
@@ -394,11 +401,15 @@ export default class CubeTimer extends React.Component {
             <div className={css.cubeTimer}>
                 <h2>Cube Timer</h2>
                 <LabelH>
-                    <input type="checkbox" checked={manualEntry} onClick={this.toggleManualEntry} />
+                    <input
+                        type="checkbox"
+                        checked={manualEntry === 'true'}
+                        onClick={this.toggleManualEntry}
+                    />
                     Manual Entry
                 </LabelH>
                 <TimerDisplay>
-                    {manualEntry ? (
+                    {manualEntry === 'true' ? (
                         <form onSubmit={this.handleManualEntrySubmit}>
                             <ManualEntryInput
                                 onChange={this.handleManualInput}
