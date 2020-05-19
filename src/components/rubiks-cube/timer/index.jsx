@@ -7,7 +7,7 @@ import css from './styles.css';
 
 import ScrambleHelper from './scramble';
 import TimerHistory from './history';
-import SessionSelector, { getSessionStorageKey } from './session-selector';
+import SessionSelector, { getCurrentSession, getSessionStorageKey } from './session-selector';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
 
@@ -101,18 +101,34 @@ export default class CubeTimer extends React.Component {
             });
         } else {
             const res = await axios.get('/api/cube-3x3-scramble');
-            const { scramble, cubeString } = res.data;
-            this.setState({
-                scramble,
-                cubeString,
-            });
+            if (getCurrentSession().includes('BLD')) {
+                const { wideScramble, wideCubeString } = res.data;
+                this.setState({
+                    scramble: wideScramble,
+                    cubeString: wideCubeString,
+                });
+            } else {
+                const { scramble, cubeString } = res.data;
+                this.setState({
+                    scramble,
+                    cubeString,
+                });
+            }
         }
         const res2 = await axios.get('/api/cube-3x3-scramble');
-        const { scramble: scramble2, cubeString: cubeString2 } = res2.data;
-        this.setState({
-            nextScramble: scramble2,
-            nextCubeString: cubeString2,
-        });
+        if (getCurrentSession().includes('BLD')) {
+            const { wideScramble, wideCubeString } = res2.data;
+            this.setState({
+                nextScramble: wideScramble,
+                nextCubeString: wideCubeString,
+            });
+        } else {
+            const { scramble, cubeString } = res2.data;
+            this.setState({
+                nextScramble: scramble,
+                nextCubeString: cubeString,
+            });
+        }
     };
 
     handleKeyDown = event => {
