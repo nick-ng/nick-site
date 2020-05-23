@@ -10,7 +10,7 @@
         "dev": "concurrently npm:back npm:front",
         "eslint": "eslint ./src",
         "prettier-fix": "prettier --write \"**/*.js\"",
-        "front": "webpack --watch --display verbose",
+        "front": "NODE_ENV=development webpack-dev-server --inline --colors --history-api-fallback",
         "heroku-postbuild": "npm run knex-migrate-prod && npm run build",
         "knex-migrate-prod": "knex migrate:latest --env production",
         "knex-migrate-stage": "knex migrate:latest --env staging --verbose",
@@ -18,7 +18,7 @@
         "knex-new-migration": "knex migrate:make name_goes_here",
         "server": "node ./server.js",
         "sim-deploy": "rm -rf node_modules && npm install && npm run heroku-postbuild && npm run server",
-        "start": "webpack-dev-server --inline --colors --history-api-fallback",
+        "start": "npm run dev",
         "test": "npm run prettier-check",
         "update-pokemon-moves": "wget -O ./src/components/pokemon/showdown/moves.js https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/moves.js",
         "update-pokemon-pokedex": "wget -O ./src/components/pokemon/showdown/pokedex.js https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.js",
@@ -37,6 +37,7 @@
     "dependencies": {
         "@babel/core": "^7.8.7",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/plugin-proposal-optional-chaining": "^7.9.0",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/plugin-transform-runtime": "^7.8.3",
         "@babel/preset-env": "^7.8.7",
@@ -69,6 +70,7 @@
     },
     "devDependencies": {
         "nodemon": "^2.0.2",
-        "prettier": "1.19.1"
+        "prettier": "1.19.1",
+        "webpack-dev-server": "^3.11.0"
     }
 }

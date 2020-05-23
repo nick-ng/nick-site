@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 let siteTitle = 'Nick Ng';
 
@@ -7,6 +8,16 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = {
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        compress: true,
+        port: 3434,
+        proxy: {
+            '/api': {
+                target: 'http://localhost:3435',
+            },
+        },
+    },
     mode: process.env.NODE_ENV || 'production',
     devtool: 'source-map',
     entry: './src/entry.jsx',
@@ -44,6 +55,7 @@ module.exports = {
                             '@babel/plugin-syntax-dynamic-import',
                             '@babel/plugin-proposal-class-properties',
                             '@babel/transform-runtime',
+                            '@babel/plugin-proposal-optional-chaining',
                         ],
                     },
                 },
