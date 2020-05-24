@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
+import { Label } from '../styles';
 import Todo from './todo';
 import TodoEditor from './todoEditor';
-import { listTodos, updateTodo, deleteTodo } from '../../services/todos';
+import { listTodos, updateTodo, deleteTodo } from '../../../services/todos';
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-`;
-
-const Label = styled.label`
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5em;
 `;
 
 const List = styled.div`
@@ -36,11 +31,6 @@ const isCurrentlyWorkHours = () => {
         return false;
     }
     return true;
-};
-
-const todoSortFunction = (a, b) => {
-    const importanceDifference = b.importance - a.importance;
-    return importanceDifference === 0 ? a.timestamp - b.timestamp : importanceDifference;
 };
 
 const TodoList = () => {
@@ -74,7 +64,6 @@ const TodoList = () => {
             <List>
                 {todos
                     .filter(todo => !workOnly || todo.category === 'work')
-                    .sort(todoSortFunction)
                     .map(todo => (
                         <Todo
                             todo={todo}
