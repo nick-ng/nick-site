@@ -83,7 +83,6 @@ export default class CubeTimer extends React.Component {
     componentWillUnmount() {
         const { timerInterval } = this.state;
         if (typeof timerInterval === 'number') {
-            console.log('clearing', timerInterval);
             clearInterval(timerInterval);
         }
 

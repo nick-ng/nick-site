@@ -10,8 +10,7 @@ import CubeTimer from './components/rubiks-cube/timer';
 import Bookmarks from './components/bookmarks';
 import Countdowns from './components/countdowns';
 import Home from './components/home';
-import TodoList from './components/todos/list';
-import TodoTimer from './components/todos/timer';
+import Todos from './components/todos';
 import WeddingPhotos from './components/wedding-photos';
 import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
@@ -70,11 +69,8 @@ export default function App() {
                         <R path="/dnd/wizardspellbook">
                             <DnDSpellBook casterClass="wizard" key="wizard" />
                         </R>
-                        <R path="/dione-list">
-                            <TodoList />
-                        </R>
-                        <R path="/dione-timer">
-                            <TodoTimer />
+                        <R path="/dione">
+                            <Todos />
                         </R>
                         <R path="/test">
                             <Test />

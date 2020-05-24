@@ -10,7 +10,6 @@ const todoSortFunction = (a, b) => {
 
 export const listTodos = async () => {
     const [todos] = await Promise.all([getItem(TODOS_STORE)]);
-    console.log('todos', todos);
     return JSON.parse(todos || '[]').sort(todoSortFunction);
 };
 
