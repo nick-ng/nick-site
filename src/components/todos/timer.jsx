@@ -53,32 +53,30 @@ const Timer = ({ closeTimer, activeTodo, todos }) => {
     const [otherTodosVisible, setOtherTodosVisible] = useState(false);
 
     return (
-        activeTodo && (
-            <TimerContainer>
-                <CloseButton onClick={closeTimer}>
-                    <i className="fa fa-close" />
-                </CloseButton>
-                <TimerMainText>
-                    {otherTodosVisible
-                        ? todos
-                              .slice(0, MAX_TODOS)
-                              .map(({ id, task, blocker }) => (
-                                  <OtherTasks active={id === activeTodo.id}>{`${task}${
-                                      blocker ? ` (${blocker})` : ''
-                                  }`}</OtherTasks>
-                              ))
-                        : activeTodo.task}
-                </TimerMainText>
-                <OtherTasksButton
-                    onClick={e => {
-                        setOtherTodosVisible(!otherTodosVisible);
-                        e.target.blur();
-                    }}
-                >
-                    {`${otherTodosVisible ? 'Hide' : 'Show'} Other Tasks`}
-                </OtherTasksButton>
-            </TimerContainer>
-        )
+        <TimerContainer>
+            <CloseButton onClick={closeTimer}>
+                <i className="fa fa-close" />
+            </CloseButton>
+            <TimerMainText>
+                {otherTodosVisible
+                    ? todos
+                          .slice(0, MAX_TODOS + 1)
+                          .map(({ id, task, blocker }) => (
+                              <OtherTasks key={id} active={id === activeTodo.id}>{`${task}${
+                                  blocker ? ` (${blocker})` : ''
+                              }`}</OtherTasks>
+                          ))
+                    : activeTodo?.task}
+            </TimerMainText>
+            <OtherTasksButton
+                onClick={e => {
+                    setOtherTodosVisible(!otherTodosVisible);
+                    e.target.blur();
+                }}
+            >
+                {`${otherTodosVisible ? 'Hide' : 'Show'} Other Tasks`}
+            </OtherTasksButton>
+        </TimerContainer>
     );
 };
 

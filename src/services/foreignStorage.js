@@ -19,25 +19,25 @@ export const getItem = async keyName => {
 export const setItem = async (keyName, dataString) => {
     if (canUse()) {
         try {
-            axios.put(`/api/foreign-storage/${encodeURIComponent(keyName)}`, {
+            return axios.put(`/api/foreign-storage/${encodeURIComponent(keyName)}`, {
                 value: dataString,
             });
         } catch (e) {
             console.error('Problem when using foreign storage', e);
         }
     }
-    localStorage.setItem(keyName, dataString);
+    return localStorage.setItem(keyName, dataString);
 };
 
 export const removeItem = async keyName => {
     if (canUse()) {
         try {
-            axios.delete(`/api/foreign-storage/${encodeURIComponent(keyName)}`);
+            return axios.delete(`/api/foreign-storage/${encodeURIComponent(keyName)}`);
         } catch (e) {
             console.error('Problem when using foreign storage', e);
         }
     }
-    localStorage.removeItem(keyName);
+    return localStorage.removeItem(keyName);
 };
 
 export const listItems = async () => {
