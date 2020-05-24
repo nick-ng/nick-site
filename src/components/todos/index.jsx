@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { v4 as uuid } from 'uuid';
 
-import { Button, BigButton, Label, List, Row } from './styles';
+import { BigButton, Label, List, Row } from './styles';
 import { filterTodos, isCurrentlyWorkHours } from './utils';
 import Todo from './todo';
 import TodoEditor from './todoEditor';
@@ -25,6 +26,7 @@ const TodoList = () => {
     const [breakTimerVisible, setBreakTimerVisible] = useState(false);
     const [breakEndTimestamp, setBreakEndTimestamp] = useState(0);
     const [activeTodoId, setActiveTodoId] = useState(null);
+    const [newTodoId, setNewTodoId] = useState(uuid());
 
     useEffect(() => {
         const fetchTodos = async () => {
@@ -69,7 +71,10 @@ const TodoList = () => {
             <TodoEditor
                 updateTodo={async newTodo => {
                     setTodos(await updateTodo(todos, newTodo));
+                    setNewTodoId(uuid());
                 }}
+                key={newTodoId}
+                newTodoId={newTodoId}
             />
             <List>
                 {filterTodos(todos, workOnly).map(todo => (

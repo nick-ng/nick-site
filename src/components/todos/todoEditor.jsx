@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { v4 as uuid } from 'uuid';
 
 import { Button } from './styles';
 
@@ -30,7 +29,7 @@ const Select = styled.select`
 
 const Option = styled.option``;
 
-const TodoEditor = ({ todo, updateTodo, deleteTodo }) => {
+const TodoEditor = ({ todo, updateTodo, deleteTodo, newTodoId }) => {
     const [importance, setImportance] = useState(todo?.importance || 0);
     const [task, setTask] = useState(todo?.task || '');
     const [blocker, setBlocker] = useState(todo?.blocker || '');
@@ -41,7 +40,7 @@ const TodoEditor = ({ todo, updateTodo, deleteTodo }) => {
             onSubmit={e => {
                 e.preventDefault();
                 updateTodo({
-                    id: todo?.id || uuid(),
+                    id: todo?.id || newTodoId,
                     importance,
                     task,
                     blocker,
