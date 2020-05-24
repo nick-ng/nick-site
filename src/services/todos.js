@@ -13,22 +13,20 @@ export const listTodos = async () => {
     return JSON.parse(todos || '[]').sort(todoSortFunction);
 };
 
-export const deleteTodo = async (todoList, todoId) => {
+export const deleteTodo = (todoList, todoId) => {
     const newTodoList = todoList.filter(todo => todo.id !== todoId);
 
-    await setItem(TODOS_STORE, JSON.stringify(newTodoList));
+    setItem(TODOS_STORE, JSON.stringify(newTodoList));
 
     return newTodoList.sort(todoSortFunction);
 };
 
-export const updateTodo = async (todoList, newTodo) => {
+export const updateTodo = (todoList, newTodo) => {
     const newTodoList = todoList.filter(todo => todo.id !== newTodo.id).concat([newTodo]);
 
-    await setItem(TODOS_STORE, JSON.stringify(newTodoList));
+    setItem(TODOS_STORE, JSON.stringify(newTodoList));
 
     return newTodoList.sort(todoSortFunction);
 };
 
-export const createTodo = async (todoList, newTodo) => {
-    return updateTodo(todoList, newTodo);
-};
+export const createTodo = updateTodo;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Button, BigButton, Label, List, Row } from './styles';
+import { BigButton, Label, List, Row } from './styles';
 import { filterTodos, isCurrentlyWorkHours } from './utils';
 import Todo from './todo';
 import TodoEditor from './todoEditor';
