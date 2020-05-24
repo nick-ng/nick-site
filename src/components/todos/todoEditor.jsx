@@ -2,16 +2,11 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
+import { Button } from './styles';
+
 const Container = styled.form`
     display: flex;
     flex-direction: row;
-`;
-
-export const Button = styled.button`
-    background-color: ${props => (props.active ? 'grey' : 'white')};
-    color: black;
-    border: 1px solid grey;
-    padding: 0.2em;
 `;
 
 const ButtonFlex = styled(Button)`
