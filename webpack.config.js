@@ -12,11 +12,12 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist'),
         compress: true,
         port: 3434,
-        proxy: {
-            '/api': {
+        proxy: [
+            {
+                context: ['/oll', '/api'],
                 target: 'http://localhost:3435',
             },
-        },
+        ],
     },
     mode: process.env.NODE_ENV || 'production',
     devtool: 'source-map',
