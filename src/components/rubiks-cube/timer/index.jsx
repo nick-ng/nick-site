@@ -100,7 +100,7 @@ export default class CubeTimer extends React.Component {
             });
         } else {
             const res = await axios.get('/api/cube-3x3-scramble');
-            if (getCurrentSession().includes('BLD')) {
+            if (getCurrentSession().includes('BLD') && false) {
                 const { wideScramble, wideCubeString } = res.data;
                 this.setState({
                     scramble: wideScramble,
