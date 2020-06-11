@@ -17,7 +17,7 @@ const COLOR_MAP = {
 const Scramble = styled.div`
     display: flex;
     justify-content: center;
-    font-size: 1.5em;
+    font-size: 2.5em;
 `;
 
 const CubeNet = styled.div`
