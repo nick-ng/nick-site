@@ -3,8 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
+import { getItem, setItem } from '../../../services/foreignStorage';
 import css from './styles.css';
-
 import ScrambleHelper from './scramble';
 import TimerHistory from './history';
 import SessionSelector, { getCurrentSession, getSessionStorageKey } from './session-selector';
@@ -58,7 +58,7 @@ export default class CubeTimer extends React.Component {
             timerInterval: null,
             timerProgress: null,
             currentLocalStorageKey,
-            timerHistory: localStorage.getItem(currentLocalStorageKey) || '[]',
+            timerHistory: '[]',
             scramble: '',
             cubeString: '',
             nextScramble: '',
@@ -68,7 +68,7 @@ export default class CubeTimer extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const timerInterval = setInterval(this.updateTimerProgress, 333);
         this.setState({
             timerInterval,
@@ -78,6 +78,12 @@ export default class CubeTimer extends React.Component {
         addEventListener('keyup', this.handleKeyUp);
 
         this.getNewScramble();
+
+        const currentLocalStorageKey = getSessionStorageKey();
+
+        this.setState({
+            timerHistory: (await getItem(currentLocalStorageKey)) || '[]',
+        });
     }
 
     componentWillUnmount() {
@@ -306,7 +312,7 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: newTimeHistory,
         });
-        localStorage.setItem(currentLocalStorageKey, newTimeHistory);
+        setItem(currentLocalStorageKey, newTimeHistory);
     };
 
     removeTime = (id, time = '') => {
@@ -317,7 +323,7 @@ export default class CubeTimer extends React.Component {
             this.setState({
                 timerHistory: newTimeHistory,
             });
-            localStorage.setItem(currentLocalStorageKey, newTimeHistory);
+            setItem(currentLocalStorageKey, newTimeHistory);
         }
     };
 
@@ -332,7 +338,7 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: newTimeHistory,
         });
-        localStorage.setItem(currentLocalStorageKey, newTimeHistory);
+        setItem(currentLocalStorageKey, newTimeHistory);
     };
 
     editTime = id => {
@@ -357,7 +363,7 @@ export default class CubeTimer extends React.Component {
             this.setState({
                 timerHistory: newTimeHistory,
             });
-            localStorage.setItem(currentLocalStorageKey, newTimeHistory);
+            setItem(currentLocalStorageKey, newTimeHistory);
         }
     };
 
@@ -370,7 +376,7 @@ export default class CubeTimer extends React.Component {
             if (prevState.manualEntry === 'true') {
                 newManualEntry = 'false';
             }
-            localStorage.setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, newManualEntry);
+            setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, newManualEntry);
             return {
                 manualEntry: newManualEntry,
             };

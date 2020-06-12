@@ -10,7 +10,6 @@ const getByUserIdAndKey = db => (userId, key) =>
         });
 
 const addOrUpdate = db => async (userId, key, value) => {
-    console.log(userId, key, value);
     try {
         await db(foreignStorageTable).insert({
             user_id: userId,
