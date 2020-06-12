@@ -3,7 +3,7 @@ const { bookmark } = require('../sql-database');
 module.exports = router => {
     router.get('/api/bookmarks', async (req, res, next) => {
         const { user } = res.locals;
-        if (!user) {
+        if (!user || user.id === 0) {
             return res.sendStatus(403);
         }
 

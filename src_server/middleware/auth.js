@@ -28,6 +28,13 @@ module.exports = app => {
             })
         );
 
+        if (process.env.GUEST_KEY && adminKey === process.env.GUEST_KEY) {
+            res.locals.user = {
+                id: 0,
+                username: 'guest',
+            };
+        }
+
         return next();
     });
 };
