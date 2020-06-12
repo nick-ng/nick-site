@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
+import { listItems } from '../../../services/foreignStorage';
 
 export const BASE_LOCAL_STORAGE_KEY = 'CUBE_TIMER_STORAGE';
 
@@ -16,9 +18,9 @@ export const getSessionStorageKey = () => {
     return BASE_LOCAL_STORAGE_KEY;
 };
 
-const listSessions = () => {
+export const listSessions = async () => {
     const uniqueSessions = new Set([
-        ...Object.keys(localStorage)
+        ...(await listItems())
             .filter(key => key.startsWith(`${BASE_LOCAL_STORAGE_KEY}-`))
             .map(key => key.replace(`${BASE_LOCAL_STORAGE_KEY}-`, ''))
             .filter(key => key !== 'DEFAULT'),
@@ -49,6 +51,14 @@ const SessionForm = styled.form`
 
 const SessionSelector = () => {
     const currentSession = getCurrentSession();
+    const [sessions, setSessions] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            setSessions(await listSessions());
+        })();
+    }, []);
+
     return (
         <Container>
             {currentSession === '' ? (
@@ -58,7 +68,7 @@ const SessionSelector = () => {
             ) : (
                 <SessionLink href={`/cubetimer`}>Default</SessionLink>
             )}
-            {listSessions().map(sessionName => {
+            {sessions.map(sessionName => {
                 return currentSession === sessionName ? (
                     <SessionLink as="span" key={`session-${sessionName}`} current>
                         {sessionName}
