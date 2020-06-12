@@ -43,8 +43,6 @@ export default class CubeTimer extends React.Component {
     constructor(props) {
         super(props);
 
-        const currentLocalStorageKey = getSessionStorageKey();
-
         this.state = {
             key1Pressed: false,
             key2Pressed: false,
@@ -57,7 +55,7 @@ export default class CubeTimer extends React.Component {
             timerTimeout: null,
             timerInterval: null,
             timerProgress: null,
-            currentLocalStorageKey,
+            currentLocalStorageKey: getSessionStorageKey(),
             timerHistory: '[]',
             scramble: '',
             cubeString: '',
@@ -66,6 +64,8 @@ export default class CubeTimer extends React.Component {
             manualEntry: localStorage.getItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY) || 'false',
             manualValue: '',
         };
+
+        this.manualInputBoxRef = React.createRef();
     }
 
     async componentDidMount() {
@@ -84,6 +84,8 @@ export default class CubeTimer extends React.Component {
         this.setState({
             timerHistory: (await getItem(currentLocalStorageKey)) || '[]',
         });
+
+        this.focusTextInput();
     }
 
     componentWillUnmount() {
@@ -95,6 +97,13 @@ export default class CubeTimer extends React.Component {
         removeEventListener('keydown', this.handleKeyDown);
         removeEventListener('keyup', this.handleKeyUp);
     }
+
+    focusTextInput = () => {
+        const { manualEntry } = this.state;
+        if (manualEntry) {
+            this.manualInputBoxRef.current.focus();
+        }
+    };
 
     getNewScramble = async () => {
         const { nextScramble, nextCubeString } = this.state;
@@ -269,6 +278,7 @@ export default class CubeTimer extends React.Component {
         if (e) {
             e.target.blur();
         }
+        this.focusTextInput();
     };
 
     getTime = () => {
@@ -313,6 +323,8 @@ export default class CubeTimer extends React.Component {
             timerHistory: newTimeHistory,
         });
         setItem(currentLocalStorageKey, newTimeHistory);
+
+        this.focusTextInput();
     };
 
     removeTime = (id, time = '') => {
@@ -325,6 +337,8 @@ export default class CubeTimer extends React.Component {
             });
             setItem(currentLocalStorageKey, newTimeHistory);
         }
+
+        this.focusTextInput();
     };
 
     togglePenalty = id => {
@@ -339,6 +353,8 @@ export default class CubeTimer extends React.Component {
             timerHistory: newTimeHistory,
         });
         setItem(currentLocalStorageKey, newTimeHistory);
+
+        this.focusTextInput();
     };
 
     editTime = id => {
@@ -365,6 +381,8 @@ export default class CubeTimer extends React.Component {
             });
             setItem(currentLocalStorageKey, newTimeHistory);
         }
+
+        this.focusTextInput();
     };
 
     toggleManualEntry = e => {
@@ -381,6 +399,7 @@ export default class CubeTimer extends React.Component {
                 manualEntry: newManualEntry,
             };
         });
+        this.focusTextInput();
     };
 
     handleManualInput = event => {
@@ -406,6 +425,8 @@ export default class CubeTimer extends React.Component {
                 manualValue: '',
             });
         }
+
+        this.focusTextInput();
     };
 
     render() {
@@ -435,6 +456,7 @@ export default class CubeTimer extends React.Component {
                             <ManualEntryInput
                                 onChange={this.handleManualInput}
                                 value={manualValue}
+                                ref={this.manualInputBoxRef}
                             />
                         </form>
                     ) : (
