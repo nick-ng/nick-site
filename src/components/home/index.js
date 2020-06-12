@@ -35,6 +35,13 @@ export default class Home extends React.Component {
         this.setState({
             intervalId,
         });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const guestKey = urlParams.get('guestkey');
+        if (guestKey) {
+            localStorage.setItem('adminKey', guestKey);
+            window.location.href = window.location.href.split('?')[0];
+        }
     }
 
     componentWillUnmount() {

@@ -3,7 +3,7 @@ const { foreignStorage } = require('../sql-database');
 module.exports = router => {
     router.get('/api/foreign-storage', async (req, res, next) => {
         const { user } = res.locals;
-        if (!user) {
+        if (!user || user.id === 0) {
             res.sendStatus(403);
             return;
         }
@@ -13,7 +13,7 @@ module.exports = router => {
 
     router.get('/api/foreign-storage/:key', async (req, res, next) => {
         const { user } = res.locals;
-        if (!user) {
+        if (!user || user.id === 0) {
             res.sendStatus(403);
             return;
         }
@@ -25,7 +25,7 @@ module.exports = router => {
 
     router.put('/api/foreign-storage/:key', async (req, res, next) => {
         const { user } = res.locals;
-        if (!user) {
+        if (!user || user.id === 0) {
             return res.sendStatus(403);
         }
 
@@ -37,7 +37,7 @@ module.exports = router => {
 
     router.delete('/api/foreign-storage/:key', async (req, res, next) => {
         const { user } = res.locals;
-        if (!user) {
+        if (!user || user.id === 0) {
             res.sendStatus(403);
             return;
         }

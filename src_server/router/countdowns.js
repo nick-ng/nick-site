@@ -3,7 +3,7 @@ const { countdown } = require('../sql-database');
 module.exports = router => {
     router.get('/api/countdowns', async (req, res, next) => {
         const { user } = res.locals;
-        if (!user) {
+        if (!user || user.id === 0) {
             return res.sendStatus(403);
         }
 
