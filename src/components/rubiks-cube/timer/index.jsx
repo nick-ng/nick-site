@@ -8,6 +8,7 @@ import css from './styles.css';
 import ScrambleHelper from './scramble';
 import TimerHistory from './history';
 import SessionSelector, { getCurrentSession, getSessionStorageKey } from './session-selector';
+import SessionStats from './session-stats';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
 const SESSION_LIMIT = 100000;
@@ -443,6 +444,13 @@ export default class CubeTimer extends React.Component {
         return (
             <div className={css.cubeTimer}>
                 <h2>Cube Timer</h2>
+
+                <button onClick={this.handleResetTimer}>Next Scramble</button>
+                <InfoRow>
+                    <SessionSelector />
+                    <ScrambleHelper cubeString={cubeString} scramble={scramble} />
+                    <SessionStats timerHistory={JSON.parse(timerHistory)} />
+                </InfoRow>
                 <LabelH>
                     <input
                         type="checkbox"
@@ -471,11 +479,6 @@ export default class CubeTimer extends React.Component {
                         </>
                     )}
                 </TimerDisplay>
-                <button onClick={this.handleResetTimer}>Next Scramble</button>
-                <InfoRow>
-                    <SessionSelector />
-                    <ScrambleHelper cubeString={cubeString} scramble={scramble} />
-                </InfoRow>
                 <TimerHistory
                     timerHistory={JSON.parse(timerHistory)}
                     removeTime={this.removeTime}

@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import chunk from 'lodash/chunk';
 import moment from 'moment';
 
-import { solvesByDay } from './utils';
-
 const Button = styled.button`
     padding: 5px 10px;
     border: solid 1px grey;
@@ -100,8 +98,6 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
         }),
         5
     ).reverse();
-
-    solvesByDay(timerHistory);
 
     return (
         <TimerHistoryContainer>

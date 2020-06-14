@@ -21,7 +21,7 @@ const Scramble = styled.div`
 `;
 
 const CubeNet = styled.div`
-    margin-top: 10px;
+    margin-bottom: 10px;
     justify-content: center;
     display: grid;
     grid-template-columns: ${STICKER_SIZE * 3}px ${STICKER_SIZE * 3}px ${STICKER_SIZE * 3}px ${STICKER_SIZE *
@@ -50,7 +50,6 @@ const CubeScrambleHelper = ({ cubeString, scramble }) => {
     const [uFace, rFace, fFace, dFace, lFace, bFace] = chunk(cubeString.split(''), 9);
     return (
         <div className={css.cubeScrambleHelper}>
-            <Scramble>{scramble}</Scramble>
             {cubeString.length === 54 && (
                 <CubeNet>
                     <Face column={2} row={1}>
@@ -85,6 +84,7 @@ const CubeScrambleHelper = ({ cubeString, scramble }) => {
                     </Face>
                 </CubeNet>
             )}
+            <Scramble>{scramble}</Scramble>
         </div>
     );
 };

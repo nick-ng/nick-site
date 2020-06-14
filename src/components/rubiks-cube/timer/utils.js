@@ -1,14 +1,28 @@
 import moment from 'moment';
 
-export const solvesByDay = session => {
-    if (session.length === 0) {
-        return [];
+export const getTime = solve => {
+    if (!solve) {
+        return 0;
     }
-    const sortedSession = [...session].sort((a, b) => {
+    if (solve.penalty) {
+        return solve.time + 2;
+    }
+    return solve.time;
+};
+
+const sortByCreatedAt = array => {
+    return [...array].sort((a, b) => {
         const dateA = new Date(a.createdAt);
         const dateB = new Date(b.createdAt);
         return dateA - dateB;
     });
+};
+
+export const solvesByDay = session => {
+    if (session.length === 0) {
+        return [];
+    }
+    const sortedSession = sortByCreatedAt(session);
 
     const startDate = new Date(sortedSession[0].createdAt);
     const endDate = new Date(sortedSession[sortedSession.length - 1].createdAt);
@@ -17,7 +31,7 @@ export const solvesByDay = session => {
     let dayStart = moment();
     let dayEnd = moment();
 
-    const ao5sPerDay = [];
+    const byDay = [];
 
     do {
         dayStart = moment(startDate)
@@ -30,17 +44,85 @@ export const solvesByDay = session => {
         const solvesOfTheDay = session.filter(a => {
             const solveDate = moment(a.createdAt);
             return solveDate.isBetween(dayStart, dayEnd);
-        })
-        console.log('solvesOfTheDay', solvesOfTheDay);
+        });
 
-        if (solvesOfTheDay.length >= 5) {
-
+        if (solvesOfTheDay.length > 0) {
+            byDay.push(solvesOfTheDay);
         }
-            counter++;
+
+        counter++;
     } while (dayEnd.isBefore(endDate));
 
-    console.log('startDate', startDate);
-    console.log('endDate', endDate);
+    return byDay;
+};
+
+export const averageOfN = (solves, n = 5) => {
+    if (solves.length === 0) {
+        return 0;
+    }
+
+    let countingSolves = [...solves];
+    if (solves.length === n) {
+        countingSolves = [...solves].sort((a, b) => getTime(a) - getTime(b)).slice(1, n - 1);
+    }
+
+    return countingSolves
+        .reduce((accumulator, current, _, array) => {
+            return accumulator + getTime(current) / array.length;
+        }, 0)
+        .toFixed(2);
+};
+
+export const lastAverageOfN = (solves, n = 5) => {
+    if (solves.length < 5) {
+        return 0;
+    }
+
+    return averageOfN(solves.slice(-n), n);
+};
+
+export const firstAoNByDay = (solves, n = 5) => {
+    const byDay = solvesByDay(solves);
+
+    const results = [];
+    byDay.forEach(group => {
+        if (group.length >= n) {
+            const sortedGroup = sortByCreatedAt(group);
+            results.push({
+                id: `AO${n}-DAY-${sortedGroup[n - 1].id}`,
+                average: averageOfN(sortedGroup.slice(0, n), n),
+                createdAt: moment(sortedGroup[n - 1].createdAt)
+                    .endOf('day')
+                    .toISOString(),
+            });
+        }
+    });
+
+    return results;
+};
+
+export const rollingAoN = (solves, n = 5) => {
+    const sortedSolves = sortByCreatedAt(solves);
+
+    const results = [];
+    for (let i = 0; i < sortedSolves.length - (n - 1); i++) {
+        results.push({
+            id: `AO${n}-${sortedSolves[i + n - 1].id}`,
+            average: averageOfN(sortedSolves.slice(i, i + n), n),
+            createdAt: sortedSolves[i + n - 1].createdAt,
+        });
+    }
+
+    return results;
+};
+
+export const bestSingle = solves => {
+    return [...solves].sort((a, b) => getTime(a) - getTime(b))[0];
+};
+
+export const bestRollingAoN = (solves, n = 5) => {
+    const averages = rollingAoN(solves, n);
+    return [...averages].sort((a, b) => a.average - b.average)[0];
 };
 
 const getMoveMap = rotation => {
