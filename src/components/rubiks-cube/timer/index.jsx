@@ -10,6 +10,7 @@ import TimerHistory from './history';
 import SessionSelector, { getCurrentSession, getSessionStorageKey } from './session-selector';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
+const SESSION_LIMIT = 100000;
 
 const LabelH = styled.div`
     display: flex;
@@ -115,7 +116,7 @@ export default class CubeTimer extends React.Component {
             });
         } else {
             const res = await axios.get('/api/cube-3x3-scramble');
-            if (getCurrentSession().includes('BLD') && false) {
+            if (getCurrentSession().includes('BLD')) {
                 const { wideScramble, wideCubeString } = res.data;
                 this.setState({
                     scramble: wideScramble,
@@ -317,7 +318,7 @@ export default class CubeTimer extends React.Component {
                 const dateB = new Date(b.createdAt);
                 return dateA - dateB;
             })
-            .slice(0, 10000);
+            .slice(0, SESSION_LIMIT);
         const newTimeHistory = JSON.stringify(newTimeHistoryObj);
         this.setState({
             timerHistory: newTimeHistory,
