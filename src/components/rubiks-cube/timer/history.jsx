@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import chunk from 'lodash/chunk';
+import moment from 'moment';
 
 const Button = styled.button`
     padding: 5px 10px;
@@ -27,7 +28,7 @@ const AO5 = styled.div`
 
 const AO5Header = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     margin: 1em 0;
 
@@ -36,7 +37,7 @@ const AO5Header = styled.div`
     }
 
     ${Button} {
-        margin-left: 1em;
+        margin-top: 0.5em;
     }
 `;
 
@@ -129,7 +130,7 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
                 return (
                     <AO5 key={ao5.map(a => a.id).join('-')}>
                         <AO5Header>
-                            <h3>{average}</h3>
+                            <h3>{`${average} (${moment(ao5[0].createdAt).format('Do MMM')})`}</h3>
                             {ao5.length < 5 && (
                                 <Button
                                     onClick={e => {
