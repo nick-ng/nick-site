@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import chunk from 'lodash/chunk';
 import moment from 'moment';
 
+import { solvesByDay } from './utils';
+
 const Button = styled.button`
     padding: 5px 10px;
     border: solid 1px grey;
@@ -99,6 +101,8 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
         5
     ).reverse();
 
+    solvesByDay(timerHistory);
+
     return (
         <TimerHistoryContainer>
             {ao5s.slice(0, 5).map(ao5 => {
@@ -146,7 +150,7 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
                         </AO5Header>
                         <Times>
                             {ao5.map(({ id, time, scramble, penalty }) => (
-                                <>
+                                <React.Fragment key={`fragment-${id}`}>
                                     <Time
                                         key={`time-${id}`}
                                         fastest={id === fastestId}
@@ -191,7 +195,7 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
                                     >
                                         <i className="fa fa-times" />
                                     </Button>
-                                </>
+                                </React.Fragment>
                             ))}
                         </Times>
                     </AO5>

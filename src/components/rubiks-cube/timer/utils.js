@@ -1,3 +1,48 @@
+import moment from 'moment';
+
+export const solvesByDay = session => {
+    if (session.length === 0) {
+        return [];
+    }
+    const sortedSession = [...session].sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateA - dateB;
+    });
+
+    const startDate = new Date(sortedSession[0].createdAt);
+    const endDate = new Date(sortedSession[sortedSession.length - 1].createdAt);
+
+    let counter = 0;
+    let dayStart = moment();
+    let dayEnd = moment();
+
+    const ao5sPerDay = [];
+
+    do {
+        dayStart = moment(startDate)
+            .add(counter, 'days')
+            .startOf('day');
+        dayEnd = moment(startDate)
+            .add(counter, 'days')
+            .endOf('day');
+
+        const solvesOfTheDay = session.filter(a => {
+            const solveDate = moment(a.createdAt);
+            return solveDate.isBetween(dayStart, dayEnd);
+        })
+        console.log('solvesOfTheDay', solvesOfTheDay);
+
+        if (solvesOfTheDay.length >= 5) {
+
+        }
+            counter++;
+    } while (dayEnd.isBefore(endDate));
+
+    console.log('startDate', startDate);
+    console.log('endDate', endDate);
+};
+
 const getMoveMap = rotation => {
     const moveMap = {
         U: 'U',

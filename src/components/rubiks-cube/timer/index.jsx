@@ -447,7 +447,7 @@ export default class CubeTimer extends React.Component {
                     <input
                         type="checkbox"
                         checked={manualEntry === 'true'}
-                        onClick={this.toggleManualEntry}
+                        onChange={this.toggleManualEntry}
                     />
                     Manual Entry
                 </LabelH>
