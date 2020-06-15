@@ -92,6 +92,10 @@ export default class CubeTimer extends React.Component {
         ]);
 
         const options = {
+            start: moment()
+                .startOf('day')
+                .subtract(1, 'month'),
+            end: moment().endOf('day'),
             defaultGroup: '',
             interpolation: false,
             legend: { left: { position: 'bottom-left' } },
