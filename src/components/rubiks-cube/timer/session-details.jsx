@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Graph2d, DataSet } from 'vis-timeline/standalone';
 
 import { getItem } from '../../../services/foreignStorage';
-import { solvesByDay, bestRollingAoN, firstAoNByDay, rollingAoN } from './utils';
+import { solvesByDay, bestRollingAoN, bestSingle, firstAoNByDay, rollingAoN } from './utils';
 import SessionSelector, { getSessionStorageKey } from './session-selector';
 import SessionStats from './session-stats';
 
@@ -46,7 +46,12 @@ export default class CubeTimer extends React.Component {
     makeGraphs() {
         const { session } = this.state;
 
-        const groupNames = ['Rolling Ao12s', 'Best Ao12 of the Day', 'First Ao5 of the Day'];
+        const groupNames = [
+            'Rolling Ao12s',
+            'Best Single of the Day',
+            'Best Ao12 of the Day',
+            'First Ao5 of the Day',
+        ];
 
         const graphData = new DataSet([
             ...rollingAoN(session, 12).map(solve => ({
@@ -55,19 +60,29 @@ export default class CubeTimer extends React.Component {
                 group: groupNames[0],
             })),
             ...solvesByDay(session)
+                .filter(a => a.length > 0)
+                .map(daySolves => {
+                    const bestSingleSolve = bestSingle(daySolves);
+                    return {
+                        x: moment(bestSingleSolve.createdAt),
+                        y: parseFloat(bestSingleSolve.time),
+                        group: groupNames[1],
+                    };
+                }),
+            ...solvesByDay(session)
                 .filter(a => a.length >= 12)
                 .map(daySolves => {
                     const bestAverage = bestRollingAoN(daySolves);
                     return {
                         x: moment(bestAverage.createdAt),
                         y: parseFloat(bestAverage.average),
-                        group: groupNames[1],
+                        group: groupNames[2],
                     };
                 }),
             ...firstAoNByDay(session, 5).map(solve => ({
                 x: moment(solve.createdAt),
                 y: parseFloat(solve.average),
-                group: groupNames[2],
+                group: groupNames[3],
             })),
         ]);
 
