@@ -65,7 +65,7 @@ export default class CubeTimer extends React.Component {
                     };
                 }),
             ...solvesByDay(session)
-                .filter(a => a.length >= 5)
+                .filter(a => a.length > 5) // avoid overlap with first Ao5
                 .map(daySolves => {
                     const bestAverage = bestRollingAoN(daySolves);
                     return {
