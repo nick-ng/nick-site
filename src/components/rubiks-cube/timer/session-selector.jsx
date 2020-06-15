@@ -21,9 +21,9 @@ export const getSessionStorageKey = () => {
 export const listSessions = async () => {
     const uniqueSessions = new Set([
         ...(await listItems())
-            .filter(key => key.startsWith(`${BASE_LOCAL_STORAGE_KEY}-`))
-            .map(key => key.replace(`${BASE_LOCAL_STORAGE_KEY}-`, ''))
-            .filter(key => key !== 'DEFAULT'),
+            .filter((key) => key.startsWith(`${BASE_LOCAL_STORAGE_KEY}-`))
+            .map((key) => key.replace(`${BASE_LOCAL_STORAGE_KEY}-`, ''))
+            .filter((key) => key !== 'DEFAULT'),
         getCurrentSession(),
     ]);
     const sessions = Array.from(uniqueSessions).sort();
@@ -40,7 +40,7 @@ const SessionLink = styled.a`
     margin: 0 0.3em 0.3em;
     text-decoration: none;
     color: black;
-    ${props => (props.current ? 'font-weight: bold' : '')}
+    ${(props) => (props.current ? 'font-weight: bold' : '')}
 `;
 
 const SessionForm = styled.form`
@@ -49,7 +49,7 @@ const SessionForm = styled.form`
     }
 `;
 
-const SessionSelector = () => {
+const SessionSelector = ({ hideNew }) => {
     const currentSession = getCurrentSession();
     const [sessions, setSessions] = useState([]);
 
@@ -66,9 +66,9 @@ const SessionSelector = () => {
                     Default
                 </SessionLink>
             ) : (
-                <SessionLink href={`/cubetimer`}>Default</SessionLink>
+                <SessionLink href={location.pathname}>Default</SessionLink>
             )}
-            {sessions.map(sessionName => {
+            {sessions.map((sessionName) => {
                 return currentSession === sessionName ? (
                     <SessionLink as="span" key={`session-${sessionName}`} current>
                         {sessionName}
@@ -76,15 +76,17 @@ const SessionSelector = () => {
                 ) : (
                     <SessionLink
                         key={`session-${sessionName}`}
-                        href={`/cubetimer?session=${sessionName}`}
+                        href={`${location.pathname}?session=${sessionName}`}
                     >
                         {sessionName}
                     </SessionLink>
                 );
             })}
-            <SessionForm method="get">
-                <input name="session" type="text" placeholder="New" />
-            </SessionForm>
+            {!hideNew && (
+                <SessionForm method="get">
+                    <input name="session" type="text" placeholder="New" />
+                </SessionForm>
+            )}
         </Container>
     );
 };

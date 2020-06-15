@@ -56,6 +56,9 @@ const Nav = () => (
         <NavLink icon="fa-clock-o" to="/cubetimer" indentLevel={1}>
             Cube Timer
         </NavLink>
+        <NavLink icon="fa-clock-o" to="/sessiondetails" indentLevel={1}>
+            Session Details
+        </NavLink>
         <NavLink icon="fa-clock-o" to="/cubesessionmanager" indentLevel={1}>
             Session Manager
         </NavLink>

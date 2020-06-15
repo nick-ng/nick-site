@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import { getCurrentSession } from './session-selector';
 import { getTime, bestSingle, lastAverageOfN } from './utils';
@@ -9,6 +10,7 @@ const Container = styled.div`
     grid-template-columns: auto auto;
     gap: 0.5em;
     align-content: start;
+    margin: 0 0.3em 0.3em;
 `;
 
 const Heading = styled.h3`
@@ -23,15 +25,28 @@ const Right = styled.div`
 `;
 
 const SessionStats = ({ timerHistory }) => {
+    const attemptCount = timerHistory.length;
+    const dnfCount = timerHistory.filter((a) => getTime(a) > 9000).length;
+    const solvePercent = Math.round(((attemptCount - dnfCount) / Math.max(attemptCount, 1)) * 100);
+    const dnfPercent = Math.round((dnfCount / Math.max(attemptCount, 1)) * 100);
     return (
         <Container>
             <Heading>Session Stats</Heading>
             <Left>Session:</Left>
             <Right>{getCurrentSession().toLowerCase() || 'default'}</Right>
-            <Left>Solves:</Left>
+            <Left>Attempts:</Left>
             <Right>{timerHistory.length}</Right>
-            <Left>Solves without DNFs:</Left>
-            <Right>{timerHistory.filter(a => getTime(a) < 9001).length}</Right>
+            <Left>Solves (not DNF):</Left>
+            <Right>{attemptCount - dnfCount}</Right>
+            <Left>Solve% (DNF%)</Left>
+            <Right>{`${solvePercent}% (${dnfPercent}%)`}</Right>
+            <Left>Attempts Today:</Left>
+            <Right>
+                {
+                    timerHistory.filter((a) => moment(a.createdAt).isAfter(moment().startOf('day')))
+                        .length
+                }
+            </Right>
             <Left>Best Single:</Left>
             <Right>{getTime(bestSingle(timerHistory))}</Right>
             <Left>Ao12</Left>
