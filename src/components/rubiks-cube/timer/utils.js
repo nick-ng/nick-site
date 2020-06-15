@@ -91,9 +91,7 @@ export const firstAoNByDay = (solves, n = 5) => {
             results.push({
                 id: `AO${n}-DAY-${sortedGroup[n - 1].id}`,
                 average: averageOfN(sortedGroup.slice(0, n), n),
-                createdAt: moment(sortedGroup[n - 1].createdAt)
-                    .startOf('day')
-                    .toISOString(),
+                createdAt: moment(sortedGroup[n - 1].createdAt).toISOString(),
             });
         }
     });
