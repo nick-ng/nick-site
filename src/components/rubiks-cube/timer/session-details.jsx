@@ -47,18 +47,13 @@ export default class CubeTimer extends React.Component {
         const { session } = this.state;
 
         const groupNames = [
-            'Rolling Ao12s',
             'Best Single of the Day',
+            'Best Ao5 of the Day',
             'Best Ao12 of the Day',
             'First Ao5 of the Day',
         ];
 
         const graphData = new DataSet([
-            ...rollingAoN(session, 12).map(solve => ({
-                x: moment(solve.createdAt),
-                y: parseFloat(solve.average),
-                group: groupNames[0],
-            })),
             ...solvesByDay(session)
                 .filter(a => a.length > 0)
                 .map(daySolves => {
@@ -66,6 +61,16 @@ export default class CubeTimer extends React.Component {
                     return {
                         x: moment(bestSingleSolve.createdAt),
                         y: parseFloat(bestSingleSolve.time),
+                        group: groupNames[0],
+                    };
+                }),
+            ...solvesByDay(session)
+                .filter(a => a.length >= 5)
+                .map(daySolves => {
+                    const bestAverage = bestRollingAoN(daySolves);
+                    return {
+                        x: moment(bestAverage.createdAt),
+                        y: parseFloat(bestAverage.average),
                         group: groupNames[1],
                     };
                 }),
@@ -89,10 +94,9 @@ export default class CubeTimer extends React.Component {
         const options = {
             defaultGroup: '',
             interpolation: false,
-            legend: { left: { position: 'top-right' } },
+            legend: { left: { position: 'bottom-left' } },
         };
 
-        // Create a Timeline
         const graphp1 = new Graph2d(this.graph1Ref.current, graphData, options);
         this.setState({
             graphp1,
