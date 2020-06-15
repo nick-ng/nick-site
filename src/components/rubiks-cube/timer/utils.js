@@ -10,7 +10,7 @@ export const getTime = solve => {
     return solve.time;
 };
 
-const sortByCreatedAt = array => {
+export const sortByCreatedAt = array => {
     return [...array].sort((a, b) => {
         const dateA = new Date(a.createdAt);
         const dateB = new Date(b.createdAt);
