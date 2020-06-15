@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Graph2d, DataSet } from 'vis-timeline/standalone';
 
 import { getItem } from '../../../services/foreignStorage';
-import { firstAoNByDay, rollingAoN } from './utils';
+import { solvesByDay, bestRollingAoN, firstAoNByDay, rollingAoN } from './utils';
 import SessionSelector, { getSessionStorageKey } from './session-selector';
 import SessionStats from './session-stats';
 
@@ -46,29 +46,39 @@ export default class CubeTimer extends React.Component {
     makeGraphs() {
         const { session } = this.state;
 
-        const groups = new DataSet();
-
-        const groupNames = ['Rolling Ao12s', 'First Ao5 of the Day'];
+        const groupNames = ['Rolling Ao12s', 'Best Ao12 of the Day', 'First Ao5 of the Day'];
 
         const graphData = new DataSet([
             ...rollingAoN(session, 12).map(solve => ({
-                id: solve.id,
                 x: moment(solve.createdAt),
                 y: parseFloat(solve.average),
                 group: groupNames[0],
             })),
+            ...solvesByDay(session)
+                .filter(a => a.length >= 12)
+                .map(daySolves => {
+                    const bestAverage = bestRollingAoN(daySolves);
+                    return {
+                        x: moment(bestAverage.createdAt),
+                        y: parseFloat(bestAverage.average),
+                        group: groupNames[1],
+                    };
+                }),
             ...firstAoNByDay(session, 5).map(solve => ({
-                id: solve.id,
                 x: moment(solve.createdAt),
                 y: parseFloat(solve.average),
-                group: groupNames[1],
+                group: groupNames[2],
             })),
         ]);
 
-        const options = { defaultGroup: '', legend: { left: { position: 'top-right' } } };
+        const options = {
+            defaultGroup: '',
+            interpolation: false,
+            legend: { left: { position: 'top-right' } },
+        };
 
         // Create a Timeline
-        const graphp1 = new Graph2d(this.graph1Ref.current, graphData, groups, options);
+        const graphp1 = new Graph2d(this.graph1Ref.current, graphData, options);
         this.setState({
             graphp1,
         });
