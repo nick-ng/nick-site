@@ -32,7 +32,11 @@ export const listSessions = async () => {
 
 const Container = styled.div`
     overflow-y: scroll;
-    height: 360px;
+    max-height: 360px;
+
+    @media screen and (max-device-width: 1280px) {
+        max-height: 200px;
+    }
 `;
 
 const SessionLink = styled.a`

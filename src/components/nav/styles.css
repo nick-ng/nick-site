@@ -29,7 +29,7 @@
 }
 
 /* Phone */
-@media screen and (max-device-width: 750px) {
+@media screen and (max-device-width: 1280px) {
     .navIcon {
         font-size: 28px;
         margin-right: 0;

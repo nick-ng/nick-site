@@ -326,3 +326,37 @@ export const scrambleToWide = scrambleString => {
         faceMap,
     };
 };
+
+export const stringToSeconds = inputString => {
+    if (typeof inputString === 'number') {
+        return inputString;
+    }
+
+    if ('dnf'.localeCompare(inputString, 'en', { sensitivity: 'accent' }) === 0) {
+        return 9999;
+    }
+
+    if (inputString.includes(':')) {
+        const tempArray = inputString.split(':');
+        return parseInt(tempArray[0]) * 60 + parseFloat(tempArray[1]);
+    }
+
+    if (/^\d+$/.test(inputString)) {
+        const tempArray = inputString.split('');
+        const hundredths = tempArray.pop() || 0;
+        const tenths = tempArray.pop() || 0;
+        const ones = tempArray.pop() || 0;
+        const tens = tempArray.pop() || 0;
+        const minutes = parseInt(tempArray.join(''), 10) || 0;
+        const seconds = parseFloat(`${tens}${ones}.${tenths}${hundredths}`);
+        const manualTime = minutes * 60 + seconds;
+        return manualTime;
+    }
+
+    const output = parseFloat(inputString);
+    if (isNaN(output)) {
+        throw new Error('Not a number.');
+    }
+
+    return output;
+};
