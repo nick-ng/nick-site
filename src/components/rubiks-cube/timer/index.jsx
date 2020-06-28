@@ -102,7 +102,7 @@ export default class CubeTimer extends React.Component {
 
     focusTextInput = () => {
         const { manualEntry } = this.state;
-        if (manualEntry) {
+        if (manualEntry === 'true') {
             this.manualInputBoxRef.current.focus();
         }
     };
@@ -227,7 +227,7 @@ export default class CubeTimer extends React.Component {
 
     updateTimerState = () => {
         const { key1Pressed, key2Pressed, timerState, timerTimeout } = this.state;
-        if (timerState === 'standby' && key1Pressed && key2Pressed) {
+        if (['stop', 'standby'].includes(timerState) && key1Pressed && key2Pressed) {
             this.setState(
                 {
                     timerState: 'wait',
@@ -242,7 +242,7 @@ export default class CubeTimer extends React.Component {
                             },
                             this.updateTimerState
                         );
-                    }, 1000);
+                    }, 500);
                     this.setState({
                         timerTimeout,
                     });
@@ -267,6 +267,7 @@ export default class CubeTimer extends React.Component {
                 },
                 this.storeTime
             );
+            this.getNewScramble();
         }
     };
 
@@ -411,21 +412,39 @@ export default class CubeTimer extends React.Component {
     };
 
     handleManualEntrySubmit = event => {
-        event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
 
         const { manualValue } = this.state;
-        if (parseFloat(manualValue)) {
-            this.storeTime(parseFloat(manualValue));
-            this.handleResetTimer();
-            this.setState({
-                manualValue: '',
-            });
-        } else if ('dnf'.localeCompare(manualValue, 'en', { sensitivity: 'accent' }) === 0) {
+        if ('dnf'.localeCompare(manualValue, 'en', { sensitivity: 'accent' }) === 0) {
             this.storeTime(9999);
             this.handleResetTimer();
             this.setState({
                 manualValue: '',
             });
+        } else if (/^\d+$/.test(manualValue)) {
+            const tempArray = manualValue.split('');
+            const hundredths = tempArray.pop() || 0;
+            const tenths = tempArray.pop() || 0;
+            const ones = tempArray.pop() || 0;
+            const tens = tempArray.pop() || 0;
+            const minutes = parseInt(tempArray.join(''), 10) || 0;
+            const seconds = parseFloat(`${tens}${ones}.${tenths}${hundredths}`);
+            const manualTime = minutes * 60 + seconds;
+            this.storeTime(manualTime);
+            this.handleResetTimer();
+            this.setState({
+                manualValue: '',
+            });
+        } else if (parseFloat(manualValue)) {
+            this.storeTime(parseFloat(manualValue));
+            this.handleResetTimer();
+            this.setState({
+                manualValue: '',
+            });
+        } else {
+            alert('Invalid input');
         }
 
         this.focusTextInput();
@@ -466,6 +485,7 @@ export default class CubeTimer extends React.Component {
                                 onChange={this.handleManualInput}
                                 value={manualValue}
                                 ref={this.manualInputBoxRef}
+                                type="tel"
                             />
                         </form>
                     ) : (
@@ -474,7 +494,7 @@ export default class CubeTimer extends React.Component {
                             {['run', 'stop'].includes(timerState) ? (
                                 <span className={css.timerTime}>{this.getFormatedTime()}</span>
                             ) : (
-                                <span className={css.timerStatus}>{timerState}</span>
+                                <span className={css.timerTime}>{timerState}</span>
                             )}
                         </>
                     )}
