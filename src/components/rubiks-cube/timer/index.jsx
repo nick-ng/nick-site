@@ -9,6 +9,7 @@ import ScrambleHelper from './scramble';
 import TimerHistory from './history';
 import SessionSelector, { getCurrentSession, getSessionStorageKey } from './session-selector';
 import SessionStats from './session-stats';
+import { stringToSeconds } from './utils';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
 const SESSION_LIMIT = 100000;
@@ -365,14 +366,19 @@ export default class CubeTimer extends React.Component {
         const timerHistoryObj = JSON.parse(timerHistory);
         const time = timerHistoryObj.filter(a => a.id === id)[0];
 
-        const newTimeString = prompt('Enter the correct time.');
         let newTime = null;
-
-        if (parseFloat(newTimeString)) {
-            newTime = parseFloat(newTimeString);
-        } else if ('dnf'.localeCompare(newTimeString, 'en', { sensitivity: 'accent' }) === 0) {
-            newTime = 9999;
-        }
+        do {
+            const temp = prompt('Enter the correct time.');
+            if (temp === null) {
+                newTime = time.time;
+            } else {
+                try {
+                    const newTime = stringToSeconds(temp);
+                } catch (e) {
+                    console.warn(e);
+                }
+            }
+        } while (newTime === null);
 
         if (newTime) {
             time.time = newTime;
@@ -417,33 +423,13 @@ export default class CubeTimer extends React.Component {
         }
 
         const { manualValue } = this.state;
-        if ('dnf'.localeCompare(manualValue, 'en', { sensitivity: 'accent' }) === 0) {
-            this.storeTime(9999);
+        try {
+            this.storeTime(stringToSeconds(manualValue));
             this.handleResetTimer();
             this.setState({
                 manualValue: '',
             });
-        } else if (/^\d+$/.test(manualValue)) {
-            const tempArray = manualValue.split('');
-            const hundredths = tempArray.pop() || 0;
-            const tenths = tempArray.pop() || 0;
-            const ones = tempArray.pop() || 0;
-            const tens = tempArray.pop() || 0;
-            const minutes = parseInt(tempArray.join(''), 10) || 0;
-            const seconds = parseFloat(`${tens}${ones}.${tenths}${hundredths}`);
-            const manualTime = minutes * 60 + seconds;
-            this.storeTime(manualTime);
-            this.handleResetTimer();
-            this.setState({
-                manualValue: '',
-            });
-        } else if (parseFloat(manualValue)) {
-            this.storeTime(parseFloat(manualValue));
-            this.handleResetTimer();
-            this.setState({
-                manualValue: '',
-            });
-        } else {
+        } catch (e) {
             alert('Invalid input');
         }
 
