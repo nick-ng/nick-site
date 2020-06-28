@@ -403,7 +403,7 @@ export default class CubeTimer extends React.Component {
             if (prevState.manualEntry === 'true') {
                 newManualEntry = 'false';
             }
-            setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, newManualEntry);
+            localStorage.setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, newManualEntry);
             return {
                 manualEntry: newManualEntry,
             };
