@@ -15,6 +15,7 @@
 .timerTime {
     font-family: monospace;
     font-size: 5em;
+    text-transform: capitalize;
 }
 
 .timerStatus {
