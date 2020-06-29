@@ -373,7 +373,7 @@ export default class CubeTimer extends React.Component {
                 newTime = time.time;
             } else {
                 try {
-                    const newTime = stringToSeconds(temp);
+                    newTime = stringToSeconds(temp);
                 } catch (e) {
                     console.warn(e);
                 }
