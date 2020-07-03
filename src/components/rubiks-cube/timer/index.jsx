@@ -12,7 +12,7 @@ import SessionStats from './session-stats';
 import { stringToSeconds } from './utils';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
-const SESSION_LIMIT = 100000;
+const SESSION_LIMIT = 500;
 
 const LabelH = styled.div`
     display: flex;
@@ -304,18 +304,23 @@ export default class CubeTimer extends React.Component {
     };
 
     storeTime = (time = null, n = 1) => {
-        const { scramble, cubeString, currentLocalStorageKey, timerHistory } = this.state;
+        const { scramble, currentLocalStorageKey, timerHistory } = this.state;
         const timerHistoryObj = JSON.parse(timerHistory);
         for (let i = 0; i < n; i++) {
             timerHistoryObj.push({
                 id: uuid(),
                 scramble: i === 0 ? scramble : '',
-                cubeString: i === 0 ? cubeString : '',
                 time: typeof time === 'number' ? time : this.getTime(),
                 createdAt: new Date(),
             });
         }
         const newTimeHistoryObj = timerHistoryObj
+            .map(({ id, scramble, time, createdAt }) => ({
+                id,
+                scramble,
+                time,
+                createdAt,
+            }))
             .sort((a, b) => {
                 const dateA = new Date(a.createdAt);
                 const dateB = new Date(b.createdAt);
