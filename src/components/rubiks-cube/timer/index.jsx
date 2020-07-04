@@ -3,7 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
-import { getItem, setItem } from '../../../services/foreignStorage';
+import { getArray, setArray } from '../../../services/foreignStorage';
 import css from './styles.css';
 import ScrambleHelper from './scramble';
 import TimerHistory from './history';
@@ -12,7 +12,23 @@ import SessionStats from './session-stats';
 import { stringToSeconds } from './utils';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
-const SESSION_LIMIT = 500;
+const SESSION_LIMIT = 100000000;
+const CHUNK_LIMIT = 500;
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    button {
+        min-width: 50%;
+    }
+
+    @media screen and (max-device-width: 1280px) {
+        align-items: flex-start;
+        width: 100%;
+    }
+`;
 
 const LabelH = styled.div`
     display: flex;
@@ -59,13 +75,15 @@ export default class CubeTimer extends React.Component {
             timerInterval: null,
             timerProgress: null,
             currentLocalStorageKey: getSessionStorageKey(),
-            timerHistory: '[]',
+            timerHistory: [],
             scramble: '',
             cubeString: '',
             nextScramble: '',
             nextCubeString: '',
             manualEntry: localStorage.getItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY) || 'false',
             manualValue: '',
+            loading: false,
+            saving: false,
         };
 
         this.manualInputBoxRef = React.createRef();
@@ -75,6 +93,7 @@ export default class CubeTimer extends React.Component {
         const timerInterval = setInterval(this.updateTimerProgress, 333);
         this.setState({
             timerInterval,
+            loading: true,
         });
 
         addEventListener('keydown', this.handleKeyDown);
@@ -85,7 +104,8 @@ export default class CubeTimer extends React.Component {
         const currentLocalStorageKey = getSessionStorageKey();
 
         this.setState({
-            timerHistory: (await getItem(currentLocalStorageKey)) || '[]',
+            timerHistory: await getArray(currentLocalStorageKey),
+            loading: false,
         });
 
         this.focusTextInput();
@@ -101,9 +121,15 @@ export default class CubeTimer extends React.Component {
         removeEventListener('keyup', this.handleKeyUp);
     }
 
+    updateStorage = async () => {
+        const { currentLocalStorageKey, timerHistory } = this.state;
+        this.setState({ saving: true });
+        await setArray(currentLocalStorageKey, timerHistory, CHUNK_LIMIT);
+        this.setState({ saving: false });
+    };
+
     focusTextInput = () => {
-        const { manualEntry } = this.state;
-        if (manualEntry === 'true') {
+        if (this.manualInputBoxRef.current) {
             this.manualInputBoxRef.current.focus();
         }
     };
@@ -149,6 +175,7 @@ export default class CubeTimer extends React.Component {
     };
 
     handleKeyDown = event => {
+        this.focusTextInput();
         const { key1, key2, key12 } = this.state;
         const { code } = event;
         switch (code) {
@@ -227,7 +254,12 @@ export default class CubeTimer extends React.Component {
     };
 
     updateTimerState = () => {
-        const { key1Pressed, key2Pressed, timerState, timerTimeout } = this.state;
+        const { key1Pressed, key2Pressed, timerState, timerTimeout, manualEntry } = this.state;
+
+        if (manualEntry === 'true') {
+            return;
+        }
+
         if (['stop', 'standby'].includes(timerState) && key1Pressed && key2Pressed) {
             this.setState(
                 {
@@ -282,7 +314,6 @@ export default class CubeTimer extends React.Component {
         if (e) {
             e.target.blur();
         }
-        this.focusTextInput();
     };
 
     getTime = () => {
@@ -304,17 +335,16 @@ export default class CubeTimer extends React.Component {
     };
 
     storeTime = (time = null, n = 1) => {
-        const { scramble, currentLocalStorageKey, timerHistory } = this.state;
-        const timerHistoryObj = JSON.parse(timerHistory);
+        const { scramble, timerHistory } = this.state;
         for (let i = 0; i < n; i++) {
-            timerHistoryObj.push({
+            timerHistory.push({
                 id: uuid(),
                 scramble: i === 0 ? scramble : '',
                 time: typeof time === 'number' ? time : this.getTime(),
                 createdAt: new Date(),
             });
         }
-        const newTimeHistoryObj = timerHistoryObj
+        const newTimeHistory = timerHistory
             .map(({ id, scramble, time, createdAt }) => ({
                 id,
                 scramble,
@@ -327,49 +357,43 @@ export default class CubeTimer extends React.Component {
                 return dateA - dateB;
             })
             .slice(0, SESSION_LIMIT);
-        const newTimeHistory = JSON.stringify(newTimeHistoryObj);
-        this.setState({
-            timerHistory: newTimeHistory,
-        });
-        setItem(currentLocalStorageKey, newTimeHistory);
-
-        this.focusTextInput();
+        this.setState(
+            {
+                timerHistory: newTimeHistory,
+            },
+            this.updateStorage
+        );
     };
 
     removeTime = (id, time = '') => {
         if (confirm(`Delete time of ${time}?`)) {
-            const { currentLocalStorageKey, timerHistory } = this.state;
-            const timerHistoryObj = JSON.parse(timerHistory);
-            const newTimeHistory = JSON.stringify(timerHistoryObj.filter(a => a.id !== id));
-            this.setState({
-                timerHistory: newTimeHistory,
-            });
-            setItem(currentLocalStorageKey, newTimeHistory);
+            const { timerHistory } = this.state;
+            const newTimeHistory = timerHistory.filter(a => a.id !== id);
+            this.setState(
+                {
+                    timerHistory: newTimeHistory,
+                },
+                this.updateStorage
+            );
         }
-
-        this.focusTextInput();
     };
 
     togglePenalty = id => {
-        const { currentLocalStorageKey, timerHistory } = this.state;
-        const timerHistoryObj = JSON.parse(timerHistory);
-        const penaltyTime = timerHistoryObj.filter(a => a.id === id)[0];
+        const { timerHistory } = this.state;
+        const penaltyTime = timerHistory.filter(a => a.id === id)[0];
         penaltyTime.penalty = !penaltyTime.penalty;
-        const newTimeHistory = JSON.stringify(
-            timerHistoryObj.filter(a => a.id !== id).concat(penaltyTime)
+        const newTimeHistory = timerHistory.filter(a => a.id !== id).concat(penaltyTime);
+        this.setState(
+            {
+                timerHistory: newTimeHistory,
+            },
+            this.updateStorage
         );
-        this.setState({
-            timerHistory: newTimeHistory,
-        });
-        setItem(currentLocalStorageKey, newTimeHistory);
-
-        this.focusTextInput();
     };
 
     editTime = id => {
-        const { currentLocalStorageKey, timerHistory } = this.state;
-        const timerHistoryObj = JSON.parse(timerHistory);
-        const time = timerHistoryObj.filter(a => a.id === id)[0];
+        const { timerHistory } = this.state;
+        const time = timerHistory.filter(a => a.id === id)[0];
 
         let newTime = null;
         do {
@@ -387,16 +411,14 @@ export default class CubeTimer extends React.Component {
 
         if (newTime) {
             time.time = newTime;
-            const newTimeHistory = JSON.stringify(
-                timerHistoryObj.filter(a => a.id !== id).concat(time)
+            const newTimeHistory = timerHistory.filter(a => a.id !== id).concat(time);
+            this.setState(
+                {
+                    timerHistory: newTimeHistory,
+                },
+                this.updateStorage
             );
-            this.setState({
-                timerHistory: newTimeHistory,
-            });
-            setItem(currentLocalStorageKey, newTimeHistory);
         }
-
-        this.focusTextInput();
     };
 
     toggleManualEntry = e => {
@@ -413,7 +435,6 @@ export default class CubeTimer extends React.Component {
                 manualEntry: newManualEntry,
             };
         });
-        this.focusTextInput();
     };
 
     handleManualInput = event => {
@@ -437,8 +458,6 @@ export default class CubeTimer extends React.Component {
         } catch (e) {
             alert('Invalid input');
         }
-
-        this.focusTextInput();
     };
 
     render() {
@@ -449,17 +468,22 @@ export default class CubeTimer extends React.Component {
             cubeString,
             manualEntry,
             manualValue,
+            loading,
+            saving,
         } = this.state;
 
         return (
-            <div className={css.cubeTimer}>
-                <h2>Cube Timer</h2>
+            <Container>
+                <h2>
+                    Cube Timer<span>{saving && ' (Saving)'}</span>
+                    <span>{loading && ' (Loading)'}</span>
+                </h2>
 
                 <button onClick={this.handleResetTimer}>Next Scramble</button>
                 <InfoRow>
                     <SessionSelector />
                     <ScrambleHelper cubeString={cubeString} scramble={scramble} />
-                    <SessionStats timerHistory={JSON.parse(timerHistory)} />
+                    <SessionStats timerHistory={timerHistory} />
                 </InfoRow>
                 <LabelH>
                     <input
@@ -490,14 +514,15 @@ export default class CubeTimer extends React.Component {
                         </>
                     )}
                 </TimerDisplay>
+                {loading && <p>Loading...</p>}
                 <TimerHistory
-                    timerHistory={JSON.parse(timerHistory)}
+                    timerHistory={timerHistory}
                     removeTime={this.removeTime}
                     togglePenalty={this.togglePenalty}
                     storeTime={this.storeTime}
                     editTime={this.editTime}
                 />
-            </div>
+            </Container>
         );
     }
 }
