@@ -112,6 +112,9 @@ const SessionImporter = ({ selectedSessions, refreshHack }) => {
     return (
         <Container>
             <Heading>Importer</Heading>
+            <a href="https://cstimer.net/" target="_blank">
+                csTimer.net
+            </a>
             <TextArea
                 onChange={e => {
                     setImportText(e.target.value);
