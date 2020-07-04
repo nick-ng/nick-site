@@ -5,7 +5,10 @@ export default class AnniversaryCountdown extends React.Component {
         super(props);
 
         setTimeout(() => {
-            window.open('https://www.youtube.com/watch?v=PWgvGjAhvIw', '_blank');
+            window.open(
+                'https://www.youtube.com/watch?v=PWgvGjAhvIw',
+                '_blank'
+            );
         }, 1000);
     }
 

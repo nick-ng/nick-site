@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { Graph2d, DataSet } from 'vis-timeline/standalone';
 
-import { getItem } from '../../../services/foreignStorage';
+import { getArray } from '../../../services/foreignStorage';
 import { solvesByDay, bestRollingAoN, bestSingle, firstAoNByDay, rollingAoN } from './utils';
 import SessionSelector, { getSessionStorageKey } from './session-selector';
 import SessionStats from './session-stats';
@@ -25,22 +25,24 @@ export default class CubeTimer extends React.Component {
 
         this.state = {
             session: [],
-            graphp1: null,
+            graph1: null,
+            graph2: null,
+            loading: false,
         };
 
         this.graph1Ref = React.createRef();
+        this.graph2Ref = React.createRef();
     }
 
     async componentDidMount() {
-        const sessionJSONString = await getItem(getSessionStorageKey());
-        if (sessionJSONString) {
-            this.setState(
-                {
-                    session: JSON.parse(sessionJSONString),
-                },
-                this.makeGraphs
-            );
-        }
+        this.setState({ loading: true });
+        this.setState(
+            {
+                session: await getArray(getSessionStorageKey()),
+                loading: false,
+            },
+            this.makeGraphs
+        );
     }
 
     makeGraphs() {
@@ -53,7 +55,7 @@ export default class CubeTimer extends React.Component {
             'First Ao5 of the Day',
         ];
 
-        const graphData = new DataSet([
+        const graph1Data = new DataSet([
             ...solvesByDay(session)
                 .filter(a => a.length > 0)
                 .map(daySolves => {
@@ -91,7 +93,7 @@ export default class CubeTimer extends React.Component {
             })),
         ]);
 
-        const options = {
+        const options1 = {
             start: moment()
                 .startOf('day')
                 .subtract(1, 'week'),
@@ -101,14 +103,39 @@ export default class CubeTimer extends React.Component {
             legend: { left: { position: 'bottom-left' } },
         };
 
-        const graphp1 = new Graph2d(this.graph1Ref.current, graphData, options);
+        const graph1 = new Graph2d(this.graph1Ref.current, graph1Data, options1);
+
+        const graph2Data = new DataSet([
+            ...solvesByDay(session)
+                .filter(a => a.length > 0)
+                .map(daySolves => {
+                    return {
+                        x: moment(daySolves[daySolves.length - 1].createdAt).startOf('day'),
+                        y: daySolves.length,
+                    };
+                }),
+        ]);
+
+        const options2 = {
+            style: 'bar',
+            start: moment()
+                .startOf('day')
+                .subtract(2, 'week'),
+            end: moment().endOf('day'),
+            barChart: { width: 50, align: 'right' },
+            drawPoints: false,
+        };
+
+        const graph2 = new Graph2d(this.graph2Ref.current, graph2Data, options2);
+
         this.setState({
-            graphp1,
+            graph1,
+            graph2,
         });
     }
 
     render() {
-        const { session } = this.state;
+        const { session, loading } = this.state;
 
         return (
             <Container>
@@ -118,8 +145,11 @@ export default class CubeTimer extends React.Component {
                     <SessionSelector hideNew />
                 </SideStuff>
                 <Graphs>
-                    <h3>Session Graphs</h3>
+                    {loading && <p>Loading...</p>}
+                    <h3>Best Times</h3>
                     <div ref={this.graph1Ref} />
+                    <h3>Solves Per Day</h3>
+                    <div ref={this.graph2Ref} />
                 </Graphs>
             </Container>
         );

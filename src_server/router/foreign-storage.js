@@ -45,11 +45,17 @@ module.exports = router => {
         const { key } = req.params;
 
         try {
-            const result = await foreignStorage.deleteByUserIdAndKey(user.id, key);
+            const result = await foreignStorage.deleteByUserIdAndKey(
+                user.id,
+                key
+            );
 
             res.sendStatus(result ? 205 : 304);
         } catch (e) {
-            console.error(`Trouble when DELETEing foreign storage for ${user.name}`, e);
+            console.error(
+                `Trouble when DELETEing foreign storage for ${user.name}`,
+                e
+            );
             res.sendStatus(500);
         }
     });

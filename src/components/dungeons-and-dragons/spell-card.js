@@ -24,9 +24,13 @@ const SpellCard = props => {
         <div className={css.spellCard}>
             <h4>{name}</h4>
             {level === 0 ? (
-                <p className={css.spellLevel}>{`${capFirst(school)} cantrip`}</p>
+                <p className={css.spellLevel}>{`${capFirst(
+                    school
+                )} cantrip`}</p>
             ) : (
-                <p className={css.spellLevel}>{`${withOrdinalSuffix(level)}-level ${school}`}</p>
+                <p className={css.spellLevel}>{`${withOrdinalSuffix(
+                    level
+                )}-level ${school}`}</p>
             )}
             <div className={css.spellInfoGrid}>
                 <div>Casting Time:</div>
@@ -41,7 +45,9 @@ const SpellCard = props => {
                 <div>Duration:</div>
                 <div>{duration}</div>
             </div>
-            <ReactMarkdown className={css.spellDescription}>{description}</ReactMarkdown>
+            <ReactMarkdown className={css.spellDescription}>
+                {description}
+            </ReactMarkdown>
         </div>
     );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 
 import { getArray, setArray } from '../../../services/foreignStorage';
@@ -12,8 +13,8 @@ import SessionStats from './session-stats';
 import { stringToSeconds } from './utils';
 
 const LOCAL_STORAGE_MANUAL_ENTRY_KEY = 'CUBE_TIMER_MANUAL_ENTRY';
-const SESSION_LIMIT = 100000000;
-const CHUNK_LIMIT = 500;
+export const SESSION_LIMIT = 100000000;
+export const CHUNK_LIMIT = 500;
 
 const Container = styled.div`
     display: flex;
@@ -47,7 +48,7 @@ const TimerDisplay = styled.div`
 const InfoRow = styled.div`
     align-self: stretch;
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
     justify-content: space-between;
     padding: 0.2em 0em;
 `;
@@ -334,32 +335,31 @@ export default class CubeTimer extends React.Component {
         return '0';
     };
 
-    storeTime = (time = null, n = 1) => {
+    storeTime = (time = null, options = {}) => {
         const { scramble, timerHistory } = this.state;
-        for (let i = 0; i < n; i++) {
-            timerHistory.push({
-                id: uuid(),
-                scramble: i === 0 ? scramble : '',
-                time: typeof time === 'number' ? time : this.getTime(),
-                createdAt: new Date(),
-            });
-        }
-        const newTimeHistory = timerHistory
-            .map(({ id, scramble, time, createdAt }) => ({
-                id,
-                scramble,
-                time,
-                createdAt,
-            }))
-            .sort((a, b) => {
-                const dateA = new Date(a.createdAt);
-                const dateB = new Date(b.createdAt);
-                return dateA - dateB;
-            })
-            .slice(0, SESSION_LIMIT);
+
+        timerHistory.push({
+            id: uuid(),
+            scramble: options.scramble || scramble || '',
+            time: typeof time === 'number' ? time : this.getTime(),
+            createdAt: options.createdAt || Date.now(),
+        });
+
         this.setState(
             {
-                timerHistory: newTimeHistory,
+                timerHistory: timerHistory
+                    .map(({ id, scramble, time, createdAt }) => ({
+                        id,
+                        scramble,
+                        time,
+                        createdAt: moment(createdAt).valueOf(),
+                    }))
+                    .sort((a, b) => {
+                        const dateA = new Date(a.createdAt);
+                        const dateB = new Date(b.createdAt);
+                        return dateA - dateB;
+                    })
+                    .slice(0, SESSION_LIMIT),
             },
             this.updateStorage
         );

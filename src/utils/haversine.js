@@ -12,7 +12,9 @@ const haversine = (coords1, coords2) => {
     const latrd = latr2 - latr1;
     const lonrd = toRadians(coords2.lon - coords1.lon);
 
-    const a = sin(latrd / 2) ** 2 + cos(latr1) * cos(latr2) * sin(lonrd / 2) * sin(lonrd / 2);
+    const a =
+        sin(latrd / 2) ** 2 +
+        cos(latr1) * cos(latr2) * sin(lonrd / 2) * sin(lonrd / 2);
 
     const c = 2 * atan2(sqrt(a), sqrt(1 - a));
 

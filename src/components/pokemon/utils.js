@@ -9,9 +9,11 @@ export const statNames = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'];
 const pokeRound = num => (num % 1 > 0.5 ? Math.ceil(num) : Math.floor(num));
 const product = array => array.reduce((p, c) => pokeRound(p * c), 1);
 const lowerCaseNoSpace = s => s && s.replace(/\s/g, '').toLocaleLowerCase('en');
-const strCompare = (str1, str2) => lowerCaseNoSpace(str1) === lowerCaseNoSpace(str2);
+const strCompare = (str1, str2) =>
+    lowerCaseNoSpace(str1) === lowerCaseNoSpace(str2);
 
-export const getTotalEVs = evs => statNames.reduce((p, name) => p + evs[name], 0);
+export const getTotalEVs = evs =>
+    statNames.reduce((p, name) => p + evs[name], 0);
 
 export const getEffectiveness = (attackingType, defendingType) => {
     const att = attackingType.toLocaleLowerCase('en');
@@ -24,7 +26,8 @@ export const getEffectiveness = (attackingType, defendingType) => {
 
 export const get2Effectiveness = (attackingType, defendingTypes) => {
     return defendingTypes.reduce(
-        (p, defendingType) => p * getEffectiveness(attackingType, defendingType),
+        (p, defendingType) =>
+            p * getEffectiveness(attackingType, defendingType),
         1
     );
 };
@@ -70,7 +73,9 @@ export const getDamageFromStats = (
         1,
     ].map(r => {
         const baseDamage = Math.floor(
-            Math.floor((Math.floor(2 * level * 0.2 + 2) * basePower * a) / d) / 50 + 2
+            Math.floor((Math.floor(2 * level * 0.2 + 2) * basePower * a) / d) /
+                50 +
+                2
         );
 
         let damage = product([baseDamage, weather, crit]);
@@ -82,7 +87,12 @@ export const getDamageFromStats = (
     });
 };
 
-export const getDamageFromObjects = ({ attacker, defender, move, modifiers = [] }) => {
+export const getDamageFromObjects = ({
+    attacker,
+    defender,
+    move,
+    modifiers = [],
+}) => {
     const {
         types: attackerTypes,
         finalStats: { atk, spa },
@@ -131,7 +141,14 @@ export const getDamageFromObjects = ({ attacker, defender, move, modifiers = [] 
     });
 };
 
-export const getFinalStat = (baseStat, iv, ev, nature = 1, isHP = false, level = 50) => {
+export const getFinalStat = (
+    baseStat,
+    iv,
+    ev,
+    nature = 1,
+    isHP = false,
+    level = 50
+) => {
     const ev4 = Math.floor(ev / 4);
     const calc1 = Math.floor((2 * baseStat + iv + ev4) * level * 0.01);
     if (isHP) {
@@ -167,7 +184,8 @@ const natures = {
     quirky: {},
 };
 
-export const getNatureBoost = (natureName, statName) => natures[natureName][statName] || 1;
+export const getNatureBoost = (natureName, statName) =>
+    natures[natureName][statName] || 1;
 
 export const getFinalStats = ({ species, ivs, evs, level = 50 }) => {
     const pokedexEntry = BattlePokedex[lowerCaseNoSpace(species)];
@@ -204,10 +222,16 @@ export const getModifiers = (pokemon, move) => {
     if (strCompare(item, 'lifeorb')) {
         modifiers.push(5324 / 4096);
     }
-    if (strCompare(item, 'choiceband') && strCompare(moveInfo.category, 'physical')) {
+    if (
+        strCompare(item, 'choiceband') &&
+        strCompare(moveInfo.category, 'physical')
+    ) {
         modifiers.push(1.5);
     }
-    if (strCompare(item, 'choicespecs') && strCompare(moveInfo.category, 'special')) {
+    if (
+        strCompare(item, 'choicespecs') &&
+        strCompare(moveInfo.category, 'special')
+    ) {
         modifiers.push(1.5);
     }
     return modifiers;
@@ -319,7 +343,8 @@ export const processQueue2 = (yourPokemon, opponents) => {
                     const damageParams = {
                         display: `${
                             hydratedOpponent.species
-                        } ${evSpreadName} ${item} ${moveInfo.display || moveInfo.name}`,
+                        } ${evSpreadName} ${item} ${moveInfo.display ||
+                            moveInfo.name}`,
                         attacker: hydratedOpponent,
                         defender: yourPokemonHydrated,
                         move,

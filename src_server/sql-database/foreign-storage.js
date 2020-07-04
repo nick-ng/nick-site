@@ -28,7 +28,10 @@ const addOrUpdate = db => async (userId, key, value) => {
                         value,
                     });
             } catch (e) {
-                console.error(`Trouble when updating foreign storage for ${userId}`, e);
+                console.error(
+                    `Trouble when updating foreign storage for ${userId}`,
+                    e
+                );
                 return 500;
             }
             return 205;

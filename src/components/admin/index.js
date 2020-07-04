@@ -1,7 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 
-import { listItems, getItem, setItem, removeItem } from '../../services/foreignStorage';
+import {
+    listItems,
+    getItem,
+    setItem,
+    removeItem,
+} from '../../services/foreignStorage';
 import css from './styles.css';
 
 export default class Admin extends React.Component {
@@ -36,7 +41,11 @@ export default class Admin extends React.Component {
                 <h2>Admin Panel</h2>
                 <label>
                     Admin Key:
-                    <input value={adminKey} type="password" onChange={this.adminKeyChangeHandler} />
+                    <input
+                        value={adminKey}
+                        type="password"
+                        onChange={this.adminKeyChangeHandler}
+                    />
                 </label>
                 <div>
                     Test:
@@ -61,7 +70,9 @@ export default class Admin extends React.Component {
                     Test:
                     <button
                         onClick={async () => {
-                            const a = await axios.get('/api/foreign-storage/test');
+                            const a = await axios.get(
+                                '/api/foreign-storage/test'
+                            );
                             console.log('Get', a.data);
                         }}
                     >
@@ -80,11 +91,14 @@ export default class Admin extends React.Component {
                     Test:
                     <button
                         onClick={async () => {
-                            const a = await axios.put('/api/foreign-storage/test', {
-                                value: JSON.stringify({
-                                    hello: 'world',
-                                }),
-                            });
+                            const a = await axios.put(
+                                '/api/foreign-storage/test',
+                                {
+                                    value: JSON.stringify({
+                                        hello: 'world',
+                                    }),
+                                }
+                            );
                             console.log('Put', a.data);
                         }}
                     >

@@ -5,7 +5,9 @@ const TODOS_STORE = `${STORE_PREFIX}-TODOS`;
 
 const todoSortFunction = (a, b) => {
     const importanceDifference = b.importance - a.importance;
-    return importanceDifference === 0 ? a.timestamp - b.timestamp : importanceDifference;
+    return importanceDifference === 0
+        ? a.timestamp - b.timestamp
+        : importanceDifference;
 };
 
 export const listTodos = async () => {
@@ -22,7 +24,9 @@ export const deleteTodo = (todoList, todoId) => {
 };
 
 export const updateTodo = (todoList, newTodo) => {
-    const newTodoList = todoList.filter(todo => todo.id !== newTodo.id).concat([newTodo]);
+    const newTodoList = todoList
+        .filter(todo => todo.id !== newTodo.id)
+        .concat([newTodo]);
 
     setItem(TODOS_STORE, JSON.stringify(newTodoList));
 

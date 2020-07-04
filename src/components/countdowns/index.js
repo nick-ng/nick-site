@@ -96,10 +96,17 @@ export default class Admin extends React.Component {
             const countdownsWithTimers = countdowns
                 .map(countdown => {
                     const { endTime } = countdown;
-                    const secondsLeft = moment(endTime).diff(moment(), 'seconds');
+                    const secondsLeft = moment(endTime).diff(
+                        moment(),
+                        'seconds'
+                    );
                     const days = Math.floor(secondsLeft / 86400);
-                    const hours = Math.abs(Math.floor((secondsLeft % 86400) / 3600));
-                    const minutes = Math.abs(Math.floor((secondsLeft % 3600) / 60));
+                    const hours = Math.abs(
+                        Math.floor((secondsLeft % 86400) / 3600)
+                    );
+                    const minutes = Math.abs(
+                        Math.floor((secondsLeft % 3600) / 60)
+                    );
                     const seconds = Math.abs(Math.floor(secondsLeft % 60));
 
                     return {
@@ -188,9 +195,17 @@ export default class Admin extends React.Component {
         return (
             <div className={css.container}>
                 <h2>Countdowns</h2>
-                <form className={css.controls} onSubmit={this.addCountdownHandler}>
+                <form
+                    className={css.controls}
+                    onSubmit={this.addCountdownHandler}
+                >
                     <input type="date" name="endDate" placeholder="End Date" />
-                    <input type="time" name="endTime" placeholder="End Time" defaultValue="17:00" />
+                    <input
+                        type="time"
+                        name="endTime"
+                        placeholder="End Time"
+                        defaultValue="17:00"
+                    />
                     <input type="text" name="name" placeholder="Name" />
                     <button type="submit">
                         <i className={cx('fa', 'fa-plus')}></i>
@@ -201,44 +216,102 @@ export default class Admin extends React.Component {
                     <div className={css.countdowns}>
                         {countdowns.length > 0 ? (
                             countdowns.map(
-                                ({ id, days, hours, minutes, seconds, secondsLeft, name }) =>
+                                ({
+                                    id,
+                                    days,
+                                    hours,
+                                    minutes,
+                                    seconds,
+                                    secondsLeft,
+                                    name,
+                                }) =>
                                     days && (
                                         <div
                                             className={css.countdownColumn}
                                             key={`countdown-${id}`}
                                         >
                                             <div
-                                                className={cx(css.countdownTimer, {
-                                                    [css.overdue]: days < 0,
-                                                })}
-                                                style={getStyleMargin(secondsLeft)}
+                                                className={cx(
+                                                    css.countdownTimer,
+                                                    {
+                                                        [css.overdue]: days < 0,
+                                                    }
+                                                )}
+                                                style={getStyleMargin(
+                                                    secondsLeft
+                                                )}
                                             >
-                                                <span style={getStyleText(secondsLeft)}>
+                                                <span
+                                                    style={getStyleText(
+                                                        secondsLeft
+                                                    )}
+                                                >
                                                     {days}
                                                 </span>
-                                                <label style={getStyleText2(secondsLeft)}>
+                                                <label
+                                                    style={getStyleText2(
+                                                        secondsLeft
+                                                    )}
+                                                >
                                                     d,&nbsp;
                                                 </label>
-                                                <span style={getStyleText(secondsLeft)}>
-                                                    {`${hours}`.padStart(2, '0')}
+                                                <span
+                                                    style={getStyleText(
+                                                        secondsLeft
+                                                    )}
+                                                >
+                                                    {`${hours}`.padStart(
+                                                        2,
+                                                        '0'
+                                                    )}
                                                 </span>
-                                                <label style={getStyleText2(secondsLeft)}>
+                                                <label
+                                                    style={getStyleText2(
+                                                        secondsLeft
+                                                    )}
+                                                >
                                                     h,&nbsp;
                                                 </label>
-                                                <span style={getStyleText(secondsLeft)}>
-                                                    {`${minutes}`.padStart(2, '0')}
+                                                <span
+                                                    style={getStyleText(
+                                                        secondsLeft
+                                                    )}
+                                                >
+                                                    {`${minutes}`.padStart(
+                                                        2,
+                                                        '0'
+                                                    )}
                                                 </span>
-                                                <label style={getStyleText2(secondsLeft)}>
+                                                <label
+                                                    style={getStyleText2(
+                                                        secondsLeft
+                                                    )}
+                                                >
                                                     m,&nbsp;
                                                 </label>
-                                                <span style={getStyleText(secondsLeft)}>
-                                                    {`${seconds}`.padStart(2, '0')}
+                                                <span
+                                                    style={getStyleText(
+                                                        secondsLeft
+                                                    )}
+                                                >
+                                                    {`${seconds}`.padStart(
+                                                        2,
+                                                        '0'
+                                                    )}
                                                 </span>
-                                                <label style={getStyleText2(secondsLeft)}>s</label>
+                                                <label
+                                                    style={getStyleText2(
+                                                        secondsLeft
+                                                    )}
+                                                >
+                                                    s
+                                                </label>
                                             </div>
                                             <div
                                                 className={css.countdownRow}
-                                                style={getStyleText2(secondsLeft)}
+                                                style={getStyleText2(
+                                                    secondsLeft
+                                                )}
                                             >
                                                 <label
                                                     className={cx({
@@ -250,15 +323,27 @@ export default class Admin extends React.Component {
                                                 {id > 0 && (
                                                     <React.Fragment>
                                                         <i
-                                                            className={cx('fa', 'fa-pencil')}
+                                                            className={cx(
+                                                                'fa',
+                                                                'fa-pencil'
+                                                            )}
                                                             role="button"
-                                                            onClick={() => this.toggleEditor(id)}
+                                                            onClick={() =>
+                                                                this.toggleEditor(
+                                                                    id
+                                                                )
+                                                            }
                                                         ></i>
                                                         {visibleEditors[id] && (
                                                             <form
-                                                                className={css.controls}
+                                                                className={
+                                                                    css.controls
+                                                                }
                                                                 onSubmit={e =>
-                                                                    this.editCountdownHandler(e, id)
+                                                                    this.editCountdownHandler(
+                                                                        e,
+                                                                        id
+                                                                    )
                                                                 }
                                                             >
                                                                 <input

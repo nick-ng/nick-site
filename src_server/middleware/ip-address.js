@@ -6,7 +6,8 @@ module.exports = app => {
         if (!req.url.match(/\/dnd-.*spell.+\.json$/gi) || res.locals.user) {
             return next();
         }
-        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const ip =
+            req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         next();
     });
 };

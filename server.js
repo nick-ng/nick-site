@@ -27,4 +27,6 @@ app.use((req, res) => {
 
 // starting listening
 const port = process.env.PORT || 3435;
-app.listen(port, () => console.log(`${new Date()} Website server listening on ${port}.`));
+app.listen(port, () =>
+    console.log(`${new Date()} Website server listening on ${port}.`)
+);

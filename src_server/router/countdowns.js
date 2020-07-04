@@ -16,7 +16,11 @@ module.exports = router => {
         const { user } = res.locals;
         const { name, endTime } = req.body;
         if (typeof name === 'string' && typeof endTime === 'string') {
-            const code = await countdown.addOrUpdateCountdownForUser(user.id, endTime, name);
+            const code = await countdown.addOrUpdateCountdownForUser(
+                user.id,
+                endTime,
+                name
+            );
             return res.sendStatus(code);
         }
         res.sendStatus(400);
@@ -27,7 +31,12 @@ module.exports = router => {
         const { name, endTime } = req.body;
         const { id } = req.params;
         try {
-            const result = await countdown.updateCountdownById(user.id, id, endTime, name);
+            const result = await countdown.updateCountdownById(
+                user.id,
+                id,
+                endTime,
+                name
+            );
 
             return res.sendStatus(result ? 205 : 304);
         } catch (e) {
@@ -44,7 +53,10 @@ module.exports = router => {
 
             return res.sendStatus(result ? 205 : 304);
         } catch (e) {
-            console.error(`Trouble when DELETEing countdown for ${user.name}`, e);
+            console.error(
+                `Trouble when DELETEing countdown for ${user.name}`,
+                e
+            );
             return res.sendStatus(500);
         }
     });
