@@ -2,30 +2,40 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import SessionList from './session-list';
+import SessionImporter from './session-importer';
 
-import { listItems, getItem, setItem } from '../../../services/foreignStorage';
+import {
+    listItems,
+    getArray,
+    setArray,
+} from '../../../services/foreignStorage';
 import { BASE_LOCAL_STORAGE_KEY } from '../timer/session-selector';
 
 const listSessions = () => {
-    return Object.keys(localStorage).filter(key => key.startsWith(BASE_LOCAL_STORAGE_KEY));
+    return Object.keys(localStorage).filter(key =>
+        key.startsWith(BASE_LOCAL_STORAGE_KEY)
+    );
 };
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: 3fr 1fr 3fr;
+    grid-template-columns: 3fr 2fr 3fr;
     gap: 0 0;
     justify-items: center;
     align-items: start;
 `;
 
-const Controls = styled.div``;
+const Controls = styled.div`
+    grid-column: 1 / 4;
+`;
 
 const Button = styled.button``;
 
 const CubeSessionManager = () => {
     const [foreignSessions, setForeignSessions] = useState({});
     const [localSessions, setLocalSessions] = useState({});
-    const [selectedSession, setSelectedSession] = useState('');
+    const [selectedSessions, setSelectedSessions] = useState([]);
+    const [refreshHack, setRefreshHack] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -33,10 +43,13 @@ const CubeSessionManager = () => {
                 key.startsWith(BASE_LOCAL_STORAGE_KEY)
             );
             const fetchedForeignSessions = {};
-            for (let sessionName of foreignSessionList) {
-                const temp = await getItem(sessionName);
-                fetchedForeignSessions[sessionName] = JSON.parse(temp);
-            }
+            const fetchedSessions = await Promise.all(
+                foreignSessionList.map(sessionName => getArray(sessionName))
+            );
+            foreignSessionList.forEach((sessionName, i) => {
+                fetchedForeignSessions[sessionName] = fetchedSessions[i];
+            });
+
             setForeignSessions(fetchedForeignSessions);
         })();
 
@@ -44,21 +57,49 @@ const CubeSessionManager = () => {
 
         setLocalSessions(
             localSessions.reduce((accumulator, sessionName) => {
-                accumulator[sessionName] = JSON.parse(localStorage.getItem(sessionName));
+                accumulator[sessionName] = JSON.parse(
+                    localStorage.getItem(sessionName)
+                );
                 return accumulator;
             }, {})
         );
-    }, []);
+    }, [refreshHack]);
+
+    const toggleSelectedSessions = sessionName => {
+        if (selectedSessions.includes(sessionName)) {
+            setSelectedSessions(
+                selectedSessions.filter(a => a !== sessionName)
+            );
+        } else {
+            setSelectedSessions(selectedSessions.concat([sessionName]));
+        }
+    };
 
     return (
         <Container>
-            <SessionList title="Foreign Sessions" sessions={foreignSessions} />
-            <Controls>
+            {/* <Controls>
                 <Button>Copy to Foreign</Button>
                 <Button>Copy to Local</Button>
                 <Button>Merge</Button>
-            </Controls>
-            <SessionList title="Local Sessions" sessions={localSessions} />
+            </Controls> */}
+            <SessionList
+                title="Foreign Sessions"
+                id="foreign"
+                sessions={foreignSessions}
+                selectedSessions={selectedSessions}
+                toggleSelectedSessions={toggleSelectedSessions}
+            />
+            <SessionImporter
+                selectedSessions={selectedSessions}
+                refreshHack={() => setRefreshHack(refreshHack + 1)}
+            />
+            <SessionList
+                title="Local Sessions"
+                id="local"
+                sessions={localSessions}
+                selectedSessions={selectedSessions}
+                toggleSelectedSessions={toggleSelectedSessions}
+            />
         </Container>
     );
 };

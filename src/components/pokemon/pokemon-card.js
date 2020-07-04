@@ -45,7 +45,11 @@ const PokemonCard = props => {
             </div>
         );
     } catch (e) {
-        return <div className={css.pokemonCard}>There's a problem with your pokemon.</div>;
+        return (
+            <div className={css.pokemonCard}>
+                There's a problem with your pokemon.
+            </div>
+        );
     }
 };
 

@@ -63,7 +63,9 @@ export const averageOfN = (solves, n = 5) => {
 
     let countingSolves = [...solves];
     if (solves.length === n) {
-        countingSolves = [...solves].sort((a, b) => getTime(a) - getTime(b)).slice(1, n - 1);
+        countingSolves = [...solves]
+            .sort((a, b) => getTime(a) - getTime(b))
+            .slice(1, n - 1);
     }
 
     return countingSolves
@@ -332,7 +334,9 @@ export const stringToSeconds = inputString => {
         return inputString;
     }
 
-    if ('dnf'.localeCompare(inputString, 'en', { sensitivity: 'accent' }) === 0) {
+    if (
+        'dnf'.localeCompare(inputString, 'en', { sensitivity: 'accent' }) === 0
+    ) {
         return 9999;
     }
 

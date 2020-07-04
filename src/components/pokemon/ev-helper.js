@@ -43,10 +43,12 @@ export default class PokemonEVHelper extends React.Component {
         const opponents = JSON.parse(opponentInput);
 
         this.state = {
-            yourInput: yourInput || JSON.stringify(YOUR_EXAMPLE_POKEMON, null, '  '),
+            yourInput:
+                yourInput || JSON.stringify(YOUR_EXAMPLE_POKEMON, null, '  '),
             yourError: null,
             yourPokemon: yourInput ? yourPokemon : YOUR_EXAMPLE_POKEMON,
-            opponentInput: opponentInput || JSON.stringify(EXAMPLE_OPPONENTS, null, '  '),
+            opponentInput:
+                opponentInput || JSON.stringify(EXAMPLE_OPPONENTS, null, '  '),
             opponentError: null,
             opponents: opponentInput ? opponents : EXAMPLE_OPPONENTS,
             processed: false,
@@ -105,9 +107,17 @@ export default class PokemonEVHelper extends React.Component {
     }
 
     async bruteForceHandler() {
-        const { queue, yourPokemon, opponents, defensiveEVSpreads50 } = this.state;
+        const {
+            queue,
+            yourPokemon,
+            opponents,
+            defensiveEVSpreads50,
+        } = this.state;
         const goodResults = [];
-        const evChunks = chunk(defensiveEVSpreads50, Math.max(5, 1000 / queue.length));
+        const evChunks = chunk(
+            defensiveEVSpreads50,
+            Math.max(5, 1000 / queue.length)
+        );
         const start = new Date();
         await evChunks.reduce(
             (p, chunk, i) =>
@@ -119,9 +129,12 @@ export default class PokemonEVHelper extends React.Component {
                             const elapsed = now - start;
                             const estimate = elapsed / progress;
                             this.setState({
-                                progress: `Progress: ${((i / evChunks.length) * 100).toFixed(
-                                    1
-                                )}%. Elapsed: ${(elapsed / 1000).toFixed(0)} seconds. Estimate: ${(
+                                progress: `Progress: ${(
+                                    (i / evChunks.length) *
+                                    100
+                                ).toFixed(1)}%. Elapsed: ${(
+                                    elapsed / 1000
+                                ).toFixed(0)} seconds. Estimate: ${(
                                     estimate / 1000
                                 ).toFixed(0)} seconds.`,
                             });
@@ -136,8 +149,14 @@ export default class PokemonEVHelper extends React.Component {
                                         nature: yourPokemon.evs.nature,
                                     },
                                 };
-                                const calculations = processQueue2(tempPokemon, opponents);
-                                const a = calculations.reduce((p, calc) => p + calc.koChance, 0);
+                                const calculations = processQueue2(
+                                    tempPokemon,
+                                    opponents
+                                );
+                                const a = calculations.reduce(
+                                    (p, calc) => p + calc.koChance,
+                                    0
+                                );
                                 const averageKoChance = a / calculations.length;
                                 goodResults.push({
                                     evSpreadName: `${yourPokemon.species} ${yourPokemon.evs.nature} ${evs.hp}/x/${evs.def}/x/${evs.spd}/x KOs: ${averageKoChance} Spare: ${spare}`,
@@ -244,7 +263,11 @@ export default class PokemonEVHelper extends React.Component {
         if (confirm('Reset your opponents?')) {
             this.setState(
                 {
-                    opponentInput: JSON.stringify(EXAMPLE_OPPONENTS, null, '  '),
+                    opponentInput: JSON.stringify(
+                        EXAMPLE_OPPONENTS,
+                        null,
+                        '  '
+                    ),
                     opponentError: null,
                     opponents: EXAMPLE_OPPONENTS,
                 },
@@ -258,12 +281,18 @@ export default class PokemonEVHelper extends React.Component {
         return event => {
             if (event.target.checked) {
                 this.setState(prevState => {
-                    return { [sortControl]: prevState[sortControl].concat([property]) };
+                    return {
+                        [sortControl]: prevState[sortControl].concat([
+                            property,
+                        ]),
+                    };
                 });
                 return;
             }
             this.setState(prevState => ({
-                [sortControl]: prevState[sortControl].filter(a => a !== property),
+                [sortControl]: prevState[sortControl].filter(
+                    a => a !== property
+                ),
             }));
         };
     }
@@ -298,7 +327,8 @@ export default class PokemonEVHelper extends React.Component {
                             <button
                                 disabled={processedBruteForce}
                                 onClick={this.bruteForceHandler}
-                            >{`Brute Force ${queue.length * defensiveEVSpreads50.length}`}</button>
+                            >{`Brute Force ${queue.length *
+                                defensiveEVSpreads50.length}`}</button>
                         </div>
                         <div>{`Outer Sort: ${outerSort.join(', ')}`}</div>
                         <div className={css.sortControls}>
@@ -306,25 +336,41 @@ export default class PokemonEVHelper extends React.Component {
                                 <div>Average KO</div>
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('averageKoChance', 'outerSort')}
-                                    checked={outerSort.includes('averageKoChance')}
+                                    onChange={this.makeSortHandler(
+                                        'averageKoChance',
+                                        'outerSort'
+                                    )}
+                                    checked={outerSort.includes(
+                                        'averageKoChance'
+                                    )}
                                 />
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('averageKoChanceR', 'outerSort')}
-                                    checked={outerSort.includes('averageKoChanceR')}
+                                    onChange={this.makeSortHandler(
+                                        'averageKoChanceR',
+                                        'outerSort'
+                                    )}
+                                    checked={outerSort.includes(
+                                        'averageKoChanceR'
+                                    )}
                                 />
                             </div>
                             <div className={css.sortControl}>
                                 <div>HP EV</div>
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('hp', 'outerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'hp',
+                                        'outerSort'
+                                    )}
                                     checked={outerSort.includes('hp')}
                                 />
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('hpR', 'outerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'hpR',
+                                        'outerSort'
+                                    )}
                                     checked={outerSort.includes('hpR')}
                                 />
                             </div>
@@ -332,12 +378,18 @@ export default class PokemonEVHelper extends React.Component {
                                 <div>Spare EVs</div>
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('spare', 'outerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'spare',
+                                        'outerSort'
+                                    )}
                                     checked={outerSort.includes('spare')}
                                 />
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('spareR', 'outerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'spareR',
+                                        'outerSort'
+                                    )}
                                     checked={outerSort.includes('spareR')}
                                 />
                             </div>
@@ -348,12 +400,18 @@ export default class PokemonEVHelper extends React.Component {
                                 <div>OHKO Chance</div>
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('koChance', 'innerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'koChance',
+                                        'innerSort'
+                                    )}
                                     checked={innerSort.includes('koChance')}
                                 />
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('koChanceR', 'innerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'koChanceR',
+                                        'innerSort'
+                                    )}
                                     checked={innerSort.includes('koChanceR')}
                                 />
                             </div>
@@ -361,17 +419,25 @@ export default class PokemonEVHelper extends React.Component {
                                 <div>Max Damage</div>
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('maxDamage', 'innerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'maxDamage',
+                                        'innerSort'
+                                    )}
                                     checked={innerSort.includes('maxDamage')}
                                 />
                                 <input
                                     type="checkbox"
-                                    onChange={this.makeSortHandler('maxDamageR', 'innerSort')}
+                                    onChange={this.makeSortHandler(
+                                        'maxDamageR',
+                                        'innerSort'
+                                    )}
                                     checked={innerSort.includes('maxDamageR')}
                                 />
                             </div>
                         </div>
-                        {progress && <div style={{ whiteSpace: 'pre' }}>{progress}</div>}
+                        {progress && (
+                            <div style={{ whiteSpace: 'pre' }}>{progress}</div>
+                        )}
                         {results.length > 0 &&
                             sortBy(results, outerSort)
                                 .slice(0, 50)
@@ -381,7 +447,9 @@ export default class PokemonEVHelper extends React.Component {
                                         <table className={css.damageResult}>
                                             <thead>
                                                 <tr>
-                                                    <th className={css.left}>Calc</th>
+                                                    <th className={css.left}>
+                                                        Calc
+                                                    </th>
                                                     <th>OHKO %</th>
                                                     <th>Max Damage</th>
                                                 </tr>
@@ -393,18 +461,41 @@ export default class PokemonEVHelper extends React.Component {
                                                     ),
                                                     innerSort
                                                 )
-                                                    .slice(0, processedBruteForce ? 10 : -1)
-                                                    .map(({ display, koChance, maxDamage, hp }) => {
-                                                        return (
-                                                            <tr key={display}>
-                                                                <td className={css.left}>
-                                                                    {display}
-                                                                </td>
-                                                                <td>{`${koChance * 100}%`}</td>
-                                                                <td>{`${maxDamage} / ${hp}`}</td>
-                                                            </tr>
-                                                        );
-                                                    })}
+                                                    .slice(
+                                                        0,
+                                                        processedBruteForce
+                                                            ? 10
+                                                            : -1
+                                                    )
+                                                    .map(
+                                                        ({
+                                                            display,
+                                                            koChance,
+                                                            maxDamage,
+                                                            hp,
+                                                        }) => {
+                                                            return (
+                                                                <tr
+                                                                    key={
+                                                                        display
+                                                                    }
+                                                                >
+                                                                    <td
+                                                                        className={
+                                                                            css.left
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            display
+                                                                        }
+                                                                    </td>
+                                                                    <td>{`${koChance *
+                                                                        100}%`}</td>
+                                                                    <td>{`${maxDamage} / ${hp}`}</td>
+                                                                </tr>
+                                                            );
+                                                        }
+                                                    )}
                                             </tbody>
                                         </table>
                                     </div>
@@ -413,7 +504,10 @@ export default class PokemonEVHelper extends React.Component {
                     <div className={cx(css.evSpreadColumn, css.fullHeight)}>
                         <p className={css.notes}>
                             Pokedex and moves from{' '}
-                            <a href="https://github.com/smogon/pokemon-showdown" target="_blank">
+                            <a
+                                href="https://github.com/smogon/pokemon-showdown"
+                                target="_blank"
+                            >
                                 Pokemon Showdown
                             </a>
                             , damage calculation from{' '}
@@ -426,7 +520,9 @@ export default class PokemonEVHelper extends React.Component {
                         </p>
                         <label>
                             Your Pokemon
-                            <button onClick={this.yourResetHandler}>Reset</button>
+                            <button onClick={this.yourResetHandler}>
+                                Reset
+                            </button>
                         </label>
                         <textarea
                             className={css.yourInput}
@@ -437,7 +533,9 @@ export default class PokemonEVHelper extends React.Component {
                         <hr />
                         <label>
                             Opponents
-                            <button onClick={this.opponentResetHandler}>Reset</button>
+                            <button onClick={this.opponentResetHandler}>
+                                Reset
+                            </button>
                         </label>
                         <textarea
                             className={css.opponentInput}

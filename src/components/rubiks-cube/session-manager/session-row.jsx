@@ -16,7 +16,17 @@ const Cell = styled.td`
     text-align: ${props => props.alignment || 'right'};
 `;
 
-const SessionRow = ({ sessionName, sessionTimes }) => {
+const Checkbox = styled.input.attrs({
+    type: 'checkbox',
+})``;
+
+const SessionRow = ({
+    id,
+    sessionName,
+    sessionTimes,
+    selectedSessions,
+    toggleSelectedSessions,
+}) => {
     let bestTime = Infinity;
     let dnfs = 0;
     let total = 0;
@@ -33,14 +43,24 @@ const SessionRow = ({ sessionName, sessionTimes }) => {
     });
     const average = total / (sessionTimes.length - dnfs);
 
+    const fullSessionName = `${id}***${sessionName}`;
+
     return (
         <Row>
+            <Cell>
+                <Checkbox
+                    checked={selectedSessions.includes(fullSessionName)}
+                    onChange={() => toggleSelectedSessions(fullSessionName)}
+                />
+            </Cell>
             <Cell alignment="left">{convertName(sessionName)}</Cell>
             <Cell>{sessionTimes.length}</Cell>
             <Cell>{bestTime.toFixed(2)}</Cell>
             <Cell>{average.toFixed(2)}</Cell>
             <Cell alignment="center">
-                <a href={`/cubetimer?session=${convertName(sessionName)}`}>Go</a>
+                <a href={`/cubetimer?session=${convertName(sessionName)}`}>
+                    Go
+                </a>
             </Cell>
         </Row>
     );

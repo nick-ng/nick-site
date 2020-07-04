@@ -85,7 +85,9 @@ export default class SpellBook extends React.Component {
                     isSpellListLoading: true,
                 },
                 async () => {
-                    const res = await axios.get(`/dnd-${casterClass}-spell-list.json`);
+                    const res = await axios.get(
+                        `/dnd-${casterClass}-spell-list.json`
+                    );
                     this.setState({
                         spellList: res.data,
                         isSpellListLoading: false,
@@ -139,7 +141,9 @@ export default class SpellBook extends React.Component {
         return (
             <div>
                 <h2>{capFirst(casterClass)} Spell Book</h2>
-                {isSpellInfoLoading || isSpellListLoading || isSpellInfo2Loading ? (
+                {isSpellInfoLoading ||
+                isSpellListLoading ||
+                isSpellInfo2Loading ? (
                     <p>Loading...</p>
                 ) : (
                     <div className={css.spellBook}>
@@ -147,8 +151,13 @@ export default class SpellBook extends React.Component {
                             {Object.keys(spellList).map(level => (
                                 <button
                                     key={`${casterClass}-level-${level}`}
-                                    className={cx(chosenSpellLevel === level && css.selected)}
-                                    onClick={() => this.spellLevelHandler(level)}
+                                    className={cx(
+                                        chosenSpellLevel === level &&
+                                            css.selected
+                                    )}
+                                    onClick={() =>
+                                        this.spellLevelHandler(level)
+                                    }
                                 >
                                     {level === '0'
                                         ? 'Cantrips'
@@ -160,10 +169,15 @@ export default class SpellBook extends React.Component {
                             {this.getCurrentSpellList().map(spellId => (
                                 <button
                                     key={`${casterClass}-${spellId}}`}
-                                    className={cx(chosenSpellId === spellId && css.selected)}
+                                    className={cx(
+                                        chosenSpellId === spellId &&
+                                            css.selected
+                                    )}
                                     onClick={() => this.spellHandler(spellId)}
                                 >
-                                    {spellInfo[spellId] ? spellInfo[spellId].name : spellId}
+                                    {spellInfo[spellId]
+                                        ? spellInfo[spellId].name
+                                        : spellId}
                                 </button>
                             ))}
                         </div>

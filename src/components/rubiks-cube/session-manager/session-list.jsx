@@ -20,13 +20,20 @@ const Heading = styled.th`
     text-align: ${props => props.alignment || 'right'};
 `;
 
-const SessionList = ({ title, sessions }) => {
+const SessionList = ({
+    title,
+    id,
+    sessions,
+    selectedSessions,
+    toggleSelectedSessions,
+}) => {
     return (
         <Container>
             <h3>{title}</h3>
             <Table>
                 <thead>
                     <tr>
+                        <Heading></Heading>
                         <Heading alignment="left">Session Name</Heading>
                         <Heading>Solves</Heading>
                         <Heading>Best</Heading>
@@ -36,7 +43,14 @@ const SessionList = ({ title, sessions }) => {
                 </thead>
                 <tbody>
                     {Object.entries(sessions).map(([key, value]) => (
-                        <SessionRow key={key} sessionName={key} sessionTimes={value} />
+                        <SessionRow
+                            key={key}
+                            id={id}
+                            sessionName={key}
+                            sessionTimes={value}
+                            selectedSessions={selectedSessions}
+                            toggleSelectedSessions={toggleSelectedSessions}
+                        />
                     ))}
                 </tbody>
             </Table>

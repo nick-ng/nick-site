@@ -19,10 +19,15 @@ module.exports = app => {
             identities.map(async identity => {
                 if (adminKey === identity.key) {
                     try {
-                        const user = await db.user.getOrAddUser(identity.username);
+                        const user = await db.user.getOrAddUser(
+                            identity.username
+                        );
                         res.locals.user = user;
                     } catch (e) {
-                        console.error(`Trouble when getting ${identity.username} info`, e);
+                        console.error(
+                            `Trouble when getting ${identity.username} info`,
+                            e
+                        );
                     }
                 }
             })

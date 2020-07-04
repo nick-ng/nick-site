@@ -23,7 +23,9 @@ export const listAllItems = async () => {
 export const getItem = async keyName => {
     if (canUse()) {
         try {
-            const res = await axios.get(`/api/foreign-storage/${encodeURIComponent(keyName)}`);
+            const res = await axios.get(
+                `/api/foreign-storage/${encodeURIComponent(keyName)}`
+            );
             return res?.data?.value || localStorage.getItem(keyName);
         } catch (e) {
             console.error('Problem when using foreign storage', e);
@@ -34,12 +36,17 @@ export const getItem = async keyName => {
 
 export const getArray = async (keyName, idKey = 'id') => {
     if (canUse()) {
-        const [firstChunkString, itemList] = await Promise.all([getItem(keyName), listAllItems()]);
+        const [firstChunkString, itemList] = await Promise.all([
+            getItem(keyName),
+            listAllItems(),
+        ]);
 
         const firstChunk = JSON.parse(firstChunkString || '[]');
 
         const otherChunks = await Promise.all(
-            itemList.filter(key => key.startsWith(`${keyName}***`)).map(key => getItem(key))
+            itemList
+                .filter(key => key.startsWith(`${keyName}***`))
+                .map(key => getItem(key))
         );
 
         const fullArray = otherChunks.reduce((prev, curr) => {
@@ -58,9 +65,12 @@ export const getArray = async (keyName, idKey = 'id') => {
 export const setItem = async (keyName, dataString) => {
     if (canUse()) {
         try {
-            await axios.put(`/api/foreign-storage/${encodeURIComponent(keyName)}`, {
-                value: dataString,
-            });
+            await axios.put(
+                `/api/foreign-storage/${encodeURIComponent(keyName)}`,
+                {
+                    value: dataString,
+                }
+            );
             return;
         } catch (e) {
             console.error('Problem when using foreign storage', e);

@@ -13,7 +13,11 @@ const hasAdminKey = () => Boolean(localStorage.getItem('adminKey'));
 
 const NavLink = props => {
     const { indentLevel = 0, icon, children } = props;
-    const otherProps = objectWithoutProperties(props, ['indentLevel', 'icon', 'children']);
+    const otherProps = objectWithoutProperties(props, [
+        'indentLevel',
+        'icon',
+        'children',
+    ]);
     const style = indentLevel
         ? {
               marginLeft: `${indentLevel * INDENT_PX}px`,

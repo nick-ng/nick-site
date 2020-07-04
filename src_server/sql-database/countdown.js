@@ -64,7 +64,10 @@ const addOrUpdateCountdownForUser = db => async (userId, url, name) => {
             try {
                 await updateCountdownForUser(db)(userId, url, name);
             } catch (e) {
-                console.error(`Trouble when updating countdown for ${userId}`, e);
+                console.error(
+                    `Trouble when updating countdown for ${userId}`,
+                    e
+                );
                 return 500;
             }
             return 205;
