@@ -12,18 +12,23 @@ const INDENT_PX = 10;
 const hasAdminKey = () => Boolean(localStorage.getItem('adminKey'));
 
 const NavLink = props => {
-    const { indentLevel = 0, icon, children } = props;
+    const { indentLevel = 0, icons, children } = props;
+
     const otherProps = objectWithoutProperties(props, [
         'indentLevel',
         'icon',
         'children',
     ]);
+
     const style = indentLevel
         ? {
               marginLeft: `${indentLevel * INDENT_PX}px`,
               marginTop: '-4px',
           }
         : {};
+
+    const iconsArray = typeof icons === 'string' ? [icons] : icons;
+
     return (
         <NavLinkRRD
             className={css.navLink}
@@ -31,7 +36,15 @@ const NavLink = props => {
             {...otherProps}
             style={style}
         >
-            <i className={cx(css.navIcon, 'fa', icon)}></i>
+            {iconsArray.map(
+                (icon, i) =>
+                    icon && (
+                        <i
+                            className={cx(css.navIcon, 'fa', icon)}
+                            key={`${icon}-${i}`}
+                        />
+                    )
+            )}
             <span className={css.navText}>{children}</span>
         </NavLinkRRD>
     );

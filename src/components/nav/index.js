@@ -8,61 +8,81 @@ import css from './styles.css';
 const Nav = () => (
     <div className={css.navContainer}>
         <Header />
-        <NavLink icon="fa-home" to="/" exact>
+        <NavLink icons="fa-home" to="/" exact>
             Home
         </NavLink>
-        <NavLink icon="fa-bell-o" to="/wedding">
+        <NavLink icons="fa-bell-o" to="/wedding">
             Wedding Album
         </NavLink>
-        <NavLink icon="fa-camera-retro" to="/wedding/photos" indentLevel={1}>
+        <NavLink icons="fa-camera-retro" to="/wedding/photos" indentLevel={1}>
             Photos
         </NavLink>
-        <AdminNav icon="fa-bookmark-o" to="/bookmarks">
+        <AdminNav icons="fa-bookmark-o" to="/bookmarks">
             Bookmarks
         </AdminNav>
-        <AdminNav icon="fa-clock-o" to="/countdowns">
+        <AdminNav icons="fa-clock-o" to="/countdowns">
             Countdowns
         </AdminNav>
-        <NavLink icon="fa-check-square-o" to="/dione">
+        <NavLink icons={['fa-check-square-o', 'fa-square-o']} to="/dione">
             Dione: Todos
         </NavLink>
-        <NavLink icon="fa-gamepad" to="/pokemon/flashcards">
+        <NavLink icons="fa-gamepad" to="/pokemon/flashcards">
             Flash Cards
         </NavLink>
-        {/* <NavLink icon="fa-gamepad" to="/pokemon/evhelper">
+        {/* <NavLink icons="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink> */}
-        <NavLink icon="fa-gamepad" to="/pokemon/notes">
+        <NavLink icons="fa-gamepad" to="/pokemon/notes">
             Pokemon Notes
         </NavLink>
-        <NavLink icon="fa-pencil" to="/dnd/druidspellbook">
+        <NavLink icons="fa-pencil" to="/dnd/druidspellbook">
             Druid Spells
         </NavLink>
-        <NavLink icon="fa-pencil" to="/dnd/paladinspellbook">
+        <NavLink icons="fa-pencil" to="/dnd/paladinspellbook">
             Paladin Spells
         </NavLink>
-        <AdminNav icon="fa-pencil" to="/dnd/wizardspellbook">
+        <AdminNav icons="fa-pencil" to="/dnd/wizardspellbook">
             Wizard Spells
         </AdminNav>
-        <NavLink icon="fa-cube" to="/pll">
+        <NavLink icons="fa-cube" to="/pll">
             Rubik's Cube
         </NavLink>
-        <NavLink icon="fa-rotate-right" to="/pll" indentLevel={1}>
-            PLL Algorithms
-        </NavLink>
-        <NavLink icon="fa-rotate-right" to="/oll" indentLevel={1}>
-            OLL Algorithms
-        </NavLink>
-        <NavLink icon="fa-clock-o" to="/cubetimer" indentLevel={1}>
+        <NavLink
+            icons={['fa-cube', 'fa-clock-o']}
+            to="/cubetimer"
+            indentLevel={1}
+        >
             Cube Timer
         </NavLink>
-        <NavLink icon="fa-clock-o" to="/sessiondetails" indentLevel={1}>
+        <NavLink
+            icons={['fa-cube', 'fa-line-chart']}
+            to="/sessiondetails"
+            indentLevel={1}
+        >
             Session Details
         </NavLink>
-        <NavLink icon="fa-clock-o" to="/cubesessionmanager" indentLevel={1}>
+        <NavLink
+            icons={['fa-cube', 'fa-list-ul']}
+            to="/cubesessionmanager"
+            indentLevel={1}
+        >
             Session Manager
         </NavLink>
-        <AdminNav icon="fa-tachometer" to="/location">
+        <NavLink
+            icons={['fa-cube', 'fa-rotate-right']}
+            to="/pll"
+            indentLevel={1}
+        >
+            PLL Algorithms
+        </NavLink>
+        <NavLink
+            icons={['fa-cube', 'fa-rotate-left']}
+            to="/oll"
+            indentLevel={1}
+        >
+            OLL Algorithms
+        </NavLink>
+        <AdminNav icons="fa-tachometer" to="/location">
             Location
         </AdminNav>
     </div>
