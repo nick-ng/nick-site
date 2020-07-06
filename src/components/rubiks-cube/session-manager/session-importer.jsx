@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import { v4 as uuid } from 'uuid';
 
 import { getArray, setArray } from '../../../services/foreignStorage';
 import { CHUNK_LIMIT, SESSION_LIMIT } from '../timer';
@@ -24,7 +23,7 @@ const convertCSTimer = sessionTimes =>
         }
 
         return {
-            id: uuid(),
+            id: `cstimer-${unixTimestamp}`,
             scramble,
             time,
             createdAt: moment.unix(unixTimestamp).valueOf(),
