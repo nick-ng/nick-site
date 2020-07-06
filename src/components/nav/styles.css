@@ -32,8 +32,12 @@
 @media screen and (max-device-width: 1280px) {
     .navIcon {
         font-size: 28px;
+    }
+
+    .navIcon:last-of-type {
         margin-right: 0;
     }
+
     .navText {
         display: none;
     }

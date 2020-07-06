@@ -7,6 +7,7 @@
 /* Phone */
 @media screen and (max-device-width: 1280px) {
     .container {
+        display: none;
         width: 35px;
         font-weight: normal;
         font-size: 12px;
