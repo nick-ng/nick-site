@@ -8,7 +8,10 @@ import { getArray, setArray } from '../../../services/foreignStorage';
 import css from './styles.css';
 import ScrambleHelper from './scramble';
 import TimerHistory from './history';
-import SessionSelector, { getCurrentSession, getSessionStorageKey } from './session-selector';
+import SessionSelector, {
+    getCurrentSession,
+    getSessionStorageKey,
+} from './session-selector';
 import SessionStats from './session-stats';
 import { stringToSeconds } from './utils';
 
@@ -81,7 +84,8 @@ export default class CubeTimer extends React.Component {
             cubeString: '',
             nextScramble: '',
             nextCubeString: '',
-            manualEntry: localStorage.getItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY) || 'false',
+            manualEntry:
+                localStorage.getItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY) || 'false',
             manualValue: '',
             loading: false,
             saving: false,
@@ -255,13 +259,23 @@ export default class CubeTimer extends React.Component {
     };
 
     updateTimerState = () => {
-        const { key1Pressed, key2Pressed, timerState, timerTimeout, manualEntry } = this.state;
+        const {
+            key1Pressed,
+            key2Pressed,
+            timerState,
+            timerTimeout,
+            manualEntry,
+        } = this.state;
 
         if (manualEntry === 'true') {
             return;
         }
 
-        if (['stop', 'standby'].includes(timerState) && key1Pressed && key2Pressed) {
+        if (
+            ['stop', 'standby'].includes(timerState) &&
+            key1Pressed &&
+            key2Pressed
+        ) {
             this.setState(
                 {
                     timerState: 'wait',
@@ -299,9 +313,11 @@ export default class CubeTimer extends React.Component {
                     timerState: 'stop',
                     timerEnd: new Date(),
                 },
-                this.storeTime
+                () => {
+                    this.storeTime();
+                    this.getNewScramble();
+                }
             );
-            this.getNewScramble();
         }
     };
 
@@ -382,7 +398,9 @@ export default class CubeTimer extends React.Component {
         const { timerHistory } = this.state;
         const penaltyTime = timerHistory.filter(a => a.id === id)[0];
         penaltyTime.penalty = !penaltyTime.penalty;
-        const newTimeHistory = timerHistory.filter(a => a.id !== id).concat(penaltyTime);
+        const newTimeHistory = timerHistory
+            .filter(a => a.id !== id)
+            .concat(penaltyTime);
         this.setState(
             {
                 timerHistory: newTimeHistory,
@@ -411,7 +429,9 @@ export default class CubeTimer extends React.Component {
 
         if (newTime) {
             time.time = newTime;
-            const newTimeHistory = timerHistory.filter(a => a.id !== id).concat(time);
+            const newTimeHistory = timerHistory
+                .filter(a => a.id !== id)
+                .concat(time);
             this.setState(
                 {
                     timerHistory: newTimeHistory,
@@ -430,7 +450,10 @@ export default class CubeTimer extends React.Component {
             if (prevState.manualEntry === 'true') {
                 newManualEntry = 'false';
             }
-            localStorage.setItem(LOCAL_STORAGE_MANUAL_ENTRY_KEY, newManualEntry);
+            localStorage.setItem(
+                LOCAL_STORAGE_MANUAL_ENTRY_KEY,
+                newManualEntry
+            );
             return {
                 manualEntry: newManualEntry,
             };
@@ -482,7 +505,10 @@ export default class CubeTimer extends React.Component {
                 <button onClick={this.handleResetTimer}>Next Scramble</button>
                 <InfoRow>
                     <SessionSelector />
-                    <ScrambleHelper cubeString={cubeString} scramble={scramble} />
+                    <ScrambleHelper
+                        cubeString={cubeString}
+                        scramble={scramble}
+                    />
                     <SessionStats timerHistory={timerHistory} />
                 </InfoRow>
                 <LabelH>
@@ -507,9 +533,13 @@ export default class CubeTimer extends React.Component {
                         <>
                             <p>Press space to start and stop.</p>
                             {['run', 'stop'].includes(timerState) ? (
-                                <span className={css.timerTime}>{this.getFormatedTime()}</span>
+                                <span className={css.timerTime}>
+                                    {this.getFormatedTime()}
+                                </span>
                             ) : (
-                                <span className={css.timerTime}>{timerState}</span>
+                                <span className={css.timerTime}>
+                                    {timerState}
+                                </span>
                             )}
                         </>
                     )}
