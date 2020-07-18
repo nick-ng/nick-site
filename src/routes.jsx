@@ -17,6 +17,7 @@ import WeddingPhotos from './components/wedding-photos';
 import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
 // import PokemonEVHelper from './components/pokemon/ev-helper';
+import PokemonCramomatic from './components/pokemon/cramomatic';
 import PokemonNotes from './components/pokemon/notes';
 import DnDSpellBook from './components/dungeons-and-dragons/spell-book';
 import Test from './components/test';
@@ -65,6 +66,9 @@ export default function App() {
                         </R> */}
                         <R path="/pokemon/flashcards">
                             <PokemonFlashCards />
+                        </R>
+                        <R path="/pokemon/cramomatic">
+                            <PokemonCramomatic />
                         </R>
                         <R path="/pokemon/notes">
                             <PokemonNotes />
