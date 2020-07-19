@@ -1,17 +1,50 @@
 import { ingredients } from './item-data';
 
-export const validRemainingItems = (range, items) => {
-    const [lower, upper] = range;
+const numberOfItemsSelected = items => {
+    return items.filter(item => item).length;
+};
 
-    const currentTotal = 0;
-    const itemsSelected = 0;
-
+export const selectedItemsTotal = items => {
+    let currentTotal = 0;
     items.forEach(item => {
-        if (typeof item.value === 'number') {
-            itemsSelected++;
-            currentTotal = currentTotal + item.value;
+        if (item) {
+            currentTotal = currentTotal + ingredients[item].value;
         }
     });
 
-    console.log('currentTotal', currentTotal);
+    return currentTotal;
+};
+
+export const validRemainingItems = (
+    range,
+    selectedItems,
+    excludedItems = []
+) => {
+    const [lower, upper] = range;
+    const allowedIngredients = Object.values(ingredients).filter(
+        ingredient => !excludedItems.includes(ingredient.item)
+    );
+
+    const currentTotal = selectedItemsTotal(selectedItems);
+    const itemsSelected = numberOfItemsSelected(selectedItems);
+    const remainingItems = 4 - itemsSelected;
+
+    const remainingValueLower = lower - currentTotal;
+    const remainingValueUpper = upper - currentTotal;
+    const lowestItem = Math.min(
+        ...allowedIngredients.map(ingredient => ingredient.value)
+    );
+    const highestItem = Math.max(
+        ...allowedIngredients.map(ingredient => ingredient.value)
+    );
+
+    const validMin = remainingValueLower - highestItem * (remainingItems - 1);
+    const validMax = remainingValueUpper - lowestItem * (remainingItems - 1);
+
+    return allowedIngredients
+        .filter(
+            ingredient =>
+                ingredient.value <= validMax && ingredient.value >= validMin
+        )
+        .map(ingredient => ingredient.item);
 };

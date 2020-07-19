@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import startCase from 'lodash/startCase';
 
-const Select = styled.select``;
+const Select = styled.select`
+    margin: 0.5em 0;
+    font-size: 1em;
+`;
 
 const Option = styled.option``;
 
@@ -14,7 +17,7 @@ const ItemSelector = ({ itemList, selectedItem, onSelect }) => {
             }}
             value={selectedItem || '__blank'}
         >
-            <Option value="__blank">Choose something</Option>
+            <Option value="__blank">{`Choose something (${itemList.length} items)`}</Option>
             {itemList.sort().map(item => (
                 <Option key={item} value={item}>
                     {startCase(item)}
