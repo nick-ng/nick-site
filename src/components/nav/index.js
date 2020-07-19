@@ -11,12 +11,12 @@ const Nav = () => (
         <NavLink icons="fa-home" to="/" exact>
             Home
         </NavLink>
-        <NavLink icons="fa-bell-o" to="/wedding">
+        <AdminNav icons="fa-bell-o" to="/wedding">
             Wedding Album
-        </NavLink>
-        <NavLink icons="fa-camera-retro" to="/wedding/photos" indentLevel={1}>
+        </AdminNav>
+        <AdminNav icons="fa-camera-retro" to="/wedding/photos" indentLevel={1}>
             Photos
-        </NavLink>
+        </AdminNav>
         <AdminNav icons="fa-bookmark-o" to="/bookmarks">
             Bookmarks
         </AdminNav>
@@ -32,6 +32,9 @@ const Nav = () => (
         {/* <NavLink icons="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink> */}
+        <NavLink icons={['fa-gamepad', 'fa-shopping-cart']} to="/pokemon/cramomatic">
+            Cram-o-matic Helper
+        </NavLink>
         <NavLink icons="fa-gamepad" to="/pokemon/notes">
             Pokemon Notes
         </NavLink>
