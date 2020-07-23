@@ -14,7 +14,7 @@ module.exports = {
         port: 3434,
         proxy: [
             {
-                context: ['/oll', '/api'],
+                context: ['/oll', '/api', '/pokemon_assets'],
                 target: 'http://localhost:3435',
             },
         ],
