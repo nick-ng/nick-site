@@ -4,7 +4,13 @@ import moment from 'moment';
 import { Graph2d, DataSet } from 'vis-timeline/standalone';
 
 import { getArray } from '../../../services/foreignStorage';
-import { solvesByDay, bestRollingAoN, bestSingle, firstAoNByDay, rollingAoN } from './utils';
+import {
+    solvesByDay,
+    bestRollingAoN,
+    bestSingle,
+    firstAoNByDay,
+    rollingAoN,
+} from './utils';
 import SessionSelector, { getSessionStorageKey } from './session-selector';
 import SessionStats from './session-stats';
 
@@ -52,7 +58,6 @@ export default class CubeTimer extends React.Component {
             'Best Single of the Day',
             'Best Ao5 of the Day',
             'Best Ao12 of the Day',
-            'First Ao5 of the Day',
         ];
 
         const graph1Data = new DataSet([
@@ -66,16 +71,14 @@ export default class CubeTimer extends React.Component {
                         group: groupNames[0],
                     };
                 }),
-            ...solvesByDay(session)
-                .filter(a => a.length > 5) // avoid overlap with first Ao5
-                .map(daySolves => {
-                    const bestAverage = bestRollingAoN(daySolves, 5);
-                    return {
-                        x: moment(bestAverage.createdAt),
-                        y: parseFloat(bestAverage.average),
-                        group: groupNames[1],
-                    };
-                }),
+            ...solvesByDay(session).map(daySolves => {
+                const bestAverage = bestRollingAoN(daySolves, 5);
+                return {
+                    x: moment(bestAverage.createdAt),
+                    y: parseFloat(bestAverage.average),
+                    group: groupNames[1],
+                };
+            }),
             ...solvesByDay(session)
                 .filter(a => a.length >= 12)
                 .map(daySolves => {
@@ -86,11 +89,6 @@ export default class CubeTimer extends React.Component {
                         group: groupNames[2],
                     };
                 }),
-            ...firstAoNByDay(session, 5).map(solve => ({
-                x: moment(solve.createdAt),
-                y: parseFloat(solve.average),
-                group: groupNames[3],
-            })),
         ]);
 
         const options1 = {
@@ -103,14 +101,20 @@ export default class CubeTimer extends React.Component {
             legend: { left: { position: 'bottom-left' } },
         };
 
-        const graph1 = new Graph2d(this.graph1Ref.current, graph1Data, options1);
+        const graph1 = new Graph2d(
+            this.graph1Ref.current,
+            graph1Data,
+            options1
+        );
 
         const graph2Data = new DataSet([
             ...solvesByDay(session)
                 .filter(a => a.length > 0)
                 .map(daySolves => {
                     return {
-                        x: moment(daySolves[daySolves.length - 1].createdAt).startOf('day'),
+                        x: moment(
+                            daySolves[daySolves.length - 1].createdAt
+                        ).startOf('day'),
                         y: daySolves.length,
                     };
                 }),
@@ -126,7 +130,11 @@ export default class CubeTimer extends React.Component {
             drawPoints: false,
         };
 
-        const graph2 = new Graph2d(this.graph2Ref.current, graph2Data, options2);
+        const graph2 = new Graph2d(
+            this.graph2Ref.current,
+            graph2Data,
+            options2
+        );
 
         this.setState({
             graph1,
