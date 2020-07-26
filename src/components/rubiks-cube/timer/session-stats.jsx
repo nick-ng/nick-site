@@ -56,7 +56,7 @@ const SessionStats = ({ timerHistory }) => {
     const solvesToday = timerHistory.filter(a =>
         moment(a.createdAt).isSameOrAfter(moment().startOf('day'))
     );
-    console.log(bestRollingAoN(solvesToday, 5));
+
     return (
         <Container>
             <Heading>{`Stats for ${getCurrentSession().toLowerCase() ||

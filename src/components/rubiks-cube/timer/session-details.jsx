@@ -71,14 +71,16 @@ export default class CubeTimer extends React.Component {
                         group: groupNames[0],
                     };
                 }),
-            ...solvesByDay(session).map(daySolves => {
-                const bestAverage = bestRollingAoN(daySolves, 5);
-                return {
-                    x: moment(bestAverage.createdAt),
-                    y: parseFloat(bestAverage.average),
-                    group: groupNames[1],
-                };
-            }),
+            ...solvesByDay(session)
+                .filter(a => a.length >= 5)
+                .map(daySolves => {
+                    const bestAverage = bestRollingAoN(daySolves, 5);
+                    return {
+                        x: moment(bestAverage.createdAt),
+                        y: parseFloat(bestAverage.average),
+                        group: groupNames[1],
+                    };
+                }),
             ...solvesByDay(session)
                 .filter(a => a.length >= 12)
                 .map(daySolves => {
