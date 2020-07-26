@@ -65,31 +65,37 @@ export default class CubeTimer extends React.Component {
                 .filter(a => a.length > 0)
                 .map(daySolves => {
                     const bestSingleSolve = bestSingle(daySolves);
-                    return {
-                        x: moment(bestSingleSolve.createdAt),
-                        y: parseFloat(bestSingleSolve.time),
-                        group: groupNames[0],
-                    };
+                    return bestSingleSolve
+                        ? {
+                              x: moment(bestSingleSolve.createdAt),
+                              y: parseFloat(bestSingleSolve.time),
+                              group: groupNames[0],
+                          }
+                        : {};
                 }),
             ...solvesByDay(session)
                 .filter(a => a.length >= 5)
                 .map(daySolves => {
                     const bestAverage = bestRollingAoN(daySolves, 5);
-                    return {
-                        x: moment(bestAverage.createdAt),
-                        y: parseFloat(bestAverage.average),
-                        group: groupNames[1],
-                    };
+                    return bestAverage
+                        ? {
+                              x: moment(bestAverage.createdAt),
+                              y: parseFloat(bestAverage.average),
+                              group: groupNames[1],
+                          }
+                        : {};
                 }),
             ...solvesByDay(session)
                 .filter(a => a.length >= 12)
                 .map(daySolves => {
                     const bestAverage = bestRollingAoN(daySolves, 12);
-                    return {
-                        x: moment(bestAverage.createdAt),
-                        y: parseFloat(bestAverage.average),
-                        group: groupNames[2],
-                    };
+                    return bestAverage
+                        ? {
+                              x: moment(bestAverage.createdAt),
+                              y: parseFloat(bestAverage.average),
+                              group: groupNames[2],
+                          }
+                        : {};
                 }),
         ]);
 

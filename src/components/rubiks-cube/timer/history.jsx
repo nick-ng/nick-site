@@ -8,7 +8,8 @@ const Button = styled.button`
     border: solid 1px grey;
     border-radius: 3px;
     color: ${({ invertColours }) => (invertColours ? 'white' : 'black')};
-    background-color: ${({ invertColours }) => (invertColours ? 'darkslategrey' : 'white')};
+    background-color: ${({ invertColours }) =>
+        invertColours ? 'darkslategrey' : 'white'};
     ${props => (props.invertColours ? 'font-weight: bold;' : '')}
 `;
 
@@ -89,7 +90,13 @@ const ScrambleTooltip = styled.div`
     }
 `;
 
-const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePenalty }) => {
+const TimerHistory = ({
+    editTime,
+    removeTime,
+    storeTime,
+    timerHistory,
+    togglePenalty,
+}) => {
     const ao5s = chunk(
         timerHistory.sort((a, b) => {
             const dateA = new Date(a.createdAt);
@@ -102,17 +109,20 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
     return (
         <TimerHistoryContainer>
             {ao5s.slice(0, 5).map(ao5 => {
-                let average = null;
+                let headingText = `${5 - ao5.length} to go`;
                 let fastestId = null;
                 let slowestId = null;
                 if (ao5.length === 5) {
                     const sortedTimes = [...ao5].sort(
-                        (a, b) => a.time + (a.penalty ? 2 : 0) - (b.time + (b.penalty ? 2 : 0))
+                        (a, b) =>
+                            a.time +
+                            (a.penalty ? 2 : 0) -
+                            (b.time + (b.penalty ? 2 : 0))
                     );
                     const [fastest, a, b, c, slowest] = sortedTimes;
                     fastestId = fastest.id;
                     slowestId = slowest.id;
-                    average = (
+                    headingText = (
                         (a.time +
                             (a.penalty ? 2 : 0) +
                             b.time +
@@ -121,16 +131,14 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
                             (c.penalty ? 2 : 0)) /
                         3
                     ).toFixed(2);
-                } else {
-                    average = ao5
-                        .reduce((a, c) => a + (c.time + (c.penalty ? 2 : 0)) / ao5.length, 0)
-                        .toFixed(2);
                 }
 
                 return (
                     <AO5 key={ao5.map(a => a.id).join('-')}>
                         <AO5Header>
-                            <h3>{`${average} (${moment(ao5[0].createdAt).format('Do MMM')})`}</h3>
+                            <h3>{`${headingText} (${moment(
+                                ao5[0].createdAt
+                            ).format('Do MMM')})`}</h3>
                             {ao5.length < 5 && (
                                 <Button
                                     onClick={e => {
@@ -186,7 +194,12 @@ const TimerHistory = ({ editTime, removeTime, storeTime, timerHistory, togglePen
                                             if (e) {
                                                 e.target.blur();
                                             }
-                                            removeTime(id, time < 9001 ? time.toFixed(2) : 'DNF');
+                                            removeTime(
+                                                id,
+                                                time < 9001
+                                                    ? time.toFixed(2)
+                                                    : 'DNF'
+                                            );
                                         }}
                                     >
                                         <i className="fa fa-times" />

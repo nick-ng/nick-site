@@ -106,11 +106,20 @@ export const rollingAoN = (solves, n = 5) => {
 
     const results = [];
     for (let i = 0; i < sortedSolves.length - (n - 1); i++) {
-        results.push({
-            id: `AO${n}-${sortedSolves[i + n - 1].id}`,
-            average: averageOfN(sortedSolves.slice(i, i + n), n),
-            createdAt: sortedSolves[i + n - 1].createdAt,
-        });
+        const firstSolve = sortedSolves[i];
+        const lastSolve = sortedSolves[i + n - 1];
+        if (
+            moment(firstSolve.createdAt).isSame(
+                moment(lastSolve.createdAt),
+                'day'
+            )
+        ) {
+            results.push({
+                id: `AO${n}-${sortedSolves[i + n - 1].id}`,
+                average: averageOfN(sortedSolves.slice(i, i + n), n),
+                createdAt: sortedSolves[i + n - 1].createdAt,
+            });
+        }
     }
 
     return results;
