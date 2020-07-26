@@ -87,6 +87,14 @@ const SessionStats = ({ timerHistory }) => {
             <Right>{bestRollingAoN(solvesThisMonth, 5)?.average || '-'}</Right>
             <Left>Ao5, Best Today:</Left>
             <Right>{bestRollingAoN(solvesToday, 5)?.average || '-'}</Right>
+            <Left>Ao12, Best All Time:</Left>
+            <Right>{bestRollingAoN(timerHistory, 12)?.average || '-'}</Right>
+            <Left>Ao12, Best Last Month:</Left>
+            <Right>{bestRollingAoN(solvesLastMonth, 12)?.average || '-'}</Right>
+            <Left>Ao12, Best This Month:</Left>
+            <Right>{bestRollingAoN(solvesThisMonth, 12)?.average || '-'}</Right>
+            <Left>Ao12, Best Today:</Left>
+            <Right>{bestRollingAoN(solvesToday, 12)?.average || '-'}</Right>
             <Left>Last Ao12</Left>
             <Right>{lastAverageOfN(timerHistory, 12) || '-'}</Right>
         </Container>
