@@ -7,8 +7,8 @@ import { getTime, bestSingle, bestRollingAoN, lastAverageOfN } from './utils';
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: auto auto;
-    gap: 0.5em;
+    grid-template-columns: auto auto auto auto;
+    gap: 0.5em 1em;
     align-content: start;
     margin: 0 0.3em 0.3em;
 
@@ -18,12 +18,12 @@ const Container = styled.div`
 `;
 
 const Heading = styled.h3`
-    grid-column: 1 / 3;
+    grid-column: 1 / 5;
     margin: 0.5em 0;
 `;
 
 const Full = styled.div`
-    grid-column: 1 / 3;
+    grid-column: 1 / 5;
     font-weight: bold;
 `;
 
@@ -75,27 +75,31 @@ const SessionStats = ({ timerHistory }) => {
                     ).length
                 }
             </Right>
-            <Left>Single, Best All Time:</Left>
+            <Left />
+            <Left />
+            <Left />
+            <Right>Single</Right>
+            <Right>Ao5</Right>
+            <Right>Ao12</Right>
+            <Left>Best All Time:</Left>
             <Right>{getTime(bestSingle(timerHistory)) || '-'}</Right>
-            <Left>Single, Best This Month:</Left>
-            <Right>{getTime(bestSingle(solvesThisMonth)) || '-'}</Right>
-            <Left>Ao5, Best All Time:</Left>
             <Right>{bestRollingAoN(timerHistory, 5)?.average || '-'}</Right>
-            <Left>Ao5, Best Last Month:</Left>
-            <Right>{bestRollingAoN(solvesLastMonth, 5)?.average || '-'}</Right>
-            <Left>Ao5, Best This Month:</Left>
-            <Right>{bestRollingAoN(solvesThisMonth, 5)?.average || '-'}</Right>
-            <Left>Ao5, Best Today:</Left>
-            <Right>{bestRollingAoN(solvesToday, 5)?.average || '-'}</Right>
-            <Left>Ao12, Best All Time:</Left>
             <Right>{bestRollingAoN(timerHistory, 12)?.average || '-'}</Right>
-            <Left>Ao12, Best Last Month:</Left>
+            <Left>Best Last Month:</Left>
+            <Right>{getTime(bestSingle(solvesLastMonth)) || '-'}</Right>
+            <Right>{bestRollingAoN(solvesLastMonth, 5)?.average || '-'}</Right>
             <Right>{bestRollingAoN(solvesLastMonth, 12)?.average || '-'}</Right>
-            <Left>Ao12, Best This Month:</Left>
+            <Left>Best This Month:</Left>
+            <Right>{getTime(bestSingle(solvesThisMonth)) || '-'}</Right>
+            <Right>{bestRollingAoN(solvesThisMonth, 5)?.average || '-'}</Right>
             <Right>{bestRollingAoN(solvesThisMonth, 12)?.average || '-'}</Right>
-            <Left>Ao12, Best Today:</Left>
+            <Left>Best Today:</Left>
+            <Right>{getTime(bestSingle(solvesToday)) || '-'}</Right>
+            <Right>{bestRollingAoN(solvesToday, 5)?.average || '-'}</Right>
             <Right>{bestRollingAoN(solvesToday, 12)?.average || '-'}</Right>
-            <Left>Last Ao12</Left>
+            <Left>Current:</Left>
+            <Right></Right>
+            <Right>{lastAverageOfN(timerHistory, 5) || '-'}</Right>
             <Right>{lastAverageOfN(timerHistory, 12) || '-'}</Right>
         </Container>
     );
