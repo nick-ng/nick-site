@@ -32,7 +32,10 @@ const Nav = () => (
         {/* <NavLink icons="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink> */}
-        <NavLink icons={['fa-gamepad', 'fa-shopping-cart']} to="/pokemon/cramomatic">
+        <NavLink
+            icons={['fa-gamepad', 'fa-shopping-cart']}
+            to="/pokemon/cramomatic"
+        >
             Cram-o-matic Helper
         </NavLink>
         <NavLink icons="fa-gamepad" to="/pokemon/notes">
@@ -84,6 +87,9 @@ const Nav = () => (
             indentLevel={1}
         >
             OLL Algorithms
+        </NavLink>
+        <NavLink icons={['fa-square-o', 'fa-mouse-pointer']} to="/boxclicker">
+            Box Clicker
         </NavLink>
         <AdminNav icons="fa-tachometer" to="/location">
             Location

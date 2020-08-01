@@ -20,6 +20,7 @@ import PokemonFlashCards from './components/pokemon/flash-cards';
 import PokemonCramomatic from './components/pokemon/cramomatic';
 import PokemonNotes from './components/pokemon/notes';
 import DnDSpellBook from './components/dungeons-and-dragons/spell-book';
+import BoxClicker from './components/box-clicker';
 import Test from './components/test';
 import Admin from './components/admin';
 
@@ -84,6 +85,9 @@ export default function App() {
                         </R>
                         <R path="/dione">
                             <Todos />
+                        </R>
+                        <R path="/boxclicker">
+                            <BoxClicker />
                         </R>
                         <R path="/test">
                             <Test />
