@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import random from 'lodash/random';
 
-const TOTAL_BOXES = 25;
 const BOXES_TO_CLICK = 30;
+const COLUMN_COUNT = 8;
+const ROW_COUNT = 8;
 
 const Container = styled.div`
     margin: 1em;
@@ -25,9 +26,10 @@ const Controls = styled.div`
 const BoxGrid = styled.div`
     display: grid;
     gap: 1em;
-    grid-template-columns: repeat(5, auto);
-    width: ${props => props.width || 100}%;
+    grid-template-columns: repeat(${props => props.columns}, auto);
+    min-width: ${props => props.width || 100}%;
     justify-items: center;
+    justify-content: space-between;
 `;
 
 const Box = styled.button`
@@ -38,16 +40,18 @@ const Box = styled.button`
 `;
 
 const BoxClicker = () => {
-    const [boxCount, setBoxCount] = useState(TOTAL_BOXES);
+    const [rowCount, setRowCount] = useState(ROW_COUNT);
+    const [columnCount, setColumnCount] = useState(COLUMN_COUNT);
     const [activeBox, setActiveBox] = useState(-1);
     const [boxesClicked, setBoxesClicked] = useState(0);
     const [boxesToClick, setBoxesToClick] = useState(BOXES_TO_CLICK);
-    const [gridWidth, setGridWidth] = useState(80);
+    const [gridWidth, setGridWidth] = useState(1);
     const [gameState, setGameState] = useState('standby');
     const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(0);
 
     const timeTaken = (endTime - startTime) / 1000;
+    const boxCount = rowCount * columnCount;
 
     useEffect(() => {
         if (gameState !== 'done') {
@@ -67,21 +71,6 @@ const BoxClicker = () => {
             <button onClick={restartGame}>Restart Game</button>
             <Controls>
                 <label>
-                    Number of Boxes:{' '}
-                    <input
-                        type="number"
-                        step={1}
-                        min={1}
-                        max={20000}
-                        value={boxCount}
-                        onChange={e => {
-                            setBoxCount(
-                                parseInt(e.target.value || 1)
-                            );
-                        }}
-                    />
-                </label>
-                <label>
                     Boxes to Click:{' '}
                     <input
                         type="number"
@@ -90,9 +79,33 @@ const BoxClicker = () => {
                         max={9999999}
                         value={boxesToClick}
                         onChange={e => {
-                            setBoxesToClick(
-                                parseInt(e.target.value || 1)
-                            );
+                            setBoxesToClick(parseInt(e.target.value || 1));
+                        }}
+                    />
+                </label>
+                <label>
+                    Rows:{' '}
+                    <input
+                        type="number"
+                        step={1}
+                        value={rowCount}
+                        min={2}
+                        max={100}
+                        onChange={e => {
+                            setRowCount(parseInt(e.target.value || 2));
+                        }}
+                    />
+                </label>
+                <label>
+                    Columns:{' '}
+                    <input
+                        type="number"
+                        step={1}
+                        value={columnCount}
+                        min={2}
+                        max={100}
+                        onChange={e => {
+                            setColumnCount(parseInt(e.target.value || 2));
                         }}
                     />
                 </label>
@@ -123,7 +136,7 @@ const BoxClicker = () => {
                     fast as you can.
                 </p>
             )}
-            <BoxGrid width={gridWidth}>
+            <BoxGrid columns={columnCount} width={gridWidth}>
                 {Array.from(Array(boxCount).keys()).map((_, i) => (
                     <Box
                         key={`box-${i}-of-${boxCount}`}
