@@ -89,10 +89,10 @@ const BoxClicker = () => {
                         type="number"
                         step={1}
                         value={rowCount}
-                        min={2}
+                        min={1}
                         max={100}
                         onChange={e => {
-                            setRowCount(parseInt(e.target.value || 2));
+                            setRowCount(parseInt(e.target.value || 1));
                         }}
                     />
                 </label>
