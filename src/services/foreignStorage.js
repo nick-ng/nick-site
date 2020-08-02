@@ -59,7 +59,7 @@ export const getArray = async (keyName, idKey = 'id') => {
 
         return fullArray;
     }
-    return JSON.parse(localStorage.getItem(keyName));
+    return JSON.parse(localStorage.getItem(keyName) || '[]');
 };
 
 export const setItem = async (keyName, dataString) => {
