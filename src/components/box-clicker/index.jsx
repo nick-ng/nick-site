@@ -18,7 +18,7 @@ const Controls = styled.div`
     label {
         margin-right: 1em;
     }
-    input {
+    input[type='number'] {
         width: 3em;
     }
 `;
@@ -49,9 +49,21 @@ const BoxClicker = () => {
     const [gameState, setGameState] = useState('standby');
     const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(0);
+    const [soundEnabled, setSoundEnabled] = useState(false);
+    const [soundStuff, setSoundStuff] = useState({});
 
     const timeTaken = (endTime - startTime) / 1000;
     const boxCount = rowCount * columnCount;
+
+    useEffect(() => {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance('click');
+
+        setSoundStuff({
+            synth,
+            utterance,
+        });
+    }, []);
 
     useEffect(() => {
         if (gameState !== 'done') {
@@ -122,6 +134,16 @@ const BoxClicker = () => {
                         }}
                     />
                 </label>
+                <label>
+                    Sound:{' '}
+                    <input
+                        type="checkbox"
+                        checked={soundEnabled}
+                        onChange={() => {
+                            setSoundEnabled(!soundEnabled);
+                        }}
+                    />
+                </label>
             </Controls>
             {gameState === 'done' ? (
                 <p>
@@ -147,6 +169,10 @@ const BoxClicker = () => {
                                     temp = 0;
                                 } else if (temp >= i) {
                                     temp = temp + 1;
+                                }
+                                if (soundEnabled) {
+                                    const { synth, utterance } = soundStuff;
+                                    synth.speak(utterance);
                                 }
                                 setActiveBox(temp);
                             }
