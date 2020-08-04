@@ -8,6 +8,7 @@ const Container = styled.div`
   padding: 0.3em 0.5em;
   border-bottom: 1px solid grey;
   border-right: 1px solid grey;
+  background-color: white;
 `;
 
 const Score = styled.div`
