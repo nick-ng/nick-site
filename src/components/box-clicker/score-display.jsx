@@ -48,7 +48,7 @@ const ScoreDisplay = ({ scores, isLoading }) => {
       ))}
       {topScores.length > 1 && (
         <HideOnHover>
-          Hover to see <span>{scores.length - 1}</span> more score
+          Hover to see <span>{topScores.length - 1}</span> more score
           <span>{topScores.length - 1 !== 1 ? 's' : ''}</span>
         </HideOnHover>
       )}
