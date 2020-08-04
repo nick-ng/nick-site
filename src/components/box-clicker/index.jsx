@@ -39,6 +39,11 @@ const Box = styled.button`
     border: 1px solid black;
 `;
 
+const makeSound = (synth, phrase) => {
+    const utterance = new SpeechSynthesisUtterance(phrase);
+    synth.speak(utterance);
+};
+
 const BoxClicker = () => {
     const [rowCount, setRowCount] = useState(ROW_COUNT);
     const [columnCount, setColumnCount] = useState(COLUMN_COUNT);
@@ -57,11 +62,9 @@ const BoxClicker = () => {
 
     useEffect(() => {
         const synth = window.speechSynthesis;
-        const utterance = new SpeechSynthesisUtterance('click');
 
         setSoundStuff({
             synth,
-            utterance,
         });
     }, []);
 
@@ -163,6 +166,7 @@ const BoxClicker = () => {
                     <Box
                         key={`box-${i}-of-${boxCount}`}
                         onClick={() => {
+                            let whatToSay = null;
                             if (i === activeBox && gameState !== 'done') {
                                 let temp = random(0, boxCount - 2);
                                 if (boxCount === 1) {
@@ -170,18 +174,26 @@ const BoxClicker = () => {
                                 } else if (temp >= i) {
                                     temp = temp + 1;
                                 }
-                                if (soundEnabled) {
-                                    const { synth, utterance } = soundStuff;
-                                    synth.speak(utterance);
-                                }
                                 setActiveBox(temp);
                             }
                             if (i === activeBox && gameState === 'inprogress') {
                                 const newBoxesClicked = boxesClicked + 1;
+                                whatToSay =
+                                    boxesToClick - newBoxesClicked === 1
+                                        ? `1 box to go.`
+                                        : `${boxesToClick -
+                                              newBoxesClicked} boxes to go.`;
                                 if (newBoxesClicked >= boxesToClick) {
                                     setGameState('done');
                                     setEndTime(new Date());
                                     setActiveBox(-1);
+
+                                    whatToSay = `0 boxes to go. Nice work. You clicked ${boxesToClick} ${
+                                        boxesToClick === 1 ? 'box' : 'boxes'
+                                    } in ${(
+                                        (new Date() - startTime) /
+                                        1000
+                                    ).toFixed(1)} seconds.`;
                                 }
                                 setBoxesClicked(newBoxesClicked);
                             }
@@ -189,6 +201,14 @@ const BoxClicker = () => {
                                 setGameState('inprogress');
                                 setBoxesClicked(1);
                                 setStartTime(new Date());
+                                whatToSay =
+                                    boxesToClick - 1 === 1
+                                        ? `1 box to go.`
+                                        : `${boxesToClick - 1} boxes to go.`;
+                            }
+                            if (soundEnabled && whatToSay) {
+                                const { synth } = soundStuff;
+                                makeSound(synth, whatToSay);
                             }
                         }}
                         active={i === activeBox}
