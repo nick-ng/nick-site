@@ -102,7 +102,7 @@ const BoxClicker = () => {
                         type="number"
                         step={1}
                         value={columnCount}
-                        min={2}
+                        min={1}
                         max={100}
                         onChange={e => {
                             setColumnCount(parseInt(e.target.value || 2));
