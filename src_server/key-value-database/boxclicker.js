@@ -65,12 +65,7 @@ const getAllScores = (client) => async () => {
             parseInt(score.timestamp, 10) || Math.round(new Date() / 1000),
         };
 
-        if (
-          isNaN(temp.name) ||
-          isNaN(temp.time) ||
-          isNaN(temp.timestamp) ||
-          temp.time <= 0
-        ) {
+        if (isNaN(temp.time) || isNaN(temp.timestamp) || temp.time <= 0) {
           return null;
         }
 
