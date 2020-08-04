@@ -139,7 +139,6 @@ const BoxClicker = () => {
   return (
     <Container>
       <h1>Box Clicker</h1>
-      <ScoreDisplay scores={scores} isLoading={loadingScores} />
       <button onClick={restartGame}>Restart Game</button>
       <Controls>
         <label>
@@ -274,6 +273,7 @@ const BoxClicker = () => {
           />
         ))}
       </BoxGrid>
+      <ScoreDisplay scores={scores} isLoading={loadingScores} />
     </Container>
   );
 };

@@ -49,7 +49,7 @@ const ScoreDisplay = ({ scores, isLoading }) => {
       {topScores.length > 1 && (
         <HideOnHover>
           Hover to see <span>{scores.length - 1}</span> more score
-          <span>{scores.length - 1 !== 1 ? 's' : ''}</span>
+          <span>{topScores.length - 1 !== 1 ? 's' : ''}</span>
         </HideOnHover>
       )}
       <HideOnHover>Scores expire after 2 months.</HideOnHover>

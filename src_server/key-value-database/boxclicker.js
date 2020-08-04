@@ -54,12 +54,29 @@ const getAllScores = (client) => async () => {
 
   const allScores = await Promise.all(allScoreKeys.map((key) => hgetall(key)));
 
-  return allScores.map((score) => ({
-    name: score.name,
-    time: parseFloat(score.time),
-    accuracy: parseFloat(score.accuracy),
-    timestamp: parseInt(score.timestamp, 10),
-  }));
+  const sanitisedScores = allScores
+    .map((score) => {
+      try {
+        const temp = {
+          name: score.name,
+          time: parseFloat(score.time) || 1000,
+          accuracy: parseFloat(score.accuracy) || 1000,
+          timestamp:
+            parseInt(score.timestamp, 10) || Math.round(new Date() / 1000),
+        };
+
+        if (isNaN(temp.name) || isNaN(temp.time) || isNaN(temp.timestamp)) {
+          return null;
+        }
+
+        return temp;
+      } catch (e) {
+        return null;
+      }
+    })
+    .filter((a) => a);
+
+  return sanitisedScores;
 };
 
 module.exports = (client) => ({
