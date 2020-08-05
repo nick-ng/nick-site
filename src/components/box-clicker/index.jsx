@@ -11,7 +11,7 @@ import ScoreDisplay from './score-display';
 const BOXES_TO_CLICK = 30;
 const COLUMN_COUNT = 8;
 const ROW_COUNT = 8;
-const GRID_GAP = 10;
+const GRID_GAP = 15;
 const CLOCK_TICK_DELAY = 50;
 
 const Container = styled.div`
@@ -57,15 +57,15 @@ const mouseMoveHandler = (e) => {
   };
 };
 
-const shortenMoveHistory = (moveHistory) => {
-  let newMoveHistory = [...moveHistory];
+const shortenHistory = (history) => {
+  let newHistory = [...history];
   let counter = 1;
-  while (newMoveHistory.length > 2000) {
-    newMoveHistory = moveHistory.filter((_, i) => !(i % counter));
+  while (newHistory.length > 2000) {
+    newHistory = history.filter((_, i) => !(i % counter));
     counter++;
   }
 
-  return newMoveHistory;
+  return newHistory;
 };
 
 const BoxClicker = () => {
@@ -151,7 +151,7 @@ const BoxClicker = () => {
   useEffect(() => {
     if (gameState === 'inprogress') {
       setMouseMoveHistory(
-        mouseMoveHistory.concat([
+        shortenHistory(mouseMoveHistory).concat([
           {
             ...mousePosition,
             timestamp: clockTick,
@@ -177,8 +177,8 @@ const BoxClicker = () => {
           start: startTime,
           end: endTime,
           seed: gameSeed,
-          moveHistory: JSON.stringify(shortenMoveHistory(mouseMoveHistory)),
-          clickHistory: JSON.stringify(mouseClickHistory),
+          moveHistory: JSON.stringify(shortenHistory(mouseMoveHistory)),
+          clickHistory: JSON.stringify(shortenHistory(mouseClickHistory)),
           accuracy: 1000,
         });
         updateScores();

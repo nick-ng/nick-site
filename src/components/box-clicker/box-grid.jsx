@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import random from 'lodash/random';
 
-const Container = styled.div`
-  padding: 2rem 5rem 5rem;
+export const Container = styled.div`
+  padding: 25px 70px 70px;
   display: grid;
-  gap: 1em;
   grid-template-columns: repeat(${(props) => props.columns}, auto);
-  gap: ${(props) => props.gap || 10}px;
+  gap: ${(props) => props.gap || 15}px;
   justify-items: center;
   justify-content: space-between;
 `;
 
-const Box = styled.button.attrs((props) => ({
+export const Box = styled.button.attrs((props) => ({
   style: {
-    // backgroundColor: props.active ? randomBlack() : randomWhite(),
-    backgroundColor: props.active ? 'black' : 'white',
+    backgroundColor: props.active ? 'darkslategrey' : 'white',
+    color: props.active ? 'white' : 'black',
   },
 }))`
-  width: ${(props) => props.size || 5}em;
-  height: ${(props) => props.size || 5}em;
+  width: ${(props) => props.size || 65}px;
+  height: ${(props) => props.size || 65}px;
   border: 1px solid black;
 `;
 
