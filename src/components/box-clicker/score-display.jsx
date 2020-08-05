@@ -44,7 +44,17 @@ const ScoreDisplay = ({ scores, isLoading }) => {
       {isLoading && <div>Loading scores...</div>}
       {topScores.map((score, i) => (
         <Score key={`${score.name}${score.timestamp}`} i={i}>
-          {`${i + 1}. ${score.name} - ${score.time.toFixed(2)} seconds`}
+          {`${i + 1}. ${score.name} - ${score.time.toFixed(2)} seconds`}{' '}
+          {score.hasReplay && (
+            <a
+              href="#"
+              onClick={() => {
+                alert(`Coming soon. id: ${score.id}`);
+              }}
+            >
+              (View Replay)
+            </a>
+          )}
         </Score>
       ))}
       {topScores.length > 1 && (

@@ -65,6 +65,7 @@
     "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
     "redis": "^3.0.2",
+    "seedrandom": "^3.0.5",
     "style-loader": "^0.13.1",
     "styled-components": "^5.1.1",
     "uuid": "^7.0.3",

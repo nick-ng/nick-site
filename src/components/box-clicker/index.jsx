@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import random from 'lodash/random';
 import axios from 'axios';
+import { v4 as uuid } from 'uuid';
+import seedrandom from 'seedrandom';
 
+import { getMouseRelativePosition } from './utils';
+import BoxGrid from './box-grid';
 import ScoreDisplay from './score-display';
 
 const BOXES_TO_CLICK = 30;
 const COLUMN_COUNT = 8;
 const ROW_COUNT = 8;
+const GRID_GAP = 10;
+const CLOCK_TICK_DELAY = 50;
 
 const Container = styled.div`
   position: relative;
@@ -33,26 +38,34 @@ const Controls = styled.div`
   }
 `;
 
-const BoxGrid = styled.div`
-  margin-top: 0.5rem;
-  display: grid;
-  gap: 1em;
-  grid-template-columns: repeat(${(props) => props.columns}, auto);
-  min-width: ${(props) => props.width || 100}%;
-  justify-items: center;
-  justify-content: space-between;
-`;
+let rng = () => 0;
 
-const Box = styled.button`
-  width: ${(props) => props.size || 5}em;
-  height: ${(props) => props.size || 5}em;
-  background-color: ${(props) => (props.active ? 'darkslategrey' : 'white')};
-  border: 1px solid black;
-`;
+const randInt = (min, max) => Math.floor(rng() * (max - min + 1)) + min;
 
 const makeSound = (synth, phrase) => {
   const utterance = new SpeechSynthesisUtterance(phrase);
   synth.speak(utterance);
+};
+
+let mousePosition = { x: 0, y: 0 };
+
+const mouseMoveHandler = (e) => {
+  const { x, y } = getMouseRelativePosition(e);
+  mousePosition = {
+    x,
+    y,
+  };
+};
+
+const shortenMoveHistory = (moveHistory) => {
+  let newMoveHistory = [...moveHistory];
+  let counter = 1;
+  while (newMoveHistory.length > 2000) {
+    newMoveHistory = moveHistory.filter((_, i) => !(i % counter));
+    counter++;
+  }
+
+  return newMoveHistory;
 };
 
 const BoxClicker = () => {
@@ -61,7 +74,7 @@ const BoxClicker = () => {
   const [activeBox, setActiveBox] = useState(-1);
   const [boxesClicked, setBoxesClicked] = useState(0);
   const [boxesToClick, setBoxesToClick] = useState(BOXES_TO_CLICK);
-  const [gridWidth, setGridWidth] = useState(1);
+  const [gridGap, setGridGap] = useState(GRID_GAP);
   const [gameState, setGameState] = useState('standby');
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
@@ -69,6 +82,10 @@ const BoxClicker = () => {
   const [soundStuff, setSoundStuff] = useState({});
   const [loadingScores, setLoadingScores] = useState(true);
   const [scores, setScores] = useState([]);
+  const [clockTick, setClockTick] = useState(0);
+  const [gameSeed, setGameSeed] = useState(0);
+  const [mouseMoveHistory, setMouseMoveHistory] = useState([]);
+  const [mouseClickHistory, setMouseClickHistory] = useState([]);
 
   const timeTaken = (endTime - startTime) / 1000;
   const boxCount = rowCount * columnCount;
@@ -76,14 +93,19 @@ const BoxClicker = () => {
   const restartGame = () => {
     setGameState('standby');
     setBoxesClicked(0);
-    setActiveBox(random(0, boxCount - 1));
+    const newSeed = uuid();
+    rng = seedrandom(newSeed);
+    setGameSeed(newSeed);
+    setActiveBox(randInt(0, boxCount - 1));
+    setMouseMoveHistory([]);
+    setMouseClickHistory([]);
   };
 
   const defaultSettings = () => {
-    setBoxesToClick(30);
-    setRowCount(8);
-    setColumnCount(8);
-    setGridWidth(1);
+    setBoxesToClick(BOXES_TO_CLICK);
+    setRowCount(ROW_COUNT);
+    setColumnCount(COLUMN_COUNT);
+    setGridGap(GRID_GAP);
   };
 
   const updateScores = async () => {
@@ -94,40 +116,69 @@ const BoxClicker = () => {
   };
 
   const isDefaultSettings =
-    boxesToClick === 30 &&
-    rowCount === 8 &&
-    columnCount === 8 &&
-    gridWidth === 1;
+    boxesToClick === BOXES_TO_CLICK &&
+    rowCount === ROW_COUNT &&
+    columnCount === COLUMN_COUNT &&
+    gridGap === GRID_GAP;
 
   useEffect(() => {
     restartGame();
-  }, [rowCount, columnCount, boxesToClick, gridWidth]);
+  }, [rowCount, columnCount, boxesToClick, gridGap]);
 
   useEffect(() => {
     setSoundStuff({
       synth: window.speechSynthesis,
     });
     updateScores();
+
+    const clockInterval = setInterval(() => {
+      setClockTick(Date.now());
+    }, CLOCK_TICK_DELAY);
+
+    setTimeout(restartGame, 100);
+
+    return () => {
+      clearInterval(clockInterval);
+    };
   }, []);
 
   useEffect(() => {
     if (gameState !== 'done') {
-      setActiveBox(random(0, boxCount - 1));
+      setActiveBox(randInt(0, boxCount - 1));
     }
   }, [boxCount]);
 
   useEffect(() => {
+    if (gameState === 'inprogress') {
+      setMouseMoveHistory(
+        mouseMoveHistory.concat([
+          {
+            ...mousePosition,
+            timestamp: clockTick,
+          },
+        ])
+      );
+    }
+  }, [clockTick]);
+
+  useEffect(() => {
     const submitTime = async () => {
       if (gameState === 'done' && isDefaultSettings) {
-        const temp = prompt(
-          `You finished in ${timeTaken.toFixed(
-            2
-          )} seconds! Please enter your name for the high score board.`
-        );
+        const temp =
+          prompt(
+            `You finished in ${timeTaken.toFixed(
+              2
+            )} seconds! Please enter your name for the high score board.`
+          ) || '';
         setLoadingScores(true);
         await axios.post('api/boxclicker/score', {
           name: temp,
           time: timeTaken,
+          start: startTime,
+          end: endTime,
+          seed: gameSeed,
+          moveHistory: JSON.stringify(shortenMoveHistory(mouseMoveHistory)),
+          clickHistory: JSON.stringify(mouseClickHistory),
           accuracy: 1000,
         });
         updateScores();
@@ -181,15 +232,15 @@ const BoxClicker = () => {
           />
         </label>
         <label>
-          Grid Width:{' '}
+          Grid Spacing:{' '}
           <input
             type="number"
             step={1}
-            value={gridWidth}
+            value={gridGap}
             min={0}
-            max={100}
+            max={1000}
             onChange={(e) => {
-              setGridWidth(parseInt(e.target.value || 0));
+              setGridGap(parseInt(e.target.value || 0));
             }}
           />
         </label>
@@ -216,63 +267,67 @@ const BoxClicker = () => {
         </div>
       ) : (
         <div>
-          Click the coloured box <span>{boxesToClick}</span> times as it moves
-          around.
+          Click the dark coloured box <span>{boxesToClick}</span> times as it
+          moves around. Play the game on default settings to set a high score.
         </div>
       )}
-      <div>Play the game on default settings to set a high score.</div>
-      <BoxGrid columns={columnCount} width={gridWidth}>
-        {Array.from(Array(boxCount).keys()).map((_, i) => (
-          <Box
-            key={`box-${i}-of-${boxCount}`}
-            onClick={async () => {
-              let whatToSay = null;
-              if (i === activeBox && gameState !== 'done') {
-                let temp = random(0, boxCount - 2);
-                if (boxCount === 1) {
-                  temp = 0;
-                } else if (temp >= i) {
-                  temp = temp + 1;
-                }
-                setActiveBox(temp);
-              }
-              if (i === activeBox && gameState === 'inprogress') {
-                const newBoxesClicked = boxesClicked + 1;
-                whatToSay =
-                  boxesToClick - newBoxesClicked === 1
-                    ? `1 box to go.`
-                    : `${boxesToClick - newBoxesClicked} boxes to go.`;
-                if (newBoxesClicked >= boxesToClick) {
-                  setGameState('done');
-                  setEndTime(new Date());
-                  setActiveBox(-1);
+      <BoxGrid
+        columns={columnCount}
+        gap={gridGap}
+        boxCount={boxCount}
+        activeBox={activeBox}
+        mouseMoveHandler={mouseMoveHandler}
+        boxClickHandler={async (e, i) => {
+          let whatToSay = null;
+          if (i === activeBox && gameState !== 'done') {
+            setMouseClickHistory(
+              mouseClickHistory.concat([
+                {
+                  ...mousePosition,
+                  timestamp: Date.now(),
+                },
+              ])
+            );
+            let temp = randInt(0, boxCount - 2);
+            if (boxCount === 1) {
+              temp = 0;
+            } else if (temp >= i) {
+              temp = temp + 1;
+            }
+            setActiveBox(temp);
+          }
+          if (i === activeBox && gameState === 'inprogress') {
+            const newBoxesClicked = boxesClicked + 1;
+            whatToSay =
+              boxesToClick - newBoxesClicked === 1
+                ? `1 box to go.`
+                : `${boxesToClick - newBoxesClicked} boxes to go.`;
+            if (newBoxesClicked >= boxesToClick) {
+              setGameState('done');
+              setEndTime(new Date());
+              setActiveBox(-1);
 
-                  whatToSay = `0 boxes to go. Nice work. You clicked ${boxesToClick} ${
-                    boxesToClick === 1 ? 'box' : 'boxes'
-                  } in ${((new Date() - startTime) / 1000).toFixed(
-                    1
-                  )} seconds.`;
-                }
-                setBoxesClicked(newBoxesClicked);
-              }
-              if (gameState === 'standby') {
-                setGameState('inprogress');
-                setBoxesClicked(1);
-                setStartTime(new Date());
-                whatToSay =
-                  boxesToClick - 1 === 1
-                    ? `1 box to go.`
-                    : `${boxesToClick - 1} boxes to go.`;
-              }
-              if (soundEnabled && whatToSay) {
-                const { synth } = soundStuff;
-                makeSound(synth, whatToSay);
-              }
-            }}
-            active={i === activeBox}
-          />
-        ))}
-      </BoxGrid>
+              whatToSay = `0 boxes to go. Nice work. You clicked ${boxesToClick} ${
+                boxesToClick === 1 ? 'box' : 'boxes'
+              } in ${((new Date() - startTime) / 1000).toFixed(1)} seconds.`;
+            }
+            setBoxesClicked(newBoxesClicked);
+          }
+          if (gameState === 'standby') {
+            setGameState('inprogress');
+            setBoxesClicked(1);
+            setStartTime(new Date());
+            whatToSay =
+              boxesToClick - 1 === 1
+                ? `1 box to go.`
+                : `${boxesToClick - 1} boxes to go.`;
+          }
+          if (soundEnabled && whatToSay) {
+            const { synth } = soundStuff;
+            makeSound(synth, whatToSay);
+          }
+        }}
+      />
       <ScoreDisplay scores={scores} isLoading={loadingScores} />
     </Container>
   );
