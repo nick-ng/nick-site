@@ -11,11 +11,41 @@ module.exports = (router) => {
     }
   });
 
-  router.post('/api/boxclicker/score', async (req, res, next) => {
-    const { name, time, accuracy } = req.body;
+  router.get('/api/boxclicker/score/:id', async (req, res, next) => {
+    const { id } = req.params;
 
     try {
-      await boxclicker.addScore({ name, time, accuracy });
+      res.json({
+        scores: await boxclicker.getScore(id),
+      });
+    } catch (e) {
+      res.sendStatus(500);
+    }
+  });
+
+  router.post('/api/boxclicker/score', async (req, res, next) => {
+    const {
+      name,
+      time,
+      start,
+      end,
+      seed,
+      moveHistory,
+      clickHistory,
+      accuracy,
+    } = req.body;
+
+    try {
+      await boxclicker.addScore({
+        name,
+        time,
+        start,
+        end,
+        seed,
+        moveHistory,
+        clickHistory,
+        accuracy,
+      });
       res.sendStatus(201);
     } catch (e) {
       res.sendStatus(500);
