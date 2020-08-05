@@ -70,14 +70,24 @@ const addScore = (client) => async ({
 
   const key = `${SCORE_KEY}:${uuid()}`;
 
+  let newMoveHistory = null;
+  let newClickHistory = null;
+
+  try {
+    newMoveHistory = JSON.stringify(shortenHistory(JSON.parse(moveHistory)));
+    newClickHistory = JSON.stringify(shortenHistory(JSON.parse(clickHistory)));
+  } catch (e) {
+    // pass
+  }
+
   const data = {
     name,
     time,
     start,
     end,
     seed,
-    moveHistory: shortenHistory(moveHistory),
-    clickHistory: shortenHistory(clickHistory),
+    moveHistory: newMoveHistory,
+    clickHistory: newClickHistory,
     accuracy,
     timestamp: Math.round(new Date() / 1000),
   };
