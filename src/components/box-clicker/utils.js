@@ -49,3 +49,25 @@ export const randomWhite = () => {
   a = `${'f'.repeat(3 - a.length)}${a}`;
   return a.split('').reduce((prev, curr) => `${prev}f${curr}`, '#');
 };
+
+export const processReplay = (moveHistory, clickHistory) => {
+  const history = moveHistory
+    .map((a) => ({
+      ...a,
+      type: 'move',
+    }))
+    .concat(clickHistory.map((a, i) => ({ ...a, type: 'click', boxNumber: i })))
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  for (let i = 0; i < history.length; i++) {
+    history[i].relativeTimestamp = history[i].timestamp - history[0].timestamp;
+
+    if (i > 0) {
+      history[i].delta = history[i].timestamp - history[i - 1].timestamp;
+    } else {
+      history[i].delta = 0;
+    }
+  }
+
+  return history;
+};

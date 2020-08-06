@@ -8,10 +8,10 @@ import { getMouseRelativePosition } from './utils';
 import BoxGrid from './box-grid';
 import ScoreDisplay from './score-display';
 
-const BOXES_TO_CLICK = 30;
-const COLUMN_COUNT = 8;
-const ROW_COUNT = 8;
-const GRID_GAP = 15;
+export const BOXES_TO_CLICK = 30;
+export const COLUMN_COUNT = 8;
+export const ROW_COUNT = 8;
+export const GRID_GAP = 15;
 const CLOCK_TICK_DELAY = 50;
 
 const Container = styled.div`
@@ -22,7 +22,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Controls = styled.div`
+export const Controls = styled.div`
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   display: flex;
@@ -91,14 +91,16 @@ const BoxClicker = () => {
   const boxCount = rowCount * columnCount;
 
   const restartGame = () => {
-    setGameState('standby');
-    setBoxesClicked(0);
-    const newSeed = uuid();
-    rng = seedrandom(newSeed);
-    setGameSeed(newSeed);
-    setActiveBox(randInt(0, boxCount - 1));
-    setMouseMoveHistory([]);
-    setMouseClickHistory([]);
+    setTimeout(() => {
+      setGameState('standby');
+      setBoxesClicked(0);
+      const newSeed = uuid();
+      rng = seedrandom(newSeed);
+      setGameSeed(newSeed);
+      setActiveBox(randInt(0, boxCount - 1));
+      setMouseMoveHistory([]);
+      setMouseClickHistory([]);
+    });
   };
 
   const defaultSettings = () => {
@@ -106,6 +108,7 @@ const BoxClicker = () => {
     setRowCount(ROW_COUNT);
     setColumnCount(COLUMN_COUNT);
     setGridGap(GRID_GAP);
+    restartGame();
   };
 
   const updateScores = async () => {
@@ -122,10 +125,6 @@ const BoxClicker = () => {
     gridGap === GRID_GAP;
 
   useEffect(() => {
-    restartGame();
-  }, [rowCount, columnCount, boxesToClick, gridGap]);
-
-  useEffect(() => {
     setSoundStuff({
       synth: window.speechSynthesis,
     });
@@ -135,7 +134,7 @@ const BoxClicker = () => {
       setClockTick(Date.now());
     }, CLOCK_TICK_DELAY);
 
-    setTimeout(restartGame, 100);
+    restartGame();
 
     return () => {
       clearInterval(clockInterval);
@@ -202,6 +201,7 @@ const BoxClicker = () => {
             value={boxesToClick}
             onChange={(e) => {
               setBoxesToClick(parseInt(e.target.value || 1));
+              restartGame();
             }}
           />
         </label>
@@ -215,6 +215,7 @@ const BoxClicker = () => {
             max={100}
             onChange={(e) => {
               setRowCount(parseInt(e.target.value || 1));
+              restartGame();
             }}
           />
         </label>
@@ -228,6 +229,7 @@ const BoxClicker = () => {
             max={100}
             onChange={(e) => {
               setColumnCount(parseInt(e.target.value || 2));
+              restartGame();
             }}
           />
         </label>
@@ -241,6 +243,7 @@ const BoxClicker = () => {
             max={1000}
             onChange={(e) => {
               setGridGap(parseInt(e.target.value || 0));
+              restartGame();
             }}
           />
         </label>
