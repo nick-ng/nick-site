@@ -22,6 +22,8 @@ const sanitiseScore = (score) => {
       ...score,
       time: parseFloat(score.time) || 1000,
       accuracy: parseFloat(score.accuracy) || 1000,
+      moveHistory: JSON.parse(score.moveHistory),
+      clickHistory: JSON.parse(score.clickHistory),
       hasReplay: !!score.moveHistory && !!score.clickHistory,
       timestamp: parseInt(score.timestamp, 10) || Math.round(new Date() / 1000),
     };
@@ -44,7 +46,7 @@ const summariseScore = (score) => {
     name: score.name,
     time: score.time,
     accuracy: score.accuracy,
-    hasReplay: !!score.moveHistory && !!score.clickHistory,
+    hasReplay: score.hasReplay,
     timestamp: score.timestamp,
   };
 };
@@ -70,8 +72,8 @@ const addScore = (client) => async ({
 
   const key = `${SCORE_KEY}:${uuid()}`;
 
-  let newMoveHistory = null;
-  let newClickHistory = null;
+  let newMoveHistory = [];
+  let newClickHistory = [];
 
   try {
     newMoveHistory = JSON.stringify(shortenHistory(JSON.parse(moveHistory)));

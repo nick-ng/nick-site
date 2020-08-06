@@ -21,86 +21,89 @@ import PokemonCramomatic from './components/pokemon/cramomatic';
 import PokemonNotes from './components/pokemon/notes';
 import DnDSpellBook from './components/dungeons-and-dragons/spell-book';
 import BoxClicker from './components/box-clicker';
+import BoxClickerReplayPlayer from './components/box-clicker/replay';
 import Test from './components/test';
 import Admin from './components/admin';
 
 export default function App() {
-    return (
-        <Router>
-            <div className={css.container}>
-                <Nav />
-                <div className={css.pageContent}>
-                    <Switch>
-                        <R path="/weddingphotos">
-                            <WeddingPhotos />
-                        </R>
-                        <R path="/wedding">
-                            <WeddingPhotos />
-                        </R>
-                        <R path="/pll">
-                            <PermuteLastLayerPage />
-                        </R>
-                        <R path="/oll">
-                            <OrientLastLayer />
-                        </R>
-                        <R path="/sessiondetails">
-                            <CubeTimerSessionDetails />
-                        </R>
-                        <R path="/cubetimer">
-                            <CubeTimer />
-                        </R>
-
-                        <R path="/cubesessionmanager">
-                            <CubeSessionManager />
-                        </R>
-                        <R path="/bookmarks">
-                            <Bookmarks />
-                        </R>
-                        <R path="/countdowns">
-                            <Countdowns />
-                        </R>
-                        <R path="/location">
-                            <Location />
-                        </R>
-                        {/* <R path="/pokemon/evhelper">
+  return (
+    <Router>
+      <div className={css.container}>
+        <Nav />
+        <div className={css.pageContent}>
+          <Switch>
+            <R path="/weddingphotos">
+              <WeddingPhotos />
+            </R>
+            <R path="/wedding">
+              <WeddingPhotos />
+            </R>
+            <R path="/pll">
+              <PermuteLastLayerPage />
+            </R>
+            <R path="/oll">
+              <OrientLastLayer />
+            </R>
+            <R path="/sessiondetails">
+              <CubeTimerSessionDetails />
+            </R>
+            <R path="/cubetimer">
+              <CubeTimer />
+            </R>
+            <R path="/cubesessionmanager">
+              <CubeSessionManager />
+            </R>
+            <R path="/bookmarks">
+              <Bookmarks />
+            </R>
+            <R path="/countdowns">
+              <Countdowns />
+            </R>
+            <R path="/location">
+              <Location />
+            </R>
+            {/* <R path="/pokemon/evhelper">
                             <PokemonEVHelper />
                         </R> */}
-                        <R path="/pokemon/flashcards">
-                            <PokemonFlashCards />
-                        </R>
-                        <R path="/pokemon/cramomatic">
-                            <PokemonCramomatic />
-                        </R>
-                        <R path="/pokemon/notes">
-                            <PokemonNotes />
-                        </R>
-                        <R path="/dnd/druidspellbook">
-                            <DnDSpellBook casterClass="druid" key="druid" />
-                        </R>
-                        <R path="/dnd/paladinspellbook">
-                            <DnDSpellBook casterClass="paladin" key="paladin" />
-                        </R>
-                        <R path="/dnd/wizardspellbook">
-                            <DnDSpellBook casterClass="wizard" key="wizard" />
-                        </R>
-                        <R path="/dione">
-                            <Todos />
-                        </R>
-                        <R path="/boxclicker">
-                            <BoxClicker />
-                        </R>
-                        <R path="/test">
-                            <Test />
-                        </R>
-                        <R path="/admin">
-                            <Admin />
-                        </R>
-                        <R path="/">
-                            <Home />
-                        </R>
-                    </Switch>
-                </div>
-            </div>
-        </Router>
-    );
+            <R path="/pokemon/flashcards">
+              <PokemonFlashCards />
+            </R>
+            <R path="/pokemon/cramomatic">
+              <PokemonCramomatic />
+            </R>
+            <R path="/pokemon/notes">
+              <PokemonNotes />
+            </R>
+            <R path="/dnd/druidspellbook">
+              <DnDSpellBook casterClass="druid" key="druid" />
+            </R>
+            <R path="/dnd/paladinspellbook">
+              <DnDSpellBook casterClass="paladin" key="paladin" />
+            </R>
+            <R path="/dnd/wizardspellbook">
+              <DnDSpellBook casterClass="wizard" key="wizard" />
+            </R>
+            <R path="/dione">
+              <Todos />
+            </R>
+            <R path={['/boxclicker/replay/:replayId', '/boxclicker/replay']}>
+              <BoxClickerReplayPlayer />
+            </R>
+            <R exact path="/boxclicker">
+              <BoxClicker />
+            </R>
+            <R path="/test">
+              <Test />
+            </R>
+            <R path="/admin">
+              <Admin />
+            </R>
+            <R path="/">
+              <Home />
+            </R>
+          </Switch>
+        </div>
+      </div>
+    </Router>
+  );
 }

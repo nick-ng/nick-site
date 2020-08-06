@@ -15,9 +15,7 @@ module.exports = (router) => {
     const { id } = req.params;
 
     try {
-      res.json({
-        scores: await boxclicker.getScore(id),
-      });
+      res.json(await boxclicker.getScore(id));
     } catch (e) {
       res.sendStatus(500);
     }

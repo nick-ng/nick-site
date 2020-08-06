@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   position: absolute;
@@ -13,7 +14,7 @@ const Container = styled.div`
 
 const Score = styled.div`
   margin: 0.5em 0 0;
-  display: ${(props) => (props.i === 0 ? 'block' : 'none')};
+  display: ${({ alwaysOpen, i }) => (i === 0 || alwaysOpen ? 'block' : 'none')};
 
   ${Container}:hover & {
     display: block;
@@ -37,33 +38,35 @@ const HideOnHover = styled.div`
   }
 `;
 
-const ScoreDisplay = ({ scores, isLoading }) => {
-  const topScores = scores.sort((a, b) => a.time - b.time).slice(0, 10);
+const ScoreDisplay = ({
+  scores,
+  isLoading,
+  alwaysOpen = false,
+  limit = 10,
+}) => {
+  const topScores = scores.sort((a, b) => a.time - b.time).slice(0, limit);
   return (
     <Container>
       {isLoading && <div>Loading scores...</div>}
       {topScores.map((score, i) => (
-        <Score key={`${score.name}${score.timestamp}`} i={i}>
+        <Score
+          alwaysOpen={alwaysOpen}
+          key={`${score.name}${score.timestamp}`}
+          i={i}
+        >
           {`${i + 1}. ${score.name} - ${score.time.toFixed(2)} seconds`}{' '}
           {score.hasReplay && (
-            <a
-              href="#"
-              onClick={() => {
-                alert(`Coming soon. id: ${score.id}`);
-              }}
-            >
-              (View Replay)
-            </a>
+            <Link to={`/boxclicker/replay/${score.id}`}>(View Replay)</Link>
           )}
         </Score>
       ))}
-      {topScores.length > 1 && (
+      {!alwaysOpen && topScores.length > 1 && (
         <HideOnHover>
           Hover to see <span>{topScores.length - 1}</span> more score
           <span>{topScores.length - 1 !== 1 ? 's' : ''}</span>
         </HideOnHover>
       )}
-      <HideOnHover>Scores expire after 2 months.</HideOnHover>
+      {!alwaysOpen && <HideOnHover>Scores expire after 2 months.</HideOnHover>}
     </Container>
   );
 };
