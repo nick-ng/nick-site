@@ -34,7 +34,8 @@ export const Controls = styled.div`
     align-items: center;
   }
   input[type='number'] {
-    width: 3em;
+    text-align: right;
+    width: 5em;
   }
 `;
 

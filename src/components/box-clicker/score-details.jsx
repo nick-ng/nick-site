@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
+import { hasAdminKey } from '../../utils';
+
 const Container = styled.div`
   position: absolute;
   top: -1em;
@@ -19,8 +21,11 @@ const Left = styled.div``;
 const Right = styled.div`
   text-align: right;
 `;
+const Full = styled.div`
+  grid-column: 1 / 3;
+`;
 
-const ScoreDetails = ({ score }) => {
+const ScoreDetails = ({ score, deleteHandler }) => {
   return score.name ? (
     <Container>
       <Left>Player</Left>
@@ -29,6 +34,11 @@ const ScoreDetails = ({ score }) => {
       <Right>{score.time}</Right>
       <Left>Date</Left>
       <Right>{moment(score.end).format('Do MMM YYYY')}</Right>
+      {hasAdminKey() && (
+        <Full>
+          <button onClick={deleteHandler}>Delete</button>
+        </Full>
+      )}
     </Container>
   ) : null;
 };

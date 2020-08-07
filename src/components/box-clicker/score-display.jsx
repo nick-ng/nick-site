@@ -54,7 +54,7 @@ const ScoreDisplay = ({
           key={`${score.name}${score.timestamp}`}
           i={i}
         >
-          {`${i + 1}. ${score.name} - ${score.time.toFixed(2)} seconds`}{' '}
+          {`${i + 1}. ${score.name} - ${score.time.toFixed(3)} seconds`}{' '}
           {score.hasReplay && (
             <Link to={`/boxclicker/replay/${score.id}`}>(View Replay)</Link>
           )}

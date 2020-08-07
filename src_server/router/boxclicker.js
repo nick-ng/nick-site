@@ -49,4 +49,21 @@ module.exports = (router) => {
       res.sendStatus(500);
     }
   });
+
+  router.delete('/api/boxclicker/score/:id', async (req, res, next) => {
+    const { user } = res.locals;
+    const { id } = req.params;
+
+    if (!user || user.id === 0) {
+      return res.sendStatus(403);
+    }
+
+    try {
+      await boxclicker.deleteScore(id);
+
+      return res.sendStatus(205);
+    } catch (e) {
+      return res.sendStatus(500);
+    }
+  });
 };
