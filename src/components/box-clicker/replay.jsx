@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import seedrandom from 'seedrandom';
@@ -52,25 +52,28 @@ const Cursor = styled.div.attrs((props) => ({
 
 const Time = styled.div`
   font-family: monospace;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const BoxClickerReplayPlayer = () => {
+  const history = useHistory();
   const { replayId } = useParams();
   const [loading, setLoading] = useState(false);
   const [score, setScore] = useState({});
   const [allScores, setAllScores] = useState([]);
   const [boxOrder, setBoxOrder] = useState([]);
   const [activeBox, setActiveBox] = useState(0);
-
-  const [replayTick, setReplayTick] = useState(0);
-  const [replayTickObject, setReplayTickObject] = useState({
+  const [replayFrame, setReplayFrame] = useState(0);
+  const [replayFrameObject, setReplayFrameObject] = useState({
     x: 0,
     y: 0,
     delta: 0,
     relativeTimestamp: 0,
   });
-  const [replayState, setReplayState] = useState('stop');
+  const [replayState, setReplayState] = useState('pause');
+  const [replaySpeed, setReplaySpeed] = useState(1);
   const [processedReplay, setProcessedReplay] = useState([]);
 
   useEffect(() => {
@@ -88,10 +91,7 @@ const BoxClickerReplayPlayer = () => {
         const fastestWithReplay = newAllScores
           .filter((a) => a.hasReplay)
           .sort((a, b) => a.time - b.time)[0];
-        const res = await axios.get(
-          `/api/boxclicker/score/${fastestWithReplay.id}`
-        );
-        setScore(res.data);
+        history.push(`/boxclicker/replay/${fastestWithReplay.id}`);
       }
       setLoading(false);
     };
@@ -102,7 +102,7 @@ const BoxClickerReplayPlayer = () => {
     const { moveHistory, clickHistory, seed } = score;
     if (Array.isArray(moveHistory) && Array.isArray(clickHistory)) {
       setProcessedReplay(processReplay(moveHistory, clickHistory));
-      setReplayTick(0);
+      setReplayFrame(0);
       const rng = seedrandom(seed);
       const randInt = (min, max) => Math.floor(rng() * (max - min + 1)) + min;
       let prev;
@@ -124,17 +124,17 @@ const BoxClickerReplayPlayer = () => {
       );
     }
 
-    setReplayState('stop');
+    setReplayState('pause');
   }, [score]);
 
   useEffect(() => {
     let timeoutId = null;
-    if (replayTick < processedReplay.length) {
-      const { delta, type, boxNumber } = processedReplay[replayTick];
-      setReplayTickObject(processedReplay[replayTick]);
-      if (replayTick === 0) {
+    if (replayFrame < processedReplay.length) {
+      const { delta, type, boxNumber } = processedReplay[replayFrame];
+      setReplayFrameObject(processedReplay[replayFrame]);
+      if (replayFrame === 0) {
         setActiveBox(boxOrder[0]);
-      } else if (replayTick === 1) {
+      } else if (replayFrame === 1) {
         setActiveBox(boxOrder[1]);
       } else if (type === 'click') {
         if (boxNumber + 1 < boxOrder.length) {
@@ -146,11 +146,11 @@ const BoxClickerReplayPlayer = () => {
 
       if (replayState === 'play') {
         timeoutId = setTimeout(() => {
-          setReplayTick(replayTick + 1);
-        }, delta);
+          setReplayFrame(replayFrame + 1);
+        }, delta / Math.max(replaySpeed, 0.0001));
       }
     } else {
-      setReplayState('stop');
+      setReplayState('pause');
     }
 
     return () => {
@@ -158,7 +158,9 @@ const BoxClickerReplayPlayer = () => {
         clearTimeout(timeoutId);
       }
     };
-  }, [replayState, replayTick, processedReplay]);
+  }, [replayState, replayFrame, processedReplay]);
+
+  console.log('replayFrame', replayFrame);
 
   return (
     <Container>
@@ -166,30 +168,95 @@ const BoxClickerReplayPlayer = () => {
       <Controls>
         <button
           onClick={() => {
-            setReplayTick(0);
-            setReplayState('stop');
+            setReplayFrame(0);
+            setReplayState('pause');
           }}
         >
           <i className="fa fa-fast-backward"></i> Rewind
         </button>
         <button
-          disabled={replayState === 'stop'}
           onClick={() => {
-            setReplayState('stop');
+            setReplayFrame(Math.max(0, replayFrame - 1));
+            setReplayState('pause');
+          }}
+        >
+          <i className="fa fa-step-backward"></i> Step
+        </button>
+        <button
+          disabled={replayState === 'pause'}
+          onClick={() => {
+            setReplayState('pause');
           }}
         >
           <i className="fa fa-pause"></i> Pause
         </button>
         <button
+          onClick={() => {
+            setReplayFrame(replayFrame + 1);
+            setReplayState('pause');
+          }}
+        >
+          <i className="fa fa-step-forward"></i> Step
+        </button>
+        <button
           disabled={replayState === 'play'}
           onClick={() => {
+            if (replayFrame >= processedReplay.length) {
+              setReplayFrame(0);
+            }
             setReplayState('play');
           }}
         >
           <i className="fa fa-play"></i> Play
         </button>
       </Controls>
-      <Time>{(replayTickObject.relativeTimestamp / 1000).toFixed(3)}</Time>
+      <Controls>
+        <label>
+          Replay Speed:
+          <input
+            type="number"
+            step={0.01}
+            min={0.01}
+            max={9999999}
+            value={replaySpeed}
+            onChange={(e) => {
+              try {
+                let a = e.target.value;
+                if (a[0] === '.') {
+                  a = '0' + a;
+                }
+                setReplaySpeed(parseFloat(a));
+              } catch (e) {
+                // pass
+              }
+            }}
+          />
+        </label>
+        <label>
+          Replay Frame:
+          <input
+            type="number"
+            step={1}
+            value={replayFrame}
+            onChange={(e) => {
+              console.log(
+                Math.max(processedReplay.length - 1, 0),
+                e.target.value
+              );
+              try {
+                let a = parseInt(e.target.value);
+
+                setReplayFrame(Math.max(0, a));
+                setReplayState('pause');
+              } catch (e) {
+                // pass
+              }
+            }}
+          />
+        </label>
+        <Time>{(replayFrameObject.relativeTimestamp / 1000).toFixed(3)}</Time>
+      </Controls>
+
       {loading ? (
         <p>Loading replay...</p>
       ) : (
@@ -204,9 +271,14 @@ const BoxClickerReplayPlayer = () => {
           />
           <Cursor
             player={1}
-            left={replayTickObject.x}
-            top={replayTickObject.y}
-            duration={replayTickObject.delta / 1001}
+            left={replayFrameObject.x}
+            top={replayFrameObject.y}
+            duration={
+              replayState === 'play'
+                ? replayFrameObject.delta /
+                  (1001 * Math.max(replaySpeed, 0.0001))
+                : 0.1
+            }
           />
         </ReplayArea>
       )}
@@ -216,7 +288,19 @@ const BoxClickerReplayPlayer = () => {
         isLoading={loading}
         limit={99999}
       />
-      <ScoreDetails score={score} />
+      <ScoreDetails
+        score={score}
+        deleteHandler={async () => {
+          if (
+            confirm(
+              `Really delete ${score.name}'s replay (${score.time} seconds)?`
+            )
+          ) {
+            await axios.delete(`/api/boxclicker/score/${replayId}`);
+            history.push('/boxclicker/replay');
+          }
+        }}
+      />
     </Container>
   );
 };

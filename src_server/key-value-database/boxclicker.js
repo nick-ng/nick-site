@@ -18,12 +18,22 @@ const shortenHistory = (history) => {
 
 const sanitiseScore = (score) => {
   try {
+    const moveHistory = JSON.parse(score.moveHistory);
+    const clickHistory = JSON.parse(score.clickHistory);
+
+    const combinedHistory = moveHistory
+      .concat(clickHistory)
+      .sort((a, b) => a.timestamp - b.timestamp);
+
     return {
       ...score,
-      time: parseFloat(score.time) || 1000,
+      time:
+        (combinedHistory[combinedHistory.length - 1].timestamp -
+          combinedHistory[0].timestamp) /
+        1000,
       accuracy: parseFloat(score.accuracy) || 1000,
-      moveHistory: JSON.parse(score.moveHistory),
-      clickHistory: JSON.parse(score.clickHistory),
+      moveHistory,
+      clickHistory,
       hasReplay: !!score.moveHistory && !!score.clickHistory,
       timestamp: parseInt(score.timestamp, 10) || Math.round(new Date() / 1000),
     };
@@ -53,7 +63,6 @@ const summariseScore = (score) => {
 
 const addScore = (client) => async ({
   name = '',
-  time = 1000,
   start,
   end,
   seed,
@@ -66,42 +75,51 @@ const addScore = (client) => async ({
 
   let newName = name || md5(uuid());
 
-  if (name.length > 32) {
+  if (name.length > 32 || !name) {
     newName = md5(name);
   }
 
   const key = `${SCORE_KEY}:${uuid()}`;
 
-  let newMoveHistory = [];
-  let newClickHistory = [];
-
   try {
-    newMoveHistory = JSON.stringify(shortenHistory(JSON.parse(moveHistory)));
-    newClickHistory = JSON.stringify(shortenHistory(JSON.parse(clickHistory)));
-  } catch (e) {
-    // pass
-  }
+    const newMoveHistory = JSON.stringify(
+      shortenHistory(JSON.parse(moveHistory))
+    );
+    const newClickHistory = JSON.stringify(
+      shortenHistory(JSON.parse(clickHistory))
+    );
 
-  const data = {
-    name,
-    time,
-    start,
-    end,
-    seed,
-    moveHistory: newMoveHistory,
-    clickHistory: newClickHistory,
-    accuracy,
-    timestamp: Math.round(new Date() / 1000),
-  };
+    const data = {
+      name,
+      start,
+      end,
+      seed,
+      moveHistory: newMoveHistory,
+      clickHistory: newClickHistory,
+      accuracy,
+      timestamp: Math.round(new Date() / 1000),
+    };
 
-  const dataArray = Object.entries(data).reduce(
-    (prev, curr) => prev.concat(curr),
-    []
-  );
+    const dataArray = Object.entries(data).reduce(
+      (prev, curr) => prev.concat(curr),
+      []
+    );
 
-  try {
     await hmset(key, ...dataArray);
     await expire(key, SCORE_TTL);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+const deleteScore = (client) => async (id) => {
+  const del = promisify(client.del).bind(client);
+
+  const key = `${SCORE_KEY}:${id}`;
+
+  try {
+    await del(key);
     return true;
   } catch (e) {
     return false;
@@ -148,6 +166,7 @@ const getScore = (client) => async (id) => {
 
 module.exports = (client) => ({
   addScore: addScore(client),
+  deleteScore: deleteScore(client),
   getAllScores: getAllScores(client),
   getScore: getScore(client),
 });
