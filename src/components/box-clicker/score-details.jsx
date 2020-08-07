@@ -26,21 +26,21 @@ const Full = styled.div`
 `;
 
 const ScoreDetails = ({ score, deleteHandler }) => {
-  return score.name ? (
+  return (
     <Container>
       <Left>Player</Left>
-      <Right>{score.name}</Right>
+      <Right>{score?.name}</Right>
       <Left>Time</Left>
-      <Right>{score.time}</Right>
+      <Right>{score?.time}</Right>
       <Left>Date</Left>
-      <Right>{moment(score.end).format('Do MMM YYYY')}</Right>
+      <Right>{moment(score?.end).format('Do MMM YYYY')}</Right>
       {hasAdminKey() && (
         <Full>
           <button onClick={deleteHandler}>Delete</button>
         </Full>
       )}
     </Container>
-  ) : null;
+  );
 };
 
 export default ScoreDetails;
