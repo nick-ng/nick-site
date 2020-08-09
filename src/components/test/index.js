@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
+import {
+  wsAddListener,
+  wsConnect,
+  wsRemoveListener,
+  wsSend,
+} from '../../services/websocket';
 
 let webSocket = null;
 
@@ -11,47 +18,29 @@ const Test = () => {
       window.open('https://www.youtube.com/watch?v=PWgvGjAhvIw', '_blank');
     }, 1000);
 
-    const setupWebSocket = async () => {
-      //   const res = await axios.get('/api/websocketport');
-
-      webSocket = new WebSocket(`ws://${window.location.host}/ws`);
-
-      console.log('webSocket 1', webSocket);
-
-      webSocket.onopen = () => {
-        webSocket.send('onopen event on client');
-      };
-
-      webSocket.onerror = (error) => {
-        console.log('WebSocket error', error);
-      };
-
-      webSocket.onmessage = (e) => {
-        setVarA(`${e.data} (${Date.now()})`);
-        setVarC(Date.now());
-      };
-
-      webSocket.onclose = () => {
-        console.log('onclose event on client');
-        webSocket = null;
-      };
-    };
-
-    setupWebSocket();
+    wsConnect();
+    const listenerId = uuid();
+    wsAddListener({
+      id: listenerId,
+      type: 'test',
+      callback: ({ subType, payload }) => {
+        console.log('subType', subType);
+        console.log('payload', payload);
+      },
+    });
 
     return () => {
       clearTimeout(popupVideoId);
+      wsRemoveListener(listenerId);
     };
   }, []);
 
   useEffect(() => {
-    console.log('webSocket 2', webSocket);
-    if (webSocket && webSocket.readyState) {
-      console.log('varB', varB);
-      console.log('websocket 3', webSocket);
-
-      webSocket.send(varB);
-    }
+    wsSend({
+      type: 'test',
+      subType: 'set-var-b',
+      payload: varB,
+    });
   }, [varB]);
 
   return (

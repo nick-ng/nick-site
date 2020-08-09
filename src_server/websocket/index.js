@@ -8,10 +8,33 @@ module.exports = (server) => {
     const connectionId = uuid();
     console.log('connection', connectionId);
 
-    websocketConnection.on('message', (message) => {
-      console.log('Received message', message, connectionId);
+    websocketConnection.send(
+      JSON.stringify({
+        type: 'setup',
+        subType: 'set-connection-id',
+        payload: {
+          connectionId,
+        },
+      })
+    );
 
-      websocketConnection.send('PONG!', connectionId);
+    websocketConnection.on('message', (message) => {
+      try {
+        const messageObj = JSON.parse(message);
+        switch (messageObj.type) {
+          case 'test':
+            console.log('test message', messageObj);
+            websocketConnection.send(
+              JSON.stringify({
+                type: 'test',
+                subType: 'hello',
+                payload: 'world',
+              })
+            );
+        }
+      } catch (e) {
+        console.log('error when receiving webSocket message', e);
+      }
     });
   });
 };

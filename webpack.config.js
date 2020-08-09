@@ -18,7 +18,7 @@ module.exports = {
         target: 'http://localhost:3435',
       },
       {
-        context: ['ws://'],
+        context: ['/ws'],
         target: 'ws://localhost:3435',
         ws: true,
       },

@@ -21,12 +21,6 @@ app.use(express.json());
 applyMiddlewares(app);
 applyRouters(router);
 app.use(router);
-router.get('/api/websocketport', (req, res, next) => {
-  console.log('wsPort', wsPort);
-  res.json({
-    port: wsPort,
-  });
-});
 
 // serve static files
 app.use(express.static('assets'));
