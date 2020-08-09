@@ -47,7 +47,9 @@ export const wsConnect = async () => {
     )
   ) {
     webSocketService.websocket = new WebSocket(
-      `ws://${window.location.host}/ws`
+      `${window.location.protocol === 'http:' ? 'ws' : 'wss'}://${
+        window.location.host
+      }/ws`
     );
 
     webSocketService.connectionId = await sleep(100);
