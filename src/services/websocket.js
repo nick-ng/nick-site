@@ -42,9 +42,8 @@ const readyStates = {
 export const wsConnect = async () => {
   if (
     !webSocketService.websocket ||
-    [readyStates.CLOSING, readyStates.CLOSING].includes(
-      webSocketService.websocket.readyState
-    )
+    webSocketService.websocket.readyState === 2 ||
+    webSocketService.websocket.readyState === 3
   ) {
     webSocketService.websocket = new WebSocket(
       `${window.location.protocol === 'http:' ? 'ws' : 'wss'}://${
@@ -52,18 +51,16 @@ export const wsConnect = async () => {
       }/ws`
     );
 
-    webSocketService.connectionId = await sleep(100);
+    webSocketService.connectionId = null;
+    await sleep(100);
 
     webSocketService.websocket.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      console.log('data', data);
       webSocketService.listeners.forEach((listener) => {
         if (data.type === listener.type) {
           listener.callback(data);
         }
       });
-
-      console.log('webSocketService', webSocketService);
     };
   }
 

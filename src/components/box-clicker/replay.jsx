@@ -282,12 +282,7 @@ const BoxClickerReplayPlayer = () => {
           />
         </ReplayArea>
       )}
-      <ScoreDisplay
-        alwaysOpen
-        scores={allScores}
-        isLoading={loading}
-        limit={99999}
-      />
+      <ScoreDisplay scores={allScores} isLoading={loading} limit={99999} />
       <ScoreDetails
         score={score}
         deleteHandler={async () => {

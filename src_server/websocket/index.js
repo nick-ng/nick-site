@@ -1,6 +1,8 @@
 const WebSocket = require('ws');
 const { v4: uuid } = require('uuid');
 
+const boxclicker = require('./boxclicker');
+
 module.exports = (server) => {
   const webSocketServer = new WebSocket.Server({ server });
 
@@ -18,6 +20,8 @@ module.exports = (server) => {
       })
     );
 
+    boxclicker(websocketConnection, connectionId);
+
     websocketConnection.on('message', (message) => {
       try {
         const messageObj = JSON.parse(message);
@@ -31,10 +35,17 @@ module.exports = (server) => {
                 payload: 'world',
               })
             );
+            break;
+          default:
+          // nothing
         }
       } catch (e) {
         console.log('error when receiving webSocket message', e);
       }
+    });
+
+    websocketConnection.on('close', (e) => {
+      console.log('close', e);
     });
   });
 };
