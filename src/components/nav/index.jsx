@@ -24,11 +24,11 @@ const Nav = () => (
       Countdowns
     </AdminNav>
     <NavLink icons={['fa-check-square-o', 'fa-square-o']} to="/dione">
-      Dione: Todos
+      Todos
     </NavLink>
-    <NavLink icons="fa-gamepad" to="/pokemon/flashcards">
+    <AdminNav icons="fa-gamepad" to="/pokemon/flashcards">
       Flash Cards
-    </NavLink>
+    </AdminNav>
     {/* <NavLink icons="fa-gamepad" to="/pokemon/evhelper">
             EV Helper
         </NavLink> */}
@@ -38,9 +38,9 @@ const Nav = () => (
     >
       Cram-o-matic Helper
     </NavLink>
-    <NavLink icons="fa-gamepad" to="/pokemon/notes">
+    <AdminNav icons="fa-gamepad" to="/pokemon/notes">
       Pokemon Notes
-    </NavLink>
+    </AdminNav>
     <NavLink icons="fa-pencil" to="/dnd/druidspellbook">
       Druid Spells
     </NavLink>
@@ -50,7 +50,7 @@ const Nav = () => (
     <AdminNav icons="fa-pencil" to="/dnd/wizardspellbook">
       Wizard Spells
     </AdminNav>
-    <NavLink icons="fa-cube" to="/pll">
+    <NavLink icons="fa-cube" to="/cubetimer">
       Rubik's Cube
     </NavLink>
     <NavLink icons={['fa-cube', 'fa-clock-o']} to="/cubetimer" indentLevel={1}>
