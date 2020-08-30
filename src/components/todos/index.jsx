@@ -29,19 +29,21 @@ const TodoList = () => {
   const [newTodoId, setNewTodoId] = useState(uuid());
   const [timeoutId, setTimeoutId] = useState(null);
 
-  const fetchTodos = async () => {
+  const fetchTodos = async (updateActiveTodo = false) => {
     const fetchedTodos = await listTodos();
     setTodos(fetchedTodos);
     const filteredTodos = filterTodos(fetchedTodos, workOnly);
-    if (filteredTodos.length > 0) {
+    if (updateActiveTodo && filteredTodos.length > 0) {
       setActiveTodoId(filteredTodos[0].id);
     }
   };
 
   useEffect(() => {
-    fetchTodos();
+    fetchTodos(true);
 
-    const todoFetcherId = setInterval(fetchTodos, 1000 * 60 * 60);
+    const todoFetcherId = setInterval(() => {
+      fetchTodos(false);
+    }, 1000 * 60 * 60);
 
     return clearInterval(todoFetcherId);
   }, []);
@@ -104,9 +106,11 @@ const TodoList = () => {
             chooseTodo={() => setActiveTodoId(todo.id)}
             updateTodo={async (newTodo) => {
               setTodos(await updateTodo(todos, newTodo));
+              fetchTodos(false);
             }}
             deleteTodo={async (todoId) => {
               setTodos(await deleteTodo(todos, todoId));
+              fetchTodos(activeTodoId === todo.id);
             }}
           />
         ))}
