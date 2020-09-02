@@ -178,7 +178,7 @@ export default class AnniversaryCountdown extends React.Component {
   render() {
     const { ordinal, timeString, timeUnit, timeMilliseconds } = this.state;
     const size = SIZE_RATIO / (timeMilliseconds + 1);
-    console.log('size', size);
+
     return (
       <p>
         Only <MonoSpan size={size}>{timeString}</MonoSpan>{' '}
