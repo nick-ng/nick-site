@@ -4,6 +4,7 @@ const countdownRouter = require('./countdowns');
 const foreignStorageRouter = require('./foreign-storage');
 const rubiksCubeRouter = require('./rubiks-cube');
 const weddingPhotoRouter = require('./wedding-photos');
+const workRouter = require('./work');
 
 const applyRouters = (router) => {
   bookmarkRouter(router);
@@ -12,6 +13,7 @@ const applyRouters = (router) => {
   foreignStorageRouter(router);
   rubiksCubeRouter(router);
   weddingPhotoRouter(router);
+  workRouter(router);
 };
 
 module.exports = {
