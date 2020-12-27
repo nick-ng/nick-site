@@ -44,3 +44,5 @@ jspm_packages
 
 # environmental variables
 .env
+
+.directory
