@@ -22,6 +22,10 @@ const OllSet = styled.div`
 const OllVideos = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+
+  video: {
+    background-color: grey;
+  }
 `;
 
 const OLL_VIDEOS = [
@@ -39,7 +43,7 @@ const OLL_VIDEOS = [
   },
   {
     case: 'W Shapes',
-    videos: [],
+    videos: ['36', '38'],
   },
   {
     case: 'Square Shapes',
@@ -51,7 +55,7 @@ const OLL_VIDEOS = [
   },
   {
     case: 'Fish Shapes',
-    videos: [],
+    videos: ['09', '10', '35', '37'],
   },
   {
     case: 'C Shapes',
