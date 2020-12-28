@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -87,40 +87,55 @@ const OLL_VIDEOS = [
   },
 ].filter((ollSet) => ollSet.videos.length > 0);
 
-const OrientLastLayerPage = () => (
-  <Container>
-    <h1>OLLs</h1>
-    <p>
-      Original videos{' '}
-      <a href="https://www.youtube.com/watch?v=47JfJxU7EjM">
-        Rubik's Cube: All 57 OLL Algorithms &amp; Finger Tricks
-      </a>{' '}
-      by{' '}
-      <a href="https://www.youtube.com/channel/UCqTVfT9JQqhA6_Hi_h_h97Q">
-        J Perm
-      </a>
-      .
-    </p>
-    <OllSets>
-      {OLL_VIDEOS.map((ollSet) => (
-        <OllSet key={ollSet.case}>
-          <h3>{ollSet.case}</h3>
-          <OllVideos>
-            {ollSet.videos.map((videoNumber) => (
-              <video
-                key={`${ollSet.case}-${videoNumber}`}
-                loop
-                autoPlay
-                muted
-                width={400}
-                src={`/oll/${videoNumber}.mp4`}
-              />
-            ))}
-          </OllVideos>
-        </OllSet>
-      ))}
-    </OllSets>
-  </Container>
-);
+const OrientLastLayerPage = () => {
+  const [expandedCase, setExpandedCase] = useState(null);
+
+  return (
+    <Container>
+      <h1>OLLs</h1>
+      <p>
+        Original videos{' '}
+        <a href="https://www.youtube.com/watch?v=47JfJxU7EjM">
+          Rubik's Cube: All 57 OLL Algorithms &amp; Finger Tricks
+        </a>{' '}
+        by{' '}
+        <a href="https://www.youtube.com/channel/UCqTVfT9JQqhA6_Hi_h_h97Q">
+          J Perm
+        </a>
+        .
+      </p>
+      <OllSets>
+        {OLL_VIDEOS.map((ollSet) => (
+          <OllSet key={ollSet.case}>
+            <h3>
+              {ollSet.case}
+              <button
+                onClick={() => {
+                  setExpandedCase(ollSet.case);
+                }}
+              >
+                Expand
+              </button>
+            </h3>
+            {expandedCase === ollSet.case && (
+              <OllVideos>
+                {ollSet.videos.map((videoNumber) => (
+                  <video
+                    key={`${ollSet.case}-${videoNumber}`}
+                    loop
+                    autoPlay
+                    muted
+                    width={400}
+                    src={`/oll/${videoNumber}.mp4`}
+                  />
+                ))}
+              </OllVideos>
+            )}
+          </OllSet>
+        ))}
+      </OllSets>
+    </Container>
+  );
+};
 
 export default OrientLastLayerPage;
