@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import AimTimeHelperA from './aim-time-helper-a';
@@ -19,9 +19,11 @@ const OutputRow = styled.div`
 `;
 
 export default function AimTimeHelper() {
+  const [nextGun, setNextGun] = useState([]);
   const [ak47Times, setAk47Times] = useState([]);
   const [m4a4Times, setM4a4Times] = useState([]);
   const [m4a1Times, setM4a1Times] = useState([]);
+  const [augTimes, setAugTimes] = useState([]);
 
   const [warning, setWarning] = useState(null);
 
@@ -37,11 +39,41 @@ export default function AimTimeHelper() {
     `=average(${ak47Times.join(',')})`,
     `=average(${m4a4Times.join(',')})`,
     `=average(${m4a1Times.join(',')})`,
+    `=average(${augTimes.join(',')})`,
   ].join('\t');
+
+  const counts = [
+    {
+      name: 'AK47',
+      count: Math.floor(ak47Times.length / 2),
+    },
+    {
+      name: 'M4A4',
+      count: Math.floor(m4a4Times.length / 2),
+    },
+    {
+      name: 'M4A1',
+      count: Math.floor(m4a1Times.length / 2),
+    },
+    {
+      name: 'AUG',
+      count: Math.floor(augTimes.length / 2),
+    },
+  ];
+
+  const minCount = Math.min(...counts.map((a) => a.count));
+
+  const atMinCount = counts.filter((a) => a.count === minCount);
+
+  useEffect(() => {
+    const index = Math.floor(Math.random() * atMinCount.length);
+    setNextGun(atMinCount[index]?.name);
+  }, [atMinCount.length]);
 
   return (
     <Container>
       <h2>CS:GO Aim Time Helper</h2>
+      <h3>Next gun: {nextGun}</h3>
       <AimTimeHelperA
         gunName="AK47"
         gunTimes={ak47Times}
@@ -58,6 +90,12 @@ export default function AimTimeHelper() {
         gunName="M4A1"
         gunTimes={m4a1Times}
         setGunTimes={setM4a1Times}
+        setWarning={setWarning}
+      />
+      <AimTimeHelperA
+        gunName="AUG"
+        gunTimes={augTimes}
+        setGunTimes={setAugTimes}
         setWarning={setWarning}
       />
       <OutputRow>
