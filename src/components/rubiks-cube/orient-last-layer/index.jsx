@@ -59,15 +59,15 @@ const OLL_VIDEOS = [
   },
   {
     case: 'C Shapes',
-    videos: [],
+    videos: ['34', '46'],
   },
   {
     case: 'Small Lightning Bolts',
-    videos: [],
+    videos: ['07', '08', '11', '12'],
   },
   {
     case: 'Big Lightning Bolts',
-    videos: [],
+    videos: ['39', '40'],
   },
   {
     case: 'Small L Shapes',
@@ -75,19 +75,19 @@ const OLL_VIDEOS = [
   },
   {
     case: 'Knight Move Shapes (Big L)',
-    videos: [],
+    videos: ['13', '14', '15', '16'],
   },
   {
     case: 'I Shapes',
-    videos: [],
+    videos: ['51', '52', '55', '56'],
   },
   {
     case: 'Awkward Shapes (Glider)',
-    videos: [],
+    videos: ['29', '30', '41', '42'],
   },
   {
     case: 'No Edges Oriented',
-    videos: [],
+    videos: ['01', '02', '03', '04', '17', '18', '19', '20'],
   },
 ].filter((ollSet) => ollSet.videos.length > 0);
 
@@ -112,7 +112,7 @@ const OrientLastLayerPage = () => {
         {OLL_VIDEOS.map((ollSet) => (
           <OllSet key={ollSet.case}>
             <h3>
-              {ollSet.case}
+              {ollSet.case} ({ollSet.videos.length} cases)
               <button
                 onClick={() => {
                   setExpandedCase(ollSet.case);
