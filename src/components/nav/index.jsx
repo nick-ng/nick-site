@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import Header from '../header';
 import NavLink, { AdminNav } from './nav-link';
@@ -103,10 +104,7 @@ const Nav = () => (
     <AdminNav icons="fa-tachometer" to="/location">
       Location
     </AdminNav>
-    <DayMod3>
-      {Math.floor(Date.now() / 1000 / 60 / 60 / 24) % 3} (
-      {Math.floor(Date.now() / 1000 / 60 / 60 / 24)})
-    </DayMod3>
+    <DayMod3>{parseInt(moment().format('DDD'), 10) % 3}</DayMod3>
   </div>
 );
 
