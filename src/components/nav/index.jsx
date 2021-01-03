@@ -1,9 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import Header from '../header';
 import NavLink, { AdminNav } from './nav-link';
 
 import css from './styles.css';
+
+const DayMod3 = styled.div`
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  padding: 10px;
+  min-width: 100px;
+  color: transparent;
+  cursor: default;
+
+  &:hover {
+    color: black;
+  }
+`;
 
 const Nav = () => (
   <div className={css.navContainer}>
@@ -88,6 +103,10 @@ const Nav = () => (
     <AdminNav icons="fa-tachometer" to="/location">
       Location
     </AdminNav>
+    <DayMod3>
+      {Math.floor(Date.now() / 1000 / 60 / 60 / 24) % 3} (
+      {Math.floor(Date.now() / 1000 / 60 / 60 / 24)})
+    </DayMod3>
   </div>
 );
 

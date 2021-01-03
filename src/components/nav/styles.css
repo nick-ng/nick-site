@@ -1,44 +1,44 @@
 .navContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-    background: rgb(187, 187, 187);
-    background: linear-gradient(
-        0deg,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 1) 10%,
-        rgba(187, 187, 187, 1) 100%
-    );
-    height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  background: rgb(187, 187, 187);
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 1) 10%,
+    rgba(187, 187, 187, 1) 100%
+  );
+  height: 90vh;
 }
 
 .navLink {
-    margin-bottom: 8px;
-    text-decoration: none;
-    color: black;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: black;
 }
 
 .activeNavLink {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .navIcon {
-    display: inline;
-    margin-right: 5px;
+  display: inline;
+  margin-right: 5px;
 }
 
 /* Phone */
 @media screen and (max-device-width: 1280px) {
-    .navIcon {
-        font-size: 28px;
-    }
+  .navIcon {
+    font-size: 28px;
+  }
 
-    .navIcon:last-of-type {
-        margin-right: 0;
-    }
+  .navIcon:last-of-type {
+    margin-right: 0;
+  }
 
-    .navText {
-        display: none;
-    }
+  .navText {
+    display: none;
+  }
 }
