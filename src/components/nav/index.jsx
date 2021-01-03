@@ -104,7 +104,10 @@ const Nav = () => (
     <AdminNav icons="fa-tachometer" to="/location">
       Location
     </AdminNav>
-    <DayMod3>{parseInt(moment().format('DDD'), 10) % 3}</DayMod3>
+    <DayMod3>
+      {moment().diff(moment([2020, 11, 31]), 'days') % 3} (
+      {moment().diff(moment([2020, 11, 31]), 'days')})
+    </DayMod3>
   </div>
 );
 
