@@ -180,7 +180,6 @@ export default class CubeTimer extends React.Component {
   };
 
   handleKeyDown = (event) => {
-    this.focusTextInput();
     const { key1, key2, key12 } = this.state;
     const { code } = event;
     switch (code) {
@@ -392,6 +391,8 @@ export default class CubeTimer extends React.Component {
         this.updateStorage
       );
     }
+
+    this.focusTextInput();
   };
 
   togglePenalty = (id) => {
@@ -407,6 +408,7 @@ export default class CubeTimer extends React.Component {
       },
       this.updateStorage
     );
+    this.focusTextInput();
   };
 
   editTime = (id) => {
@@ -439,6 +441,8 @@ export default class CubeTimer extends React.Component {
         this.updateStorage
       );
     }
+
+    this.focusTextInput();
   };
 
   toggleManualEntry = (e) => {
@@ -455,6 +459,8 @@ export default class CubeTimer extends React.Component {
         manualEntry: newManualEntry,
       };
     });
+
+    this.focusTextInput();
   };
 
   handleManualInput = (event) => {
