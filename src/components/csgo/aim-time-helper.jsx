@@ -23,7 +23,6 @@ export default function AimTimeHelper() {
   const [ak47Times, setAk47Times] = useState([]);
   const [m4a4Times, setM4a4Times] = useState([]);
   const [m4a1Times, setM4a1Times] = useState([]);
-  const [augTimes, setAugTimes] = useState([]);
 
   const [warning, setWarning] = useState(null);
 
@@ -39,7 +38,6 @@ export default function AimTimeHelper() {
     `=average(${ak47Times.join(',')})`,
     `=average(${m4a4Times.join(',')})`,
     `=average(${m4a1Times.join(',')})`,
-    `=average(${augTimes.join(',')})`,
   ].join('\t');
 
   const counts = [
@@ -54,10 +52,6 @@ export default function AimTimeHelper() {
     {
       name: 'M4A1',
       count: Math.floor(m4a1Times.length / 2),
-    },
-    {
-      name: 'AUG',
-      count: Math.floor(augTimes.length / 2),
     },
   ];
 
@@ -90,12 +84,6 @@ export default function AimTimeHelper() {
         gunName="M4A1"
         gunTimes={m4a1Times}
         setGunTimes={setM4a1Times}
-        setWarning={setWarning}
-      />
-      <AimTimeHelperA
-        gunName="AUG"
-        gunTimes={augTimes}
-        setGunTimes={setAugTimes}
         setWarning={setWarning}
       />
       <OutputRow>
