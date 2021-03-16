@@ -3,7 +3,7 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    client: 'postgresql',
+    client: 'pg',
     connection: `${process.env.DATABASE_URL}`,
     ssl: {
       rejectUnauthorized: false,
@@ -18,7 +18,7 @@ module.exports = {
   },
 
   staging: {
-    client: 'postgresql',
+    client: 'pg',
     connection: `${process.env.DATABASE_URL}?ssl=true`,
     ssl: {
       rejectUnauthorized: false,
@@ -33,7 +33,7 @@ module.exports = {
   },
 
   production: {
-    client: 'postgresql',
+    client: 'pg',
     connection: `${process.env.DATABASE_URL}?ssl=true`,
     ssl: {
       rejectUnauthorized: false,
