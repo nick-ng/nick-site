@@ -4,9 +4,12 @@ require('dotenv').config();
 module.exports = {
   development: {
     client: 'pg',
-    connection: `${process.env.DATABASE_URL}`,
-    ssl: {
-      rejectUnauthorized: false,
+    connection: {
+      connectionString: `${process.env.DATABASE_URL}`,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
     pool: {
       min: 2,
@@ -19,9 +22,12 @@ module.exports = {
 
   staging: {
     client: 'pg',
-    connection: `${process.env.DATABASE_URL}?ssl=true`,
-    ssl: {
-      rejectUnauthorized: false,
+    connection: {
+      connectionString: `${process.env.DATABASE_URL}`,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
     pool: {
       min: 2,
@@ -34,9 +40,12 @@ module.exports = {
 
   production: {
     client: 'pg',
-    connection: `${process.env.DATABASE_URL}?ssl=true`,
-    ssl: {
-      rejectUnauthorized: false,
+    connection: {
+      connectionString: `${process.env.DATABASE_URL}`,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
     pool: {
       min: 2,
