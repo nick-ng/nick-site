@@ -6,14 +6,20 @@ const foreignStorage = require('./foreign-storage');
 const user = require('./user');
 
 const db = knex({
-    client: 'pg',
-    connection: `${process.env.DATABASE_URL}?ssl=true`,
-    searchPath: ['knex', 'public'],
+  client: 'pg',
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+  searchPath: ['knex', 'public'],
 });
 
 module.exports = {
-    bookmark: bookmark(db),
-    countdown: countdown(db),
-    foreignStorage: foreignStorage(db),
-    user: user(db),
+  bookmark: bookmark(db),
+  countdown: countdown(db),
+  foreignStorage: foreignStorage(db),
+  user: user(db),
 };

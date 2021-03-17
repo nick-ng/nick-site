@@ -44,5 +44,6 @@ jspm_packages
 
 # environmental variables
 .env
+.staging-env
 
 .directory
