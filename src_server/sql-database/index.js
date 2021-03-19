@@ -5,17 +5,24 @@ const countdown = require('./countdown');
 const foreignStorage = require('./foreign-storage');
 const user = require('./user');
 
-const db = knex({
+const ssl = {
+  require: true,
+  rejectUnauthorized: false,
+};
+
+const options = {
   client: 'pg',
   connection: {
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
   },
   searchPath: ['knex', 'public'],
-});
+};
+
+if (process.env.NODE_ENV !== 'development') {
+  options.connection.ssl = ssl;
+}
+
+const db = knex(options);
 
 module.exports = {
   bookmark: bookmark(db),

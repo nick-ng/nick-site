@@ -25,6 +25,7 @@ import BoxClickerReplayPlayer from './components/box-clicker/replay';
 import Test from './components/test';
 import Admin from './components/admin';
 import AimTimeHelper from './components/csgo/aim-time-helper';
+import MarkdownEditor from './components/markdown-editor';
 
 export default function App() {
   return (
@@ -101,6 +102,9 @@ export default function App() {
             </R>
             <R path="/csgoaim">
               <AimTimeHelper />
+            </R>
+            <R path={['/markdown-editor/:documentId', '/markdown-editor']}>
+              <MarkdownEditor />
             </R>
             <R path="/">
               <Home />
