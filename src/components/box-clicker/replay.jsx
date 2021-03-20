@@ -160,8 +160,6 @@ const BoxClickerReplayPlayer = () => {
     };
   }, [replayState, replayFrame, processedReplay]);
 
-  console.log('replayFrame', replayFrame);
-
   return (
     <Container>
       <h1>Box Clicker Replay Player</h1>
@@ -239,10 +237,6 @@ const BoxClickerReplayPlayer = () => {
             step={1}
             value={replayFrame}
             onChange={(e) => {
-              console.log(
-                Math.max(processedReplay.length - 1, 0),
-                e.target.value
-              );
               try {
                 let a = parseInt(e.target.value);
 

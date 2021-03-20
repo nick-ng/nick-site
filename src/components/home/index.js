@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
 
 import AnniversaryCountdown from '../anniversary-countdown';
+import Blog from '../blog';
 
 const HomeContainer = styled.div`
   display: flex;
@@ -10,31 +10,16 @@ const HomeContainer = styled.div`
   align-items: center;
 `;
 
-const DayDisplay = styled.span`
-  font-size: 1.5em;
-`;
-
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dateMoment: moment(),
       intervalId: null,
     };
   }
 
   componentDidMount() {
-    const intervalId = setInterval(() => {
-      this.setState({
-        dateMoment: moment(),
-      });
-    }, 60000);
-
-    this.setState({
-      intervalId,
-    });
-
     const urlParams = new URLSearchParams(window.location.search);
     const guestKey = urlParams.get('guestkey');
     if (guestKey) {
@@ -51,14 +36,10 @@ export default class Home extends React.Component {
   }
 
   render() {
-    const { dateMoment } = this.state;
-
     return (
       <HomeContainer>
         <AnniversaryCountdown />
-        <div>
-          Today is <DayDisplay>{dateMoment.format('dddd')}</DayDisplay>
-        </div>
+        <Blog />
       </HomeContainer>
     );
   }
