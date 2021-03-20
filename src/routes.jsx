@@ -26,6 +26,7 @@ import Test from './components/test';
 import Admin from './components/admin';
 import AimTimeHelper from './components/csgo/aim-time-helper';
 import MarkdownEditor from './components/markdown-editor';
+import MarkdownViewer from './components/markdown-viewer';
 
 export default function App() {
   return (
@@ -105,6 +106,9 @@ export default function App() {
             </R>
             <R path={['/markdown-editor/:documentId', '/markdown-editor']}>
               <MarkdownEditor />
+            </R>
+            <R path="/view/:uri">
+              <MarkdownViewer />
             </R>
             <R path="/">
               <Home />

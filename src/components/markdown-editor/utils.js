@@ -32,7 +32,5 @@ export const saveMarkdown = async (
     uri,
   });
 
-  console.log('res.data', res.data);
-
   return res.data.id;
 };

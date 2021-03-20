@@ -40,6 +40,21 @@ const getDocumentsForUser = (db) => async (userId) => {
   ).map((a) => camelcaseKeys(a));
 };
 
+const getPublicDocuments = (db) => async (count = 5, offset = 0) => {
+  return (
+    await db
+      .select(['title', 'content', 'publish_at', 'status', 'uri'])
+      .from(markdownDocumentTable)
+      .where('status', 'published')
+      .limit(count)
+      .offset(offset)
+      .orderBy([
+        { column: 'publish_at', order: 'desc' },
+        { column: 'created_at', order: 'desc' },
+      ])
+  ).map((a) => camelcaseKeys(a));
+};
+
 const getDocumentByIdForUser = (db) => async (userId, documentId) => {
   return camelcaseKeys(
     await db
@@ -55,6 +70,18 @@ const getDocumentByIdForUser = (db) => async (userId, documentId) => {
       ])
       .from(markdownDocumentTable)
       .where({ user_id: userId, id: documentId })
+  );
+};
+
+const getDocumentByUri = (db) => async (uri) => {
+  return camelcaseKeys(
+    await db
+      .first(['title', 'content'])
+      .from(markdownDocumentTable)
+      .where({
+        uri,
+      })
+      .whereIn('status', ['unlisted', 'published'])
   );
 };
 
@@ -105,9 +132,21 @@ const updateDocumentById = (db) => (
   return false;
 };
 
+const deleteDocumentById = (db) => (id, userId) => {
+  return db(markdownDocumentTable)
+    .where({
+      user_id: userId,
+      id,
+    })
+    .del();
+};
+
 module.exports = (db) => ({
   getDocumentsForUser: getDocumentsForUser(db),
+  getPublicDocuments: getPublicDocuments(db),
   getDocumentByIdForUser: getDocumentByIdForUser(db),
+  getDocumentByUri: getDocumentByUri(db),
   addDocumentForUser: addDocumentForUser(db),
   updateDocumentById: updateDocumentById(db),
+  deleteDocumentById: deleteDocumentById(db),
 });
