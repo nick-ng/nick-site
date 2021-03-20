@@ -27,6 +27,13 @@ const Nav = () => (
     <NavLink icons="fa-home" to="/" exact>
       Home
     </NavLink>
+    <AdminNav
+      icons={['fa-file-text-o', 'fa-pencil']}
+      to="/markdown-editor"
+      indentLevel={1}
+    >
+      .md Editor
+    </AdminNav>
     <AdminNav icons="fa-bell-o" to="/wedding">
       Wedding Album
     </AdminNav>

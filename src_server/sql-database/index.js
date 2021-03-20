@@ -3,6 +3,7 @@ const knex = require('knex');
 const bookmark = require('./bookmark');
 const countdown = require('./countdown');
 const foreignStorage = require('./foreign-storage');
+const markdownDocument = require('./markdown-document');
 const user = require('./user');
 
 const ssl = {
@@ -28,5 +29,6 @@ module.exports = {
   bookmark: bookmark(db),
   countdown: countdown(db),
   foreignStorage: foreignStorage(db),
+  markdownDocument: markdownDocument(db),
   user: user(db),
 };

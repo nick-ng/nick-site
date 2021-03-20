@@ -39,7 +39,6 @@ export default function AimTimeHelperA({
               const [minutes, seconds] = e.target.value.split(':');
               setGunSeconds(parseInt(minutes, 0) * 60 + parseFloat(seconds));
             } catch (_e) {
-              console.log('aaaa');
               setGunSeconds(-1);
             }
           }}
