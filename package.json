@@ -60,6 +60,7 @@
     "@loadable/component": "^5.13.1",
     "axios": "^0.21.0",
     "babel-loader": "^8.1.0",
+    "babel-plugin-recharts": "^2.0.0",
     "camelcase-keys": "^6.2.2",
     "classnames": "^2.2.6",
     "compression": "^1.6.2",
@@ -87,6 +88,7 @@
     "react-is": "^17.0.1",
     "react-markdown": "^4.3.1",
     "react-router-dom": "^5.2.0",
+    "recharts": "^2.0.8",
     "redis": "^3.0.2",
     "remark": "^13.0.0",
     "remark-gfm": "^1.0.0",
@@ -94,7 +96,6 @@
     "style-loader": "^0.13.1",
     "styled-components": "^5.1.1",
     "uuid": "^7.0.3",
-    "vis-timeline": "^7.3.7",
     "webpack": "^5.27.1",
     "webpack-cli": "^4.5.0",
     "ws": "^7.3.1"
