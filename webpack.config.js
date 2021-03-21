@@ -25,12 +25,10 @@ module.exports = {
     ],
   },
   mode: process.env.NODE_ENV || 'production',
-  devtool: 'source-map',
+  devtool: process.env.NODE_ENV === 'development' ? 'source-map' : null,
   entry: {
     index: './src/entry.jsx',
     todos: './src/components/todos/index.jsx',
-    rubiks_session_details:
-      './src/components/rubiks-cube/timer/session-details.jsx',
   },
   output: {
     path: `${__dirname}/dist`,

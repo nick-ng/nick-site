@@ -58,12 +58,6 @@ export default class CubeTimer extends React.Component {
   }
 
   prepareData(session) {
-    const groupNames = [
-      'Best Single of the Day',
-      'Best Ao5 of the Day',
-      'Best Ao12 of the Day',
-    ];
-
     const dataTimes = solvesByDay(session)
       .filter((a) => a.length > 0)
       .map((daySolves) => {
@@ -111,7 +105,7 @@ export default class CubeTimer extends React.Component {
           tries: daySolves.length,
         };
       });
-    console.log('dataTries', dataTries);
+
     return {
       dataTimes,
       dataTries,
