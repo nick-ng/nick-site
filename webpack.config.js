@@ -26,13 +26,10 @@ module.exports = {
   },
   mode: process.env.NODE_ENV || 'production',
   devtool: 'source-map',
-  entry: {
-    index: './src/entry.jsx',
-    pokemoncards: './src/components/pokemon/flash-cards/index.jsx',
-  },
+  entry: './src/entry.jsx',
   output: {
     path: `${__dirname}/dist`,
-    filename: '[name].bundle.js',
+    filename: 'bundle.js',
     publicPath: '/',
   },
   resolve: {
