@@ -26,10 +26,13 @@ module.exports = {
   },
   mode: process.env.NODE_ENV || 'production',
   devtool: 'source-map',
-  entry: './src/entry.jsx',
+  entry: {
+    index: './src/entry.jsx',
+    todos: './src/components/todos/index.jsx',
+  },
   output: {
     path: `${__dirname}/dist`,
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     publicPath: '/',
   },
   resolve: {
