@@ -28,7 +28,7 @@ module.exports = {
   devtool: 'source-map',
   entry: {
     main: './src/entry.jsx',
-    pokemoncards: '.src/components/pokemon/flash-cards/index.jsx',
+    pokemoncards: './src/components/pokemon/flash-cards/index.jsx',
   },
   output: {
     path: `${__dirname}/dist`,
