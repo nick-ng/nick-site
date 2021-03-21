@@ -29,6 +29,8 @@ module.exports = {
   entry: {
     index: './src/entry.jsx',
     todos: './src/components/todos/index.jsx',
+    rubiks_session_details:
+      './src/components/rubiks-cube/timer/session-details.jsx',
   },
   output: {
     path: `${__dirname}/dist`,

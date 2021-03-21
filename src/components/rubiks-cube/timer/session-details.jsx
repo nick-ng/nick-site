@@ -17,13 +17,7 @@ import {
 
 import Loading from '../../loading';
 import { getArray } from '../../../services/foreignStorage';
-import {
-  solvesByDay,
-  bestRollingAoN,
-  bestSingle,
-  firstAoNByDay,
-  rollingAoN,
-} from './utils';
+import { solvesByDay, bestRollingAoN, bestSingle } from './utils';
 import SessionSelector, { getSessionStorageKey } from './session-selector';
 import SessionStats from './session-stats';
 
