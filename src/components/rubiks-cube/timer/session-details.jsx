@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import {
   BarChart,
   Bar,
-  Legend,
   LineChart,
   Label,
   XAxis,
@@ -136,7 +135,6 @@ export default class CubeTimer extends React.Component {
                 )}
               >
                 <CartesianGrid stroke="#dddddd" />
-                <Legend layout="vertical" />
                 <XAxis
                   type="number"
                   dataKey="timestamp"

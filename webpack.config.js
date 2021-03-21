@@ -25,7 +25,7 @@ module.exports = {
     ],
   },
   mode: process.env.NODE_ENV || 'production',
-  devtool: process.env.NODE_ENV === 'development' ? 'source-map' : null,
+  devtool: process.env.NODE_ENV === 'development' && 'source-map',
   entry: {
     index: './src/entry.jsx',
     todos: './src/components/todos/index.jsx',
