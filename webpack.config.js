@@ -29,12 +29,12 @@ module.exports = {
   entry: './src/entry.jsx',
   output: {
     path: `${__dirname}/dist`,
-    filename: '[hash:base64:7]-bundle.js',
+    filename: 'bundle.js',
     publicPath: '/',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
-    fallback: { path: require.resolve('path-browserify') },
+    fallback: { path: false },
   },
   module: {
     rules: [
@@ -66,6 +66,18 @@ module.exports = {
             ],
           },
         },
+      },
+      {
+        test: /node_modules(\/|\\)vfile(\/|\\)core\.js/,
+        use: [
+          {
+            loader: 'imports-loader',
+            options: {
+              type: 'commonjs',
+              imports: ['single process/browser process'],
+            },
+          },
+        ],
       },
     ],
   },
