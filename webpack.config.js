@@ -73,7 +73,7 @@ module.exports = {
       title: siteTitle,
       favicon: `${__dirname}/favicon.ico`,
       template: './index.html',
-      inject: 'true',
+      inject: true,
     }),
   ],
 };
