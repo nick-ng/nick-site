@@ -1,3 +1,4 @@
+const { cache } = require('../key-value-database');
 const { markdownDocument } = require('../sql-database');
 
 module.exports = (router) => {
@@ -17,7 +18,11 @@ module.exports = (router) => {
 
   router.get('/api/markdown-document/public', async (_req, res, _next) => {
     try {
-      res.json(await markdownDocument.getPublicDocuments());
+      const documentList = await cache.get(
+        '/api/markdown-document/public',
+        () => markdownDocument.getPublicDocuments()
+      );
+      res.json(documentList);
     } catch (e) {
       res.sendStatus(400);
     }
@@ -43,7 +48,11 @@ module.exports = (router) => {
     const { uri } = req.params;
 
     try {
-      res.json(await markdownDocument.getDocumentByUri(uri));
+      const document = await cache.get(
+        `/api/markdown-document/uri/${uri}`,
+        () => markdownDocument.getDocumentByUri(uri)
+      );
+      res.json(document);
     } catch (e) {
       res.sendStatus(400);
     }
@@ -78,6 +87,7 @@ module.exports = (router) => {
 
     try {
       await markdownDocument.updateDocumentById(id, user.id, req.body);
+      cache.delAll();
       res.sendStatus(202);
     } catch (e) {
       res.status(500).send(e);
@@ -95,6 +105,7 @@ module.exports = (router) => {
 
     try {
       await markdownDocument.deleteDocumentById(id, user.id);
+      cache.delAll();
       res.sendStatus(202);
     } catch (e) {
       res.status(500).send(e);
