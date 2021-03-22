@@ -30,6 +30,12 @@ const Container = styled.div`
 const SideStuff = styled.div``;
 
 const Graphs = styled.div``;
+const DateRangeControls = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5em 0;
+`;
 
 const prepareData = (session) => {
   const dataTimes = solvesByDay(session)
@@ -86,6 +92,9 @@ export default function CubeTimer() {
   const [session, setSession] = useState([]);
   const [dataTimes, setDataTimes] = useState([]);
   const [dataTries, setDataTries] = useState([]);
+  const [timestampThreshold, setTimestampThreshold] = useState(0);
+  const [startDate, setStartDate] = useState('2000-01-01');
+  const [endDate, setEndDate] = useState('2000-01-02');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -95,16 +104,33 @@ export default function CubeTimer() {
 
       setSession(newSession);
       const preparedData = prepareData(newSession);
+      const thresholdA =
+        Math.max(...preparedData.dataTimes.map((a) => a.timestamp)) -
+        1000 * 60 * 60 * 24 * 37;
 
       setDataTimes(preparedData.dataTimes);
       setDataTries(preparedData.dataTries);
+      setTimestampThreshold(thresholdA);
+      setStartDate(
+        dayjs(thresholdA + 1000 * 60 * 60 * 24 * 2).format('YYYY-MM-DD')
+      );
+      setEndDate(dayjs().endOf('day').format('YYYY-MM-DD'));
       setLoading(false);
     };
     fetchSession();
   }, []);
 
-  const newestTimestamp = Math.max(...dataTimes.map((a) => a.timestamp));
-  const timestampThreshold = newestTimestamp - 1000 * 60 * 60 * 24 * 37;
+  const resetDateRange = () => {
+    setStartDate(
+      dayjs(timestampThreshold + 1000 * 60 * 60 * 24 * 2).format('YYYY-MM-DD')
+    );
+    setEndDate(dayjs().endOf('day').format('YYYY-MM-DD'));
+  };
+
+  const domain = [
+    dayjs(startDate).valueOf() || 'auto',
+    dayjs(endDate).valueOf() || 'auto',
+  ];
 
   return (
     <Container>
@@ -117,19 +143,40 @@ export default function CubeTimer() {
         <Loading />
       ) : (
         <Graphs>
+          <DateRangeControls>
+            Date Range:&nbsp;
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+              }}
+            />
+            &nbsp;to&nbsp;
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => {
+                setEndDate(e.target.value);
+              }}
+            />
+            <button onClick={resetDateRange}>Reset</button>
+          </DateRangeControls>
           <ResponsiveContainer height={400}>
             <LineChart
-              data={dataTimes.filter((a) => a.timestamp >= timestampThreshold)}
+              data={dataTimes.filter(
+                (a) =>
+                  (!startDate || a.timestamp >= dayjs(startDate).valueOf()) &&
+                  (!endDate ||
+                    a.timestamp <= dayjs(endDate).endOf('day').valueOf())
+              )}
             >
               <CartesianGrid stroke="#dddddd" />
               <XAxis
                 type="number"
                 dataKey="timestamp"
                 height={45}
-                domain={[
-                  timestampThreshold + 1000 * 60 * 60 * 24 * 2,
-                  Date.now(),
-                ]}
+                domain={domain}
                 tickFormatter={(timestamp) => dayjs(timestamp).format('D MMM')}
                 allowDataOverflow
               >
@@ -174,17 +221,19 @@ export default function CubeTimer() {
           </ResponsiveContainer>
           <ResponsiveContainer height={400}>
             <BarChart
-              data={dataTries.filter((a) => a.timestamp >= timestampThreshold)}
+              data={dataTries.filter(
+                (a) =>
+                  (!startDate || a.timestamp >= dayjs(startDate).valueOf()) &&
+                  (!endDate ||
+                    a.timestamp <= dayjs(endDate).endOf('day').valueOf())
+              )}
             >
               <CartesianGrid stroke="#dddddd" />
               <XAxis
                 type="number"
                 dataKey="timestamp"
                 height={45}
-                domain={[
-                  timestampThreshold + 1000 * 60 * 60 * 24 * 2,
-                  Date.now(),
-                ]}
+                domain={domain}
                 tickFormatter={(timestamp) => dayjs(timestamp).format('D MMM')}
                 allowDataOverflow
               >
