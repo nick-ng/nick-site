@@ -200,6 +200,7 @@ export default function CubeTimer() {
                 dataKey="single_day"
                 stroke="green"
                 strokeOpacity={1}
+                connectNulls
               ></Line>
               <Line
                 name="Best Ao5"
@@ -208,6 +209,7 @@ export default function CubeTimer() {
                 dataKey="ao5_day"
                 stroke="blue"
                 strokeOpacity={1}
+                connectNulls
               ></Line>
               <Line
                 name="Best Ao12"
@@ -216,6 +218,7 @@ export default function CubeTimer() {
                 dataKey="ao12_day"
                 stroke="red"
                 strokeOpacity={1}
+                connectNulls
               ></Line>
             </LineChart>
           </ResponsiveContainer>
