@@ -129,7 +129,7 @@ export default function CubeTimer() {
 
   const domain = [
     dayjs(startDate).valueOf() || 'auto',
-    dayjs(endDate).valueOf() || 'auto',
+    dayjs(endDate).endOf('day').valueOf() || 'auto',
   ];
 
   return (
