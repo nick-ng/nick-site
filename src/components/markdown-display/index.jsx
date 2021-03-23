@@ -25,6 +25,10 @@ const StyledReactMarkdown = styled(ReactMarkdown)`
       }
     }
   }
+
+  li {
+    line-height: 1.5;
+  }
 `;
 
 export default function MarkdownDisplay({ content }) {
