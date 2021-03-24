@@ -38,8 +38,10 @@ const TextInput = styled.input`
 
 const TextEditor = styled.textarea`
   width: 93%;
-  height: 50vh;
+  height: 60vh;
   resize: none;
+  position: sticky;
+  top: 1em;
 `;
 
 const Preview = styled.div`
