@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import dayjs from 'dayjs';
 
 import ConfettiWithMessage from './confetti-with-message';
 import { getNextAnniversary, conversionFactors, formatMSHMMSS } from './utils';

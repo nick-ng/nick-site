@@ -3,17 +3,18 @@ import styled from 'styled-components';
 import Confetti from 'react-confetti';
 
 const Container = styled.div`
-  margin-top: -1em;
   position: relative;
   display: flex;
   justify-content: center;
   font-size: 3em;
-  min-height: 50vh;
+  min-height: 100vh;
   min-width: 70vw;
   border-bottom: 1px solid lightgrey;
 `;
 
-export default function ConfettiWithMessage({ message }) {
+export default function ConfettiStandAlone() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get('m') || '';
   const [clientWidth, setClientWidth] = useState(0);
   const [clientHeight, setClientHeight] = useState(0);
   const containerRef = useRef(null);

@@ -27,6 +27,7 @@ import Admin from './components/admin';
 import AimTimeHelper from './components/csgo/aim-time-helper';
 import MarkdownEditor from './components/markdown-editor';
 import MarkdownViewer from './components/markdown-viewer';
+import ConfettiStandAlone from './components/confetti-stand-alone';
 
 export default function App() {
   return (
@@ -109,6 +110,9 @@ export default function App() {
             </R>
             <R path="/view/:uri">
               <MarkdownViewer />
+            </R>
+            <R path="/confetti">
+              <ConfettiStandAlone />
             </R>
             <R path="/">
               <Home />
