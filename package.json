@@ -84,6 +84,7 @@
     "pg": "^8.5.1",
     "process": "^0.11.10",
     "react": "^16.13.1",
+    "react-confetti": "^6.0.1",
     "react-dom": "^16.13.1",
     "react-is": "^17.0.1",
     "react-markdown": "^4.3.1",

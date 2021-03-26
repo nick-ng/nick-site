@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import dayjs from 'dayjs';
 
-const WEDDING_ANNIVERSARY = new Date('2018-09-23T00:00:00+1200');
+import ConfettiWithMessage from './confetti-with-message';
+import { getNextAnniversary, conversionFactors, formatMSHMMSS } from './utils';
+
 const SIZE_RATIO = 5184000000; // 60 days
+const COUNTDOWN_THRESHOLD = 6 * 60 * 60 * 1000; // milliseconds
+let countdownOffset = 0;
+
+const Container = styled.div`
+  margin-top: 1em;
+`;
 
 const MonoSpan = styled.span.attrs((props) => {
   const size = Math.max(1, Math.min(5, props.size || 1));
@@ -15,176 +24,110 @@ const MonoSpan = styled.span.attrs((props) => {
   font-family: monospace;
 `;
 
-const conversionFactors = [
-  {
-    name: 'milliseconds',
-    factor: 1,
-  },
-  {
-    name: 'seconds',
-    factor: 1000,
-  },
-  {
-    name: 'minutes',
-    factor: 60,
-  },
-  {
-    name: 'hours',
-    factor: 60,
-  },
-  {
-    name: 'days',
-    factor: 24,
-  },
-  {
-    name: 'years',
-    factor: 365.2422,
-  },
-  {
-    name: 'millennia',
-    factor: 1000,
-  },
-];
+const BigCountdown = styled.div`
+  display: flex;
+  justify-content: center;
 
-const getGetOrdinal = (n) => {
-  const s = ['th', 'st', 'nd', 'rd'],
-    v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
-};
+  span {
+    font-size: 6em;
+    font-family: monospace;
+    font-weight: bold;
+  }
+`;
 
-const millisecondsUntilAnniversary = () => {
-  const currentYear = new Date().getFullYear();
+export default function AnniversaryCountdown() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const timeFormat = parseInt(urlParams.get('tf'), 10);
+  const precision = parseInt(urlParams.get('p'), 10);
+  const testSeconds = parseInt(urlParams.get('test'), 10) || 0;
 
-  for (let i = 0; i < 10000000; i++) {
-    // eslint-disable-line no-plusplus
-    const nextAnniversary = new Date(WEDDING_ANNIVERSARY).setFullYear(
-      currentYear + i
-    );
-    if (nextAnniversary > new Date()) {
-      return nextAnniversary - new Date();
+  const [timeMS, setTimeMS] = useState(0);
+  const [timeString, setTimeString] = useState('');
+  const [timeUnit, setTimeUnit] = useState('');
+  const [anniversaryOrdinal, setAnniversaryOrdinal] = useState('');
+
+  const { previousAnniversary } = getNextAnniversary();
+  const showConfetti =
+    (new Date() >= previousAnniversary &&
+      new Date() < previousAnniversary + 1000 * 60 * 60) ||
+    timeMS < 0;
+  const showBigCountdown = timeMS <= COUNTDOWN_THRESHOLD || showConfetti;
+
+  const size = timeMS > COUNTDOWN_THRESHOLD ? SIZE_RATIO / (timeMS + 1) : 1;
+
+  useEffect(() => {
+    const { ms } = getNextAnniversary();
+
+    if (testSeconds > 0) {
+      countdownOffset = ms - 1000 * testSeconds;
     }
-  }
-};
+  }, []);
 
-const ordinalAnniversary = () => {
-  const anniversaryYear = WEDDING_ANNIVERSARY.getFullYear();
+  useEffect(() => {
+    let stopUpdating = false;
+    function updateTimeString() {
+      if (stopUpdating) {
+        return;
+      }
+      const { ms, ordinal } = getNextAnniversary();
+      setAnniversaryOrdinal(ordinal);
 
-  for (let i = 0; i < 10000000; i++) {
-    // eslint-disable-line no-plusplus
-    const nextAnniversary = new Date(WEDDING_ANNIVERSARY).setFullYear(
-      anniversaryYear + i
-    );
-    if (nextAnniversary > new Date()) {
-      return getGetOrdinal(i);
-    }
-  }
-  return 0;
-};
+      let time = ms - countdownOffset;
+      setTimeMS(time);
+      let factor = 1;
+      if (timeFormat && !isNaN(timeFormat) && conversionFactors[timeFormat]) {
+        for (let i = 0; i <= timeFormat; i++) {
+          // eslint-disable-line no-plusplus
+          time = time / conversionFactors[i].factor; // eslint-disable-line operator-assignment
+          factor = factor * conversionFactors[i].factor; // eslint-disable-line operator-assignment
+        }
 
-export const getNextAnniversary = () => {
-  const currentYear = new Date().getFullYear();
+        const ii = Math.floor(time).toLocaleString({ useGrouping: true });
+        const actualPrecision = isNaN(precision)
+          ? Math.floor(Math.pow(Math.log10(factor), 1.2)) // eslint-disable-line
+          : precision;
+        const dd =
+          actualPrecision > 0
+            ? `.${(time % 10).toFixed(actualPrecision).slice(2)}`
+            : '';
 
-  for (let i = 0; i < 10000000; i++) {
-    // eslint-disable-line no-plusplus
-    const nextAnniversary = new Date(WEDDING_ANNIVERSARY).setFullYear(
-      currentYear + i
-    );
-    if (nextAnniversary > new Date()) {
-      return {
-        date: nextAnniversary,
-        ordinal: ordinalAnniversary(),
-      };
-    }
-  }
-
-  return {
-    date: new Date(),
-    ordinal: '',
-  };
-};
-
-export default class AnniversaryCountdown extends React.Component {
-  constructor(props) {
-    super(props);
-
-    const urlParams = new URLSearchParams(window.location.search);
-
-    this.state = {
-      timeFormat: parseInt(urlParams.get('tf'), 10),
-      precision: parseInt(urlParams.get('p'), 10),
-      timeString: '',
-      timeUnit: '',
-      timeMilliseconds: 1,
-      ordinal: '0th',
-      intervalId: null,
-    };
-
-    this.updateTimeString = this.updateTimeString.bind(this);
-  }
-
-  componentDidMount() {
-    this.updateTimeString();
-    const intervalId = setInterval(this.updateTimeString, 17);
-    this.setState({
-      intervalId,
-    });
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.state.intervalId);
-  }
-
-  updateTimeString() {
-    const { timeFormat, precision } = this.state;
-    const milliseconds = millisecondsUntilAnniversary();
-    const ordinal = ordinalAnniversary();
-    this.setState({
-      ordinal,
-      timeMilliseconds: milliseconds,
-    });
-    let factor = 1;
-
-    if (timeFormat && !isNaN(timeFormat) && conversionFactors[timeFormat]) {
-      let time = milliseconds;
-      for (let i = 0; i <= timeFormat; i++) {
-        // eslint-disable-line no-plusplus
-        time = time / conversionFactors[i].factor; // eslint-disable-line operator-assignment
-        factor = factor * conversionFactors[i].factor; // eslint-disable-line operator-assignment
+        setTimeString(`${ii}${dd}`);
+        setTimeUnit(conversionFactors[timeFormat].name);
+      } else {
+        setTimeString(
+          `${time.toLocaleString({
+            useGrouping: true,
+          })}`
+        );
+        setTimeUnit('milliseconds');
       }
 
-      const ii = Math.floor(time).toLocaleString({ useGrouping: true });
-      const actualPrecision = isNaN(precision)
-        ? Math.floor(Math.pow(Math.log10(factor), 1.2)) // eslint-disable-line
-        : precision;
-      const dd =
-        actualPrecision > 0
-          ? `.${(time % 10).toFixed(actualPrecision).slice(2)}`
-          : '';
+      setTimeout(updateTimeString, Math.random() * 10 + 10);
 
-      this.setState({
-        timeString: `${ii}${dd}`,
-        timeUnit: conversionFactors[timeFormat].name,
-      });
-    } else {
-      this.setState({
-        timeString: `${milliseconds.toLocaleString({
-          useGrouping: true,
-        })}`,
-        timeUnit: 'milliseconds',
-      });
+      return () => {
+        stopUpdating = true;
+      };
     }
-  }
+    updateTimeString();
+  }, [timeFormat, precision]);
 
-  render() {
-    const { ordinal, timeString, timeUnit, timeMilliseconds } = this.state;
-    const size = SIZE_RATIO / (timeMilliseconds + 1);
-
-    return (
-      <p>
-        Only <MonoSpan size={size}>{timeString}</MonoSpan>{' '}
-        <span>{timeUnit}</span> until our <span>{ordinal}</span> wedding
-        anniversary!
-      </p>
-    );
-  }
+  return (
+    <Container>
+      {showBigCountdown ? (
+        <BigCountdown>
+          {showConfetti ? (
+            <ConfettiWithMessage message="Happy Anniversary!" />
+          ) : (
+            <span>{formatMSHMMSS(timeMS)}</span>
+          )}
+        </BigCountdown>
+      ) : (
+        <div>
+          Only <MonoSpan size={size}>{timeString}</MonoSpan>{' '}
+          <span>{timeUnit}</span> until our <span>{anniversaryOrdinal}</span>{' '}
+          wedding anniversary!
+        </div>
+      )}
+    </Container>
+  );
 }
