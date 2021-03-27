@@ -4,10 +4,15 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { v4 as uuid } from 'uuid';
+import debounce from 'lodash/debounce';
 
 import { saveMarkdown } from './utils';
 import MarkdownDisplay from '../markdown-display';
 import DocumentPicker from './document-picker';
+
+const debouncedSaveMarkdown = debounce(saveMarkdown, 1000, { maxWait: 10000 });
+
+const AUTOSAVE_STATUS = ['private', 'unlisted'];
 
 const Container = styled.div`
   display: grid;
@@ -84,6 +89,18 @@ export default function MarkdownEditor() {
     }
   }, [documentId]);
 
+  useEffect(() => {
+    if (documentId && AUTOSAVE_STATUS.includes(status)) {
+      debouncedSaveMarkdown(documentId, {
+        title,
+        content,
+        status,
+        publishAt,
+        uri,
+      });
+    }
+  }, [title, content, status, publishAt, uri]);
+
   return (
     <Container>
       <div>
@@ -115,6 +132,7 @@ export default function MarkdownEditor() {
                 >
                   {saving ? 'Saving...' : 'Save'}
                 </button>
+                {AUTOSAVE_STATUS.includes(status) && ' (Autosave on)'}
               </td>
             </tr>
             <tr>
