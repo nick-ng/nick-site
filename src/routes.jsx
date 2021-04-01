@@ -28,6 +28,7 @@ import AimTimeHelper from './components/csgo/aim-time-helper';
 import MarkdownEditor from './components/markdown-editor';
 import MarkdownViewer from './components/markdown-viewer';
 import ConfettiStandAlone from './components/confetti-stand-alone';
+import NumberTyper from './components/number-typer';
 
 export default function App() {
   return (
@@ -113,6 +114,9 @@ export default function App() {
             </R>
             <R path="/confetti">
               <ConfettiStandAlone />
+            </R>
+            <R path="/numbertyper">
+              <NumberTyper />
             </R>
             <R path="/">
               <Home />

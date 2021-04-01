@@ -119,6 +119,9 @@ export default function Nav() {
       >
         Replay Player
       </NavLink>
+      <NavLink icons={['fa-keyboard-o']} to="/numbertyper">
+        Number Typer
+      </NavLink>
       <AdminNav icons="fa-tachometer" to="/location">
         Location
       </AdminNav>
