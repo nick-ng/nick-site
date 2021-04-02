@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { NumberGenerator } from './utils';
+import { NumberGenerator, median } from './utils';
 
 const Container = styled.div`
   display: flex;
@@ -31,6 +31,8 @@ export default function NumberTyper() {
   const [nextNumbers, setNextNumbers] = useState([]);
   const [correctNumbers, setCorrectNumbers] = useState(0);
   const [wrongNumbers, setWrongNumbers] = useState(0);
+  const [tic, setTic] = useState(Date.now());
+  const [times, setTimes] = useState([1111, 1000]);
 
   const totalNumbers = correctNumbers + wrongNumbers;
 
@@ -52,6 +54,9 @@ export default function NumberTyper() {
       });
     }
   }, [nextNumbers]);
+
+  const msPerNumber = median(times);
+  const wpm = (1 / msPerNumber) * 1000 * 60 * 0.2;
 
   useEffect(() => {
     if (typedNumbers.length > MAX_ARRAY_SIZE) {
@@ -94,6 +99,12 @@ export default function NumberTyper() {
           if (e.target.value === ' ') {
             return;
           }
+          setTimes((times) => {
+            const toc = Date.now();
+            const newTimes = [toc - tic, ...times].slice(0, 100);
+            setTic(toc);
+            return newTimes;
+          });
           if (e.target.value === nextNumbers[0]) {
             setCorrectNumbers(correctNumbers + 1);
           } else {
@@ -121,6 +132,13 @@ export default function NumberTyper() {
               {totalNumbers > 0
                 ? `${((correctNumbers / totalNumbers) * 100).toFixed(1)}%`
                 : '0.0%'}
+            </td>
+          </tr>
+          <tr>
+            <td>WPM</td>
+            <td>
+              {wpm.toFixed(0)} (
+              {(wpm * (correctNumbers / totalNumbers)).toFixed(0)})
             </td>
           </tr>
         </tbody>
