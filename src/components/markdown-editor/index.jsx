@@ -10,7 +10,15 @@ import { saveMarkdown } from './utils';
 import MarkdownDisplay from '../markdown-display';
 import DocumentPicker from './document-picker';
 
-const debouncedSaveMarkdown = debounce(saveMarkdown, 1000, { maxWait: 10000 });
+const debouncedSaveMarkdown = debounce(
+  async (setSaving, documentId, data) => {
+    setSaving(true);
+    await saveMarkdown(documentId, data);
+    setSaving(false);
+  },
+  1000,
+  { maxWait: 10000 }
+);
 
 const AUTOSAVE_STATUS = ['private', 'unlisted', 'draft', 'note'];
 
@@ -100,6 +108,19 @@ export default function MarkdownEditor({ notesOnly }) {
     setDocumentList(res.data);
   };
 
+  const autoSave = (newData) => {
+    if (documentId && AUTOSAVE_STATUS.includes(status)) {
+      debouncedSaveMarkdown(setSaving, documentId, {
+        title,
+        content,
+        status,
+        publishAt,
+        uri,
+        ...newData,
+      });
+    }
+  };
+
   useEffect(() => {
     if (documentId) {
       fetchDocument(documentId);
@@ -112,18 +133,6 @@ export default function MarkdownEditor({ notesOnly }) {
     }
     fetchDocuments();
   }, [documentId]);
-
-  useEffect(() => {
-    if (documentId && AUTOSAVE_STATUS.includes(status)) {
-      debouncedSaveMarkdown(documentId, {
-        title,
-        content,
-        status,
-        publishAt,
-        uri,
-      });
-    }
-  }, [title, content, status, publishAt, uri]);
 
   return (
     <Container>
@@ -171,6 +180,7 @@ export default function MarkdownEditor({ notesOnly }) {
                   value={title}
                   onChange={(e) => {
                     setTitle(e.target.value);
+                    autoSave({ title: e.target.value });
                   }}
                 />
               </td>
@@ -182,6 +192,7 @@ export default function MarkdownEditor({ notesOnly }) {
                   value={status}
                   onChange={(e) => {
                     setStatus(e.target.value);
+                    autoSave({ status: e.target.value });
                   }}
                 >
                   {OPTIONS.map(({ value, display }) => (
@@ -203,6 +214,10 @@ export default function MarkdownEditor({ notesOnly }) {
                       setPublishAt(
                         e.target.value || dayjs().format('YYYY-MM-DD')
                       );
+                      autoSave({
+                        publishAt:
+                          e.target.value || dayjs().format('YYYY-MM-DD'),
+                      });
                     }}
                   />
                 </td>
@@ -216,6 +231,7 @@ export default function MarkdownEditor({ notesOnly }) {
                     value={uri}
                     onChange={(e) => {
                       setUri(e.target.value);
+                      autoSave({ uri: e.target.value });
                     }}
                   />
                   <a href={`/view/${encodeURIComponent(uri)}`} target="_blank">
@@ -249,6 +265,7 @@ export default function MarkdownEditor({ notesOnly }) {
           value={content}
           onChange={(e) => {
             setContent(e.target.value);
+            autoSave({ content: e.target.value });
           }}
         />
       </div>
