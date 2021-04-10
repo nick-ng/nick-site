@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -72,6 +72,7 @@ const Preview = styled.div`
 
 export default function MarkdownEditor({ notesOnly }) {
   const history = useHistory();
+  const location = useLocation();
   const { documentId } = useParams();
   const [documentList, setDocumentList] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -122,6 +123,7 @@ export default function MarkdownEditor({ notesOnly }) {
   };
 
   useEffect(() => {
+    fetchDocuments();
     if (documentId) {
       fetchDocument(documentId);
     } else {
@@ -131,8 +133,7 @@ export default function MarkdownEditor({ notesOnly }) {
       setPublishAt(dayjs().format('YYYY-MM-DD'));
       setUri(uuid());
     }
-    fetchDocuments();
-  }, [documentId]);
+  }, [location.pathname]);
 
   return (
     <Container>
