@@ -44,7 +44,7 @@ export default function ConfettiStandAlone({ message }) {
       <MarkdownDisplay content={message || urlParams.get('m') || ''} />
       <Disclaimer>
         This page can be made to display any message. The messages displayed on
-        this page do not reflect the views of Nick Ng.
+        this page do not reflect the views of this page's author.
       </Disclaimer>
       <Confetti
         style={{ top: 0, left: 0 }}
