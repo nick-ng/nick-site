@@ -197,7 +197,6 @@ export default function MarkdownEditor({ notesOnly }) {
                           status,
                           publishAt,
                           uri,
-                          ...newData,
                         }
                       );
                     }
