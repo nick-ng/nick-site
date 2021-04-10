@@ -10,11 +10,20 @@ const Container = styled.div`
   font-size: 3em;
   min-height: 100vh;
   min-width: 70vw;
-  border-bottom: 1px solid lightgrey;
+  box-sizing: border-box;
 
   * {
     text-align: center;
   }
+`;
+
+const Disclaimer = styled.p`
+  position: fixed;
+  bottom: 0;
+  padding: 3px;
+  margin-bottom: 0;
+  font-size: 8pt;
+  background-color: white;
 `;
 
 export default function ConfettiStandAlone({ message }) {
@@ -33,6 +42,10 @@ export default function ConfettiStandAlone({ message }) {
   return (
     <Container ref={containerRef}>
       <MarkdownDisplay content={message || urlParams.get('m') || ''} />
+      <Disclaimer>
+        This page can be made to display any message. The messages displayed on
+        this page do not reflect the views of Nick Ng.
+      </Disclaimer>
       <Confetti
         style={{ top: 0, left: 0 }}
         width={clientWidth}

@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import ConfettiStandAlone from '../confetti-stand-alone';
 
 const Container = styled.div`
-  margin-top: 1em;
   display: grid;
   grid-template-columns: 1fr 1fr;
 `;
 
 const Controls = styled.div`
+  margin-top: 1em;
   display: flex;
   flex-direction: column;
 
@@ -39,7 +39,7 @@ const TextEditor = styled.textarea`
 export default function ConfettiMaker() {
   const [message, setMessage] = useState(`## Type your message here
 
-You can write your message in [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)`);
+You can format your message in [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)`);
 
   const urlEncodeMessage = encodeURIComponent(message);
   const fullUrl = `${location.origin}/confetti?m=${urlEncodeMessage}`;

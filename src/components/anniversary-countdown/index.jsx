@@ -115,7 +115,10 @@ export default function AnniversaryCountdown() {
       {showBigCountdown ? (
         <BigCountdown>
           {showConfetti ? (
-            <ConfettiWithMessage message="It's Our Anniversary!" />
+            <ConfettiWithMessage
+              style={{ borderBottom: '1px solid lightgrey' }}
+              message="It's Our Anniversary!"
+            />
           ) : (
             <span>{formatMSHMMSS(timeMS)}</span>
           )}
