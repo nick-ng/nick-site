@@ -167,6 +167,7 @@ export default function MarkdownEditor({ notesOnly }) {
                     }
                     const basePath = notesOnly ? 'notes' : 'markdown-editor';
                     history.push(`/${basePath}/${newId}`);
+                    fetchDocuments();
                   }}
                 >
                   {saving ? 'Saving...' : 'Save'}
@@ -181,7 +182,25 @@ export default function MarkdownEditor({ notesOnly }) {
                   value={title}
                   onChange={(e) => {
                     setTitle(e.target.value);
-                    autoSave({ title: e.target.value });
+                    if (documentId && AUTOSAVE_STATUS.includes(status)) {
+                      debouncedSaveMarkdown(
+                        (a) => {
+                          if (!a) {
+                            fetchDocuments();
+                          }
+                          setSaving(a);
+                        },
+                        documentId,
+                        {
+                          title: e.target.value,
+                          content,
+                          status,
+                          publishAt,
+                          uri,
+                          ...newData,
+                        }
+                      );
+                    }
                   }}
                 />
               </td>
