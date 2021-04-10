@@ -31,6 +31,14 @@ const StyledReactMarkdown = styled(ReactMarkdown)`
   }
 `;
 
-export default function MarkdownDisplay({ content }) {
-  return <StyledReactMarkdown plugins={[gfm]}>{content}</StyledReactMarkdown>;
+export default function MarkdownDisplay({ className, content }) {
+  return (
+    <StyledReactMarkdown
+      className={className}
+      plugins={[gfm]}
+      linkTarget="_blank"
+    >
+      {content}
+    </StyledReactMarkdown>
+  );
 }
