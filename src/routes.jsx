@@ -109,6 +109,9 @@ export default function App() {
             <R path={['/markdown-editor/:documentId', '/markdown-editor']}>
               <MarkdownEditor />
             </R>
+            <R path={['/notes/:documentId', '/notes']}>
+              <MarkdownEditor notesOnly />
+            </R>
             <R path="/view/:uri">
               <MarkdownViewer />
             </R>

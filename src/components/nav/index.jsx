@@ -41,6 +41,13 @@ export default function Nav() {
       >
         .md Editor
       </AdminNav>
+      <AdminNav
+        icons={['fa-file-text-o', 'fa-star-half-o']}
+        to="/notes"
+        indentLevel={1}
+      >
+        Notes
+      </AdminNav>
       <AdminNav icons="fa-bell-o" to="/wedding">
         Wedding Album
       </AdminNav>

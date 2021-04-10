@@ -55,7 +55,6 @@ export const getNextAnniversary = () => {
         ordinal: ordinalAnniversary(),
       };
     }
-    console.log('i', i);
     previousAnniversary = nextAnniversary;
   }
 

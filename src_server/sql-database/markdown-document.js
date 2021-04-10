@@ -126,7 +126,7 @@ const updateDocumentById = (db) => (
         user_id: userId,
         id,
       })
-      .update({ ...newDocumentData });
+      .update({ ...newDocumentData, updated_at: new Date() });
   }
 
   return false;

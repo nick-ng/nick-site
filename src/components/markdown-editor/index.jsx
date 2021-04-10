@@ -12,7 +12,18 @@ import DocumentPicker from './document-picker';
 
 const debouncedSaveMarkdown = debounce(saveMarkdown, 1000, { maxWait: 10000 });
 
-const AUTOSAVE_STATUS = ['private', 'unlisted'];
+const AUTOSAVE_STATUS = ['private', 'unlisted', 'draft', 'note'];
+
+const OPTIONS = [
+  {
+    value: 'private',
+    display: 'Private',
+  },
+  { value: 'note', display: 'Note' },
+  { value: 'draft', display: 'Draft' },
+  { value: 'published', display: 'Published' },
+  { value: 'unlisted', display: 'Unlisted' },
+];
 
 const Container = styled.div`
   display: grid;
@@ -26,10 +37,6 @@ const Container = styled.div`
 const Controls = styled.table`
   a {
     margin-left: 0.5em;
-
-    @media (max-device-width: 980px) {
-      display: none;
-    }
   }
 
   button + button {
@@ -55,9 +62,10 @@ const Preview = styled.div`
   }
 `;
 
-export default function MarkdownEditor() {
+export default function MarkdownEditor({ notesOnly }) {
   const history = useHistory();
   const { documentId } = useParams();
+  const [documentList, setDocumentList] = useState([]);
   const [saving, setSaving] = useState(false);
   const [title, setTitle] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'));
   const [content, setContent] = useState('');
@@ -77,16 +85,32 @@ export default function MarkdownEditor() {
     setSaving(false);
   };
 
+  const fetchDocuments = async () => {
+    const res = await axios.get('/api/markdown-document');
+
+    const notesDocuments = res.data
+      .filter(({ status }) => status === 'note')
+      .sort((a, b) => dayjs(b.updatedAt) - dayjs(a.updatedAt));
+
+    if (!documentId && notesOnly && notesDocuments.length > 0) {
+      history.push(`/notes/${notesDocuments[0].id}`);
+      return;
+    }
+
+    setDocumentList(res.data);
+  };
+
   useEffect(() => {
     if (documentId) {
       fetchDocument(documentId);
     } else {
       setTitle(dayjs().format('YYYY-MM-DD HH:mm:ss'));
       setContent('');
-      setStatus('private');
+      setStatus(notesOnly ? 'note' : 'private');
       setPublishAt(dayjs().format('YYYY-MM-DD'));
       setUri(uuid());
     }
+    fetchDocuments();
   }, [documentId]);
 
   useEffect(() => {
@@ -104,7 +128,11 @@ export default function MarkdownEditor() {
   return (
     <Container>
       <div>
-        <DocumentPicker />
+        <DocumentPicker
+          documentList={documentList}
+          documentId={documentId}
+          notesOnly={notesOnly}
+        />
       </div>
       <div>
         <h2>Editor</h2>
@@ -127,7 +155,8 @@ export default function MarkdownEditor() {
                     if (newId === documentId) {
                       fetchDocument(documentId);
                     }
-                    history.push(`/markdown-editor/${newId}`);
+                    const basePath = notesOnly ? 'notes' : 'markdown-editor';
+                    history.push(`/${basePath}/${newId}`);
                   }}
                 >
                   {saving ? 'Saving...' : 'Save'}
@@ -155,9 +184,11 @@ export default function MarkdownEditor() {
                     setStatus(e.target.value);
                   }}
                 >
-                  <option value="private">Private</option>
-                  <option value="unlisted">Unlisted</option>
-                  <option value="published">Published</option>
+                  {OPTIONS.map(({ value, display }) => (
+                    <option key={`visibility-${value}`} value={value}>
+                      {display}
+                    </option>
+                  ))}
                 </select>
               </td>
             </tr>
@@ -177,7 +208,7 @@ export default function MarkdownEditor() {
                 </td>
               </tr>
             )}
-            {status !== 'private' && (
+            {['published', 'unlisted'].includes(status) && (
               <tr>
                 <td>URI</td>
                 <td>
