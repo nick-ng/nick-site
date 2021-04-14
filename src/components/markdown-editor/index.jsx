@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 
 import { saveMarkdown } from './utils';
 import MarkdownDisplay from '../markdown-display';
+import SwaggerUIDisplay from '../swagger-ui-display';
 import DocumentPicker from './document-picker';
 
 const debouncedSaveMarkdown = debounce(
@@ -31,6 +32,7 @@ const OPTIONS = [
   { value: 'draft', display: 'Draft' },
   { value: 'published', display: 'Published' },
   { value: 'unlisted', display: 'Unlisted' },
+  { value: 'swagger', display: 'Swagger' },
 ];
 
 const Container = styled.div`
@@ -84,7 +86,7 @@ export default function MarkdownEditor({ notesOnly }) {
 
   const fetchDocument = async (id) => {
     const res = await axios.get(`/api/markdown-document/id/${id}`);
-
+    console.log('res.data', res.data);
     const { content, publishAt, status, title, uri } = res.data;
     setTitle(title);
     setContent(content);
@@ -242,7 +244,7 @@ export default function MarkdownEditor({ notesOnly }) {
                 </td>
               </tr>
             )}
-            {['published', 'unlisted'].includes(status) && (
+            {['published', 'unlisted', 'swagger'].includes(status) && (
               <tr>
                 <td>URI</td>
                 <td>
@@ -290,7 +292,11 @@ export default function MarkdownEditor({ notesOnly }) {
       </div>
       <Preview>
         <h2>Preview</h2>
-        <MarkdownDisplay content={content} />
+        {status === 'swagger' ? (
+          <SwaggerUIDisplay spec={content} />
+        ) : (
+          <MarkdownDisplay content={content} />
+        )}
       </Preview>
     </Container>
   );

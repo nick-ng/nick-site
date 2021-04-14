@@ -76,12 +76,12 @@ const getDocumentByIdForUser = (db) => async (userId, documentId) => {
 const getDocumentByUri = (db) => async (uri) => {
   return camelcaseKeys(
     await db
-      .first(['title', 'content'])
+      .first(['title', 'content', 'status'])
       .from(markdownDocumentTable)
       .where({
         uri,
       })
-      .whereIn('status', ['unlisted', 'published'])
+      .whereIn('status', ['unlisted', 'published', 'swagger'])
   );
 };
 

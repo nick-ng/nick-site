@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import MarkdownDisplay from '../markdown-display';
+import SwaggerUIDisplay from '../swagger-ui-display';
 import Loading from '../loading';
 
 const Container = styled.div``;
@@ -13,14 +14,16 @@ export default function MarkdownViewer() {
   const { uri: documentUri } = useParams();
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
+  const [status, setStatus] = useState('');
   const [content, setContent] = useState('');
 
   const fetchDocument = async (uri) => {
     setLoading(true);
     const res = await axios.get(`/api/markdown-document/uri/${uri}`);
 
-    const { content, title } = res.data;
+    const { content, title, status } = res.data;
     setTitle(title);
+    setStatus(status);
     setContent(content);
     setLoading(false);
     if (content === undefined) {
@@ -38,6 +41,10 @@ export default function MarkdownViewer() {
         <div style={{ marginTop: '1em' }}>
           <Loading />
         </div>
+      ) : status === 'swagger' ? (
+        <SwaggerUIDisplay
+          url={`${location.origin}/api/swagger/uri/${documentUri}`}
+        />
       ) : (
         <MarkdownDisplay content={content} />
       )}

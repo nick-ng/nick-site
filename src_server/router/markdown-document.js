@@ -58,6 +58,21 @@ module.exports = (router) => {
     }
   });
 
+  router.get('/api/swagger/uri/:uri', async (req, res, _next) => {
+    const { uri } = req.params;
+
+    try {
+      const document = await cache.get(
+        `/api/markdown-document/uri/${uri}`,
+        () => markdownDocument.getDocumentByUri(uri)
+      );
+
+      res.send(document.content);
+    } catch (e) {
+      res.sendStatus(400);
+    }
+  });
+
   router.post('/api/markdown-document', async (req, res, _next) => {
     const { user } = res.locals;
     if (!user || user.id === 0) {
