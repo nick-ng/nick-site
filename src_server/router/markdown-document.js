@@ -1,3 +1,4 @@
+const cors = require('cors');
 const { cache } = require('../key-value-database');
 const { markdownDocument } = require('../sql-database');
 
@@ -58,7 +59,7 @@ module.exports = (router) => {
     }
   });
 
-  router.get('/api/swagger/uri/:uri', async (req, res, _next) => {
+  router.get('/api/swagger/uri/:uri', cors(), async (req, res, _next) => {
     const { uri } = req.params;
 
     try {
