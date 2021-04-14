@@ -63,30 +63,6 @@ export default function Nav() {
       <NavLink icons={['fa-check-square-o', 'fa-square-o']} to="/dione">
         Todos
       </NavLink>
-      <AdminNav icons="fa-gamepad" to="/pokemon/flashcards">
-        Flash Cards
-      </AdminNav>
-      {/* <NavLink icons="fa-gamepad" to="/pokemon/evhelper">
-            EV Helper
-        </NavLink> */}
-      <NavLink
-        icons={['fa-gamepad', 'fa-shopping-cart']}
-        to="/pokemon/cramomatic"
-      >
-        Cram-o-matic Helper
-      </NavLink>
-      <AdminNav icons="fa-gamepad" to="/pokemon/notes">
-        Pokemon Notes
-      </AdminNav>
-      <NavLink icons="fa-pencil" to="/dnd/druidspellbook">
-        Druid Spells
-      </NavLink>
-      <NavLink icons="fa-pencil" to="/dnd/paladinspellbook">
-        Paladin Spells
-      </NavLink>
-      <AdminNav icons="fa-pencil" to="/dnd/wizardspellbook">
-        Wizard Spells
-      </AdminNav>
       <NavLink icons="fa-cube" to="/cubetimer">
         Rubik's Cube
       </NavLink>
@@ -123,6 +99,7 @@ export default function Nav() {
       <NavLink
         icons={['fa-square-o', 'fa-mouse-pointer', 'fa-video-camera']}
         to="/boxclicker/replay"
+        indentLevel={1}
       >
         Replay Player
       </NavLink>
@@ -135,6 +112,9 @@ export default function Nav() {
       <AdminNav icons="fa-tachometer" to="/location">
         Location
       </AdminNav>
+      <NavLink icons={['fa-ellipsis-h']} to="/misc">
+        Misc.
+      </NavLink>
       <DayMod3>
         {moment().diff(moment([2020, 11, 31]), 'days') % 3} (
         {moment().diff(moment([2020, 11, 31]), 'days')})

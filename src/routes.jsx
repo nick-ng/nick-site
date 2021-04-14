@@ -18,7 +18,6 @@ import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
 // import PokemonEVHelper from './components/pokemon/ev-helper';
 import PokemonCramomatic from './components/pokemon/cramomatic';
-import PokemonNotes from './components/pokemon/notes';
 import DnDSpellBook from './components/dungeons-and-dragons/spell-book';
 import BoxClicker from './components/box-clicker';
 import BoxClickerReplayPlayer from './components/box-clicker/replay';
@@ -30,6 +29,7 @@ import MarkdownViewer from './components/markdown-viewer';
 import ConfettiStandAlone from './components/confetti-stand-alone';
 import NumberTyper from './components/number-typer';
 import ConfettiMaker from './components/confetti-maker';
+import Misc from './components/markdown-pages/misc';
 
 export default function App() {
   return (
@@ -77,9 +77,6 @@ export default function App() {
             <R path="/pokemon/cramomatic">
               <PokemonCramomatic />
             </R>
-            <R path="/pokemon/notes">
-              <PokemonNotes />
-            </R>
             <R path="/dnd/druidspellbook">
               <DnDSpellBook casterClass="druid" key="druid" />
             </R>
@@ -124,6 +121,9 @@ export default function App() {
             </R>
             <R path="/numbertyper">
               <NumberTyper />
+            </R>
+            <R path="/misc">
+              <Misc />
             </R>
             <R path="/">
               <Home />
