@@ -109,6 +109,9 @@ export default function Nav() {
       <NavLink icons={['fa-smile-o']} to="/confetti-maker">
         Confetti Maker
       </NavLink>
+      <NavLink icons={['fa-volume-up']} to="/texttospeech">
+        Text to Speech
+      </NavLink>
       <AdminNav icons="fa-tachometer" to="/location">
         Location
       </AdminNav>
