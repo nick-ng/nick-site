@@ -1,4 +1,5 @@
 const synth = window.speechSynthesis;
+let stopping = true;
 
 const sleep = (ms, output = null) =>
   new Promise((resolve, reject) => {
@@ -20,9 +21,7 @@ export const sayWithVoice = (phrase, voiceURI, { volume = 0.3, rate = 1 }) => {
   if (volume <= 0) {
     return;
   }
-  console.log('voiceURI', voiceURI);
   const voice = synth.getVoices().find((voice) => voice.voiceURI === voiceURI);
-  console.log('voices', synth.getVoices());
   const utterance = new SpeechSynthesisUtterance(phrase);
   utterance.volume = volume;
   utterance.rate = rate;
@@ -32,7 +31,32 @@ export const sayWithVoice = (phrase, voiceURI, { volume = 0.3, rate = 1 }) => {
   }
 };
 
+export const sayMultiplePhrases = async (
+  phrases,
+  voiceURI,
+  options,
+  callback
+) => {
+  const { start } = options;
+  stopping = false;
+  for (let i = start; i < phrases.length; i++) {
+    const phrase = phrases[i];
+    while (synth.speaking) {
+      await sleep(20);
+    }
+    if (stopping) {
+      return;
+    }
+    if (typeof callback === 'function') {
+      callback(i);
+    }
+    sayWithVoice(phrase, voiceURI, options);
+    await sleep(20);
+  }
+};
+
 export const stopTalking = () => {
+  stopping = true;
   synth.cancel();
 };
 

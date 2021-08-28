@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import VoiceChooser from './voice-chooser';
 import {
   getVoices,
-  sayWithVoice,
+  sayMultiplePhrases,
   stopTalking,
   pauseTalking,
   resumeTalking,
@@ -14,6 +14,7 @@ const VOICE_CHARACTER_STORE = 'VOICE_CHARACTER_NICK_SITE';
 const VOICE_VOLUME_STORE = 'VOICE_VOLUME_NICK_SITE';
 const VOICE_RATE_STORE = 'VOICE_RATE_NICK_SITE';
 const VOICE_PREV_PHRASE_STORE = 'VOICE_PREV_PHRASE_NICK_SITE';
+const VOICE_PARAGRAPH_NUMBER_STORE = 'VOICE_PARAGRAPH_NUMBER_STORE';
 
 const Container = styled.div`
   & > * {
@@ -25,6 +26,13 @@ const InlineLabel = styled.label`
   display: flex;
   flex-directon: row;
   align-items: center;
+`;
+
+const ParagraphStart = styled.div`
+  max-width: 30em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const Textarea = styled.textarea`
@@ -46,9 +54,12 @@ export default function TextToSpeech() {
   const [voiceRate, setVoiceRate] = useState(
     parseFloat(localStorage.getItem(VOICE_RATE_STORE) ?? 1)
   );
-  const [phrase, setPhrase] = useState('');
-  const [previousPhrase, setPreviousPhrase] = useState(
+  const [phrase, setPhrase] = useState(
     localStorage.getItem(VOICE_PREV_PHRASE_STORE) ?? ''
+  );
+  const [paragraphs, setParagraphs] = useState([]);
+  const [paragraphNumber, setParagraphNumber] = useState(
+    parseInt(localStorage.getItem(VOICE_PARAGRAPH_NUMBER_STORE) ?? 0)
   );
 
   useEffect(() => {
@@ -56,7 +67,19 @@ export default function TextToSpeech() {
       setVoices(await getVoices());
     };
     populateVoices();
+
+    return () => {
+      stopTalking();
+    };
   }, []);
+
+  useEffect(() => {
+    setParagraphs(phrase.split('\n').filter((b) => b));
+  }, [phrase]);
+
+  useEffect(() => {
+    localStorage.setItem(VOICE_PARAGRAPH_NUMBER_STORE, paragraphNumber);
+  }, [paragraphNumber]);
 
   return (
     <Container>
@@ -100,12 +123,30 @@ export default function TextToSpeech() {
           }}
         />
       </InlineLabel>
+      <InlineLabel>
+        Paragraph:&nbsp;
+        <input
+          value={paragraphNumber}
+          type="number"
+          onChange={(e) => {
+            setParagraphNumber(parseInt(e.target.value, 10));
+          }}
+        />
+        &nbsp;
+        <ParagraphStart>{paragraphs[paragraphNumber]}</ParagraphStart>
+      </InlineLabel>
       <button
         onClick={() => {
-          sayWithVoice(phrase, voice, {
-            volume: voiceVolume,
-            rate: voiceRate,
-          });
+          sayMultiplePhrases(
+            paragraphs,
+            voice,
+            {
+              volume: voiceVolume,
+              rate: voiceRate,
+              start: paragraphNumber,
+            },
+            (i) => setParagraphNumber(i)
+          );
         }}
       >
         Start
@@ -120,8 +161,9 @@ export default function TextToSpeech() {
         value={phrase}
         onChange={(e) => {
           const a = e.target.value;
+          setParagraphNumber(0);
           setPhrase(a);
-          //   setPreviousPhrase(a);
+          localStorage.setItem(VOICE_PREV_PHRASE_STORE, a);
         }}
       />
     </Container>
