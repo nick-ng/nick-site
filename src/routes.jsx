@@ -30,6 +30,7 @@ import ConfettiStandAlone from './components/confetti-stand-alone';
 import NumberTyper from './components/number-typer';
 import ConfettiMaker from './components/confetti-maker';
 import TextToSpeech from './components/text-to-speech';
+import Timers from './components/timers';
 import Misc from './components/markdown-pages/misc';
 
 export default function App() {
@@ -125,6 +126,9 @@ export default function App() {
             </R>
             <R path="/texttospeech">
               <TextToSpeech />
+            </R>
+            <R path="/timers">
+              <Timers />
             </R>
             <R path="/misc">
               <Misc />

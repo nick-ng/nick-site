@@ -112,6 +112,9 @@ export default function Nav() {
       <NavLink icons={['fa-volume-up']} to="/texttospeech">
         Text to Speech
       </NavLink>
+      <NavLink icons={['fa-clock-o']} to="/timers">
+        Timers
+      </NavLink>
       <AdminNav icons="fa-tachometer" to="/location">
         Location
       </AdminNav>
