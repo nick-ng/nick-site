@@ -11,8 +11,25 @@ const Container = styled.div``;
 
 const Timers = styled.div``;
 
+const saveTimers = async (timers) => {
+  setArray(TIMER_STORAGE, timers);
+};
+
 const fetchTimers = async (timerSetter) => {
   timerSetter(await getArray(TIMER_STORAGE));
+};
+
+const newTimer = (id) => {
+  return {
+    id,
+    lastManualRestart: 0,
+    durationMS: 0,
+    autoRestart: false,
+    name: ` ${id}`,
+    startSize: 12,
+    endSize: 16,
+    runningState: 'stop',
+  };
 };
 
 export default function () {
@@ -28,29 +45,43 @@ export default function () {
       <button
         onClick={() => {
           setTimers((prevTimers) => {
-            return [{ id: uuid() }].concat(prevTimers);
+            return [newTimer(uuid())].concat(prevTimers);
           });
         }}
       >
         New Timer
       </button>
       <Timers>
-        {timers.map((timer) => {
-          return (
-            <Timer
-              key={timer.id}
-              {...timer}
-              onSave={(newTimer) => {
-                setTimers((prevTimers) => {
-                  return [newTimer].concat(
-                    prevTimers.filter((timer) => timer.id !== newTimer.id)
-                  );
-                });
-                console.log('newTimer', newTimer);
-              }}
-            />
-          );
-        })}
+        {timers
+          .sort((a, b) =>
+            `${a.name}_${a.id}`.localeCompare(`${b.name}_${b.id}`)
+          )
+          .map((timer) => {
+            return (
+              <Timer
+                key={timer.id}
+                {...timer}
+                onSave={(newTimer) => {
+                  setTimers((prevTimers) => {
+                    const newTimers = [newTimer].concat(
+                      prevTimers.filter((timerb) => timerb.id !== newTimer.id)
+                    );
+                    saveTimers(newTimers);
+                    return newTimers;
+                  });
+                }}
+                onDelete={() => {
+                  setTimers((prevTimers) => {
+                    const newTimers = prevTimers.filter(
+                      (timerb) => timerb.id !== timer.id
+                    );
+                    saveTimers(newTimers);
+                    return newTimers;
+                  });
+                }}
+              />
+            );
+          })}
       </Timers>
     </Container>
   );

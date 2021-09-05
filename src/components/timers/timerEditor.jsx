@@ -15,8 +15,9 @@ const Label = styled.label`
   }
 `;
 
-export const NumberInput = ({ value, onChange, onBlur }) => (
+export const NumberInput = ({ value, onChange, onBlur, style }) => (
   <input
+    style={style}
     onChange={(e) => {
       onChange(parseFloat(e.target.value));
     }}
