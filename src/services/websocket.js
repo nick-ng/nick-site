@@ -56,14 +56,11 @@ export const wsConnect = async () => {
 
     webSocketService.websocket.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      console.log('data', data);
       webSocketService.listeners.forEach((listener) => {
         if (data.type === listener.type) {
           listener.callback(data);
         }
       });
-
-      console.log('webSocketService', webSocketService);
     };
   }
 

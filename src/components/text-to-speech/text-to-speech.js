@@ -1,3 +1,6 @@
+export const VOICE_CHARACTER_STORE = 'VOICE_CHARACTER_NICK_SITE';
+export const VOICE_VOLUME_STORE = 'VOICE_VOLUME_NICK_SITE';
+
 const synth = window.speechSynthesis;
 let stopping = true;
 
@@ -29,6 +32,15 @@ export const sayWithVoice = (phrase, voiceURI, { volume = 0.3, rate = 1 }) => {
     utterance.voice = voice;
     synth.speak(utterance);
   }
+};
+
+export const sayWithVoice2 = async (
+  phrase,
+  voiceURI,
+  { volume = 0.3, rate = 1 }
+) => {
+  await getVoices();
+  sayWithVoice(phrase, voiceURI, { volume, rate });
 };
 
 export const sayMultiplePhrases = async (

@@ -15,13 +15,14 @@ const Label = styled.label`
   }
 `;
 
-export const NumberInput = ({ value, onChange, onBlur, style }) => (
+export const NumberInput = ({ value, onChange, onBlur, onClick, style }) => (
   <input
     style={style}
     onChange={(e) => {
-      onChange(parseFloat(e.target.value));
+      onChange(parseFloat(e.target.value) || 0);
     }}
     onBlur={onBlur}
+    onClick={onClick}
     type="number"
     value={value}
   />
@@ -80,6 +81,9 @@ export default function ({ durationMS, onSave }) {
                 setTempDuration2(value, key);
               }}
               onBlur={() => {
+                onSave(getMSFromDHMS(tempDuration));
+              }}
+              onClick={() => {
                 onSave(getMSFromDHMS(tempDuration));
               }}
             />

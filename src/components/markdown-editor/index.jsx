@@ -86,7 +86,6 @@ export default function MarkdownEditor({ notesOnly }) {
 
   const fetchDocument = async (id) => {
     const res = await axios.get(`/api/markdown-document/id/${id}`);
-    console.log('res.data', res.data);
     const { content, publishAt, status, title, uri } = res.data;
     setTitle(title);
     setContent(content);

@@ -33,7 +33,8 @@ const newTimer = (id) => {
     name: ` ${id}`,
     startSize: 12,
     endSize: 16,
-    runningState: 'stop',
+    timerState: 'new',
+    sound: true,
   };
 };
 

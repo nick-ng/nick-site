@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import Loading from '../loading';
+import {
+  VOICE_CHARACTER_STORE,
+  VOICE_VOLUME_STORE,
+  sayWithVoice2,
+} from '../text-to-speech/text-to-speech';
 import TimerEditor, { NumberInput, getDHMSFromMS } from './timerEditor';
 
 const Container = styled.div`
@@ -64,11 +69,12 @@ export default function ({
   name,
   startSize,
   endSize,
-  runningState,
+  timerState,
+  sound,
   onSave,
   onDelete,
 }) {
-  const [editModeOn, setEditModeOn] = useState(typeof durationMS !== 'number');
+  const [editModeOn, setEditModeOn] = useState(timerState === 'new');
   const [tempSettings, setTempSettings] = useState({
     lastManualRestart,
     durationMS,
@@ -76,11 +82,19 @@ export default function ({
     name,
     startSize,
     endSize,
+    timerState,
+    sound,
   });
   const [timerDisplay, setTimerDisplay] = useState('');
   const [timerTimeout, setTimerTimeout] = useState(null);
   const [timerUpdate, setTimerUpdate] = useState(0);
   const [currentSize, setCurrentSize] = useState(startSize);
+  const [firstRun, setFirstRun] = useState(true);
+
+  const voice = localStorage.getItem(VOICE_CHARACTER_STORE) || '';
+  const voiceVolume = parseFloat(
+    localStorage.getItem(VOICE_VOLUME_STORE) ?? 0.3
+  );
 
   const elapsedMS = Date.now() - lastManualRestart;
   const remainingMS = durationMS - elapsedMS;
@@ -96,28 +110,44 @@ export default function ({
       durationMS,
       autoRestart,
       name,
+      timerState,
+      sound,
     });
-  }, [lastManualRestart, durationMS, autoRestart, name]);
+  }, [lastManualRestart, durationMS, autoRestart, name, timerState, sound]);
 
   useEffect(() => {
-    if (remainingMS <= 0 && runningState === 'run') {
+    setFirstRun(false);
+    if (timerState === 'new') {
       onSave({
         id,
         ...tempSettings,
-        runningState: 'expired',
+        timerState: 'stopped',
+      });
+    }
+    if (remainingMS <= 0 && timerState === 'run') {
+      onSave({
+        id,
+        ...tempSettings,
+        timerState: 'expired',
       });
     }
   }, []);
 
   // Updating Timer and queueing next timer restart
   useEffect(() => {
-    if (runningState !== 'run') {
+    if (timerState !== 'run') {
       setTimerDisplay('Stopped');
       setCurrentSize(startSize);
       return;
     }
 
     if (remainingMS <= 0) {
+      if (!firstRun && sound) {
+        sayWithVoice2(`${name} timer is complete.`, voice, {
+          volume: voiceVolume,
+        });
+      }
+
       setTimerDisplay('0.0 seconds');
       return;
     }
@@ -203,6 +233,16 @@ export default function ({
               }}
             />
           </label>
+          <label>
+            Sound:&nbsp;
+            <input
+              type="checkbox"
+              checked={tempSettings.sound}
+              onChange={() => {
+                setTempSettings2(!tempSettings.sound, 'sound');
+              }}
+            />
+          </label>
           <div>
             <button
               onClick={() => {
@@ -225,8 +265,7 @@ export default function ({
         <>
           <div
             style={{
-              color:
-                remainingMS <= 0 && runningState === 'run' ? 'red' : 'black',
+              color: remainingMS <= 0 && timerState === 'run' ? 'red' : 'black',
             }}
           >
             {name} ({getTimeFormat(getDHMSFromMS(durationMS)).display})
@@ -234,8 +273,7 @@ export default function ({
           <div
             style={{
               fontSize: `${currentSize}pt`,
-              color:
-                remainingMS <= 0 && runningState === 'run' ? 'red' : 'black',
+              color: remainingMS <= 0 && timerState === 'run' ? 'red' : 'black',
               margin: '3pt 0',
             }}
           >
@@ -244,14 +282,13 @@ export default function ({
           <div>
             <button
               onClick={() => {
-                console.log('click');
                 onSave({
                   id,
                   ...tempSettings,
-                  runningState: 'stop',
+                  timerState: 'stop',
                 });
               }}
-              disabled={runningState !== 'run'}
+              disabled={timerState !== 'run'}
             >
               Stop
             </button>
@@ -260,7 +297,7 @@ export default function ({
                 onSave({
                   id,
                   ...tempSettings,
-                  runningState: 'run',
+                  timerState: 'run',
                   lastManualRestart: Date.now(),
                 });
                 setTimeout(() => {
@@ -268,7 +305,7 @@ export default function ({
                 }, 50);
               }}
             >
-              {remainingMS > 0 && runningState === 'run' ? 'Restart' : 'Start'}
+              {remainingMS > 0 && timerState === 'run' ? 'Restart' : 'Start'}
             </button>
             <button
               onClick={() => {

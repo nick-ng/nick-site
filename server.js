@@ -6,12 +6,12 @@ const http = require('http');
 
 const { applyMiddlewares } = require('./src_server/middleware');
 const { applyRouters } = require('./src_server/router');
-const websocket = require('./src_server/websocket');
+// const websocket = require('./src_server/websocket');
 
 const app = express();
 const server = http.createServer(app);
 const router = express.Router();
-websocket(server);
+// websocket(server);
 
 const port = process.env.PORT || 3435;
 app.set('port', port);
