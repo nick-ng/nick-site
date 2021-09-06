@@ -9,7 +9,12 @@ const TIMER_STORAGE = 'NICK_TIMER_STORAGE';
 
 const Container = styled.div``;
 
-const Timers = styled.div``;
+const Timers = styled.div`
+  margin-top: 0.3em;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+`;
 
 const saveTimers = async (timers) => {
   setArray(TIMER_STORAGE, timers);

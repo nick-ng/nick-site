@@ -5,7 +5,11 @@ import Loading from '../loading';
 import TimerEditor, { NumberInput, getDHMSFromMS } from './timerEditor';
 
 const Container = styled.div`
-  margin-top: 0.5em;
+  box-shadow: 0 0 0 1px grey;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const Editor = styled.div`
@@ -65,7 +69,14 @@ export default function ({
   onDelete,
 }) {
   const [editModeOn, setEditModeOn] = useState(typeof durationMS !== 'number');
-  const [tempSettings, setTempSettings] = useState(null);
+  const [tempSettings, setTempSettings] = useState({
+    lastManualRestart,
+    durationMS,
+    autoRestart,
+    name,
+    startSize,
+    endSize,
+  });
   const [timerDisplay, setTimerDisplay] = useState('');
   const [timerTimeout, setTimerTimeout] = useState(null);
   const [timerUpdate, setTimerUpdate] = useState(0);
@@ -80,20 +91,29 @@ export default function ({
 
   useEffect(() => {
     setTempSettings({
+      ...tempSettings,
       lastManualRestart,
       durationMS,
       autoRestart,
       name,
-      startSize,
-      endSize,
     });
   }, [lastManualRestart, durationMS, autoRestart, name]);
+
+  useEffect(() => {
+    if (remainingMS <= 0 && runningState === 'run') {
+      onSave({
+        id,
+        ...tempSettings,
+        runningState: 'expired',
+      });
+    }
+  }, []);
 
   // Updating Timer and queueing next timer restart
   useEffect(() => {
     if (runningState !== 'run') {
       setTimerDisplay('Stopped');
-      setCurrentSize(endSize);
+      setCurrentSize(startSize);
       return;
     }
 
@@ -186,7 +206,7 @@ export default function ({
           <div>
             <button
               onClick={() => {
-                onSave({ id, ...tempSettings, runningState: 'stop' });
+                onSave({ id, ...tempSettings });
                 setEditModeOn(false);
               }}
             >
@@ -203,7 +223,12 @@ export default function ({
         </Editor>
       ) : (
         <>
-          <div>
+          <div
+            style={{
+              color:
+                remainingMS <= 0 && runningState === 'run' ? 'red' : 'black',
+            }}
+          >
             {name} ({getTimeFormat(getDHMSFromMS(durationMS)).display})
           </div>
           <div
@@ -216,19 +241,20 @@ export default function ({
           >
             {timerDisplay}
           </div>
-          {runningState === 'run' && remainingMS > 0 ? (
+          <div>
             <button
               onClick={() => {
+                console.log('click');
                 onSave({
                   id,
                   ...tempSettings,
                   runningState: 'stop',
                 });
               }}
+              disabled={runningState !== 'run'}
             >
               Stop
             </button>
-          ) : (
             <button
               onClick={() => {
                 onSave({
@@ -242,33 +268,32 @@ export default function ({
                 }, 50);
               }}
             >
-              Start
+              {remainingMS > 0 && runningState === 'run' ? 'Restart' : 'Start'}
             </button>
-          )}
-          <button
-            onClick={() => {
-              setEditModeOn(true);
-            }}
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => {
-              if (
-                confirm(
-                  `Really delete timer ${name} (${
-                    getTimeFormat(getDHMSFromMS(durationMS)).display
-                  })?`
-                )
-              ) {
-                onDelete();
-              }
-            }}
-          >
-            Delete
-          </button>
-          {autoRestart && <span>Auto Restart</span>}
-          <hr />
+            <button
+              onClick={() => {
+                setEditModeOn(true);
+              }}
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => {
+                if (
+                  confirm(
+                    `Really delete timer ${name} (${
+                      getTimeFormat(getDHMSFromMS(durationMS)).display
+                    })?`
+                  )
+                ) {
+                  onDelete();
+                }
+              }}
+            >
+              Delete
+            </button>
+            {autoRestart && <span>Auto Restart</span>}
+          </div>
         </>
       )}
     </Container>
