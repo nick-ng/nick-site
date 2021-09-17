@@ -7,6 +7,18 @@ import Timer from './timer';
 
 const TIMER_STORAGE = 'NICK_TIMER_STORAGE';
 
+const TIMER_DEFAULTS = {
+  lastManualRestart: 0,
+  durationMS: 0,
+  autoRestart: false,
+  startSize: 12,
+  endSize: 16,
+  remindFrom: 0,
+  url: '',
+  timerState: 'new',
+  sound: true,
+};
+
 const Container = styled.div``;
 
 const Timers = styled.div`
@@ -21,20 +33,21 @@ const saveTimers = async (timers) => {
 };
 
 const fetchTimers = async (timerSetter) => {
-  timerSetter(await getArray(TIMER_STORAGE));
+  const tempTimers = await getArray(TIMER_STORAGE);
+  timerSetter(
+    tempTimers.map((tempTimer) => {
+      return {
+        ...TIMER_DEFAULTS,
+        ...tempTimer,
+      };
+    })
+  );
 };
 
 const newTimer = (id) => {
   return {
     id,
-    lastManualRestart: 0,
-    durationMS: 0,
-    autoRestart: false,
-    name: ` ${id}`,
-    startSize: 12,
-    endSize: 16,
-    timerState: 'new',
-    sound: true,
+    ...TIMER_DEFAULTS,
   };
 };
 

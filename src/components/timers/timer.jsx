@@ -71,9 +71,12 @@ export default function ({
   endSize,
   timerState,
   sound,
+  remindFrom,
+  url: tempUrl,
   onSave,
   onDelete,
 }) {
+  const url = (tempUrl || '').trim();
   const [editModeOn, setEditModeOn] = useState(timerState === 'new');
   const [tempSettings, setTempSettings] = useState({
     lastManualRestart,
@@ -84,6 +87,7 @@ export default function ({
     endSize,
     timerState,
     sound,
+    url,
   });
   const [timerDisplay, setTimerDisplay] = useState('');
   const [timerTimeout, setTimerTimeout] = useState(null);
@@ -112,6 +116,7 @@ export default function ({
       name,
       timerState,
       sound,
+      url,
     });
   }, [lastManualRestart, durationMS, autoRestart, name, timerState, sound]);
 
@@ -178,6 +183,10 @@ export default function ({
     return <Loading />;
   }
 
+  const nameString = `${name} (${
+    getTimeFormat(getDHMSFromMS(durationMS)).display
+  })`;
+
   return (
     <Container>
       {editModeOn ? (
@@ -190,6 +199,15 @@ export default function ({
                 setTempSettings2(e.target.value, 'name');
               }}
             ></input>
+          </label>
+          <label>
+            URL:&nbsp;
+            <input
+              value={tempSettings.url}
+              onChange={(e) => {
+                setTempSettings2(e.target.value, 'url');
+              }}
+            />
           </label>
           <TimerEditor
             durationMS={tempSettings.durationMS}
@@ -263,12 +281,17 @@ export default function ({
         </Editor>
       ) : (
         <>
-          <div
-            style={{
-              color: remainingMS <= 0 && timerState === 'run' ? 'red' : 'black',
-            }}
-          >
-            {name} ({getTimeFormat(getDHMSFromMS(durationMS)).display})
+          <div>
+            {url ? (
+              <a
+                href={url.match(/^http(s)*:\/\//) ? url : `https://${url}`}
+                target="_blank"
+              >
+                {nameString}
+              </a>
+            ) : (
+              <span>{nameString}</span>
+            )}
           </div>
           <div
             style={{
