@@ -23,7 +23,7 @@ const Editor = styled.div`
   align-items: flex-start;
 `;
 
-const getTimeFormat = ({ days, hours, minutes, seconds }) => {
+const getTimeFormat = ({ days, hours, minutes, seconds }, padding = 2) => {
   const dayUnit = days === 1 ? 'day' : 'days';
   const hourUnit = hours === 1 ? 'hour' : 'hours';
   const minuteUnit = minutes === 1 ? 'minute' : 'minutes';
@@ -33,7 +33,7 @@ const getTimeFormat = ({ days, hours, minutes, seconds }) => {
     return {
       display: `${days} ${dayUnit}, ${hours
         .toString()
-        .padStart(2, '0')} ${hourUnit}`,
+        .padStart(padding, '0')} ${hourUnit}`,
       timeout: 60000 / 3,
     };
   }
@@ -41,7 +41,7 @@ const getTimeFormat = ({ days, hours, minutes, seconds }) => {
     return {
       display: `${hours} ${hourUnit}, ${minutes
         .toString()
-        .padStart(2, '0')} ${minuteUnit}`,
+        .padStart(padding, '0')} ${minuteUnit}`,
       timeout: 1000 / 3,
     };
   }
@@ -50,7 +50,7 @@ const getTimeFormat = ({ days, hours, minutes, seconds }) => {
       display: `${minutes} ${minuteUnit}, ${seconds
         .toFixed(1)
         .toString()
-        .padStart(4, '0')} ${secondUnit}`,
+        .padStart(padding + 2, '0')} ${secondUnit}`,
       timeout: 100 / 3,
     };
   }
@@ -184,7 +184,7 @@ export default function ({
   }
 
   const nameString = `${name} (${
-    getTimeFormat(getDHMSFromMS(durationMS)).display
+    getTimeFormat(getDHMSFromMS(durationMS), -9).display
   })`;
 
   return (

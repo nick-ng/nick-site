@@ -11,13 +11,27 @@ const sleep = (ms, output = null) =>
     }, ms);
   });
 
-export const getVoices = async () => {
-  for (let n = 0; n < 10000; n++) {
-    if (typeof synth.getVoices === 'function') {
-      return synth.getVoices();
+export const getVoices = () => {
+  return new Promise((resolve, reject) => {
+    const bb = async () => {
+      for (let n = 0; n < 10000; n++) {
+        const voices = synth.getVoices();
+
+        if (voices.length > 0) {
+          resolve(voices);
+          return;
+        }
+
+        await sleep(10);
+      }
+      reject('Could not get voices');
+    };
+    if (speechSynthesis.hasOwnProperty('onvoiceschanged')) {
+      speechSynthesis.onvoiceschanged = bb;
+    } else {
+      bb();
     }
-    await sleep(50);
-  }
+  });
 };
 
 export const sayWithVoice = (phrase, voiceURI, { volume = 0.3, rate = 1 }) => {
