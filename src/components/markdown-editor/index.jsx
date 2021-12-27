@@ -44,7 +44,10 @@ const Container = styled.div`
   }
 `;
 
-const Controls = styled.table`
+const Controls = styled.div`
+  position: sticky;
+  top: 0.5em;
+
   a {
     margin-left: 0.5em;
   }
@@ -62,8 +65,6 @@ const TextEditor = styled.textarea`
   width: 93%;
   height: 60vh;
   resize: none;
-  position: sticky;
-  top: 1em;
 `;
 
 const Preview = styled.div`
@@ -164,139 +165,144 @@ export default function MarkdownEditor({ notesOnly }) {
         />
       </div>
       <div>
-        <h2>Editor</h2>
         <Controls>
-          <tbody>
-            <tr>
-              <td colSpan={2}>
-                <button disabled={saving} onClick={saveNow}>
-                  {saving ? 'Saving...' : 'Save'}
-                </button>
-                {AUTOSAVE_STATUS.includes(status) && ' (Autosave on)'}
-              </td>
-            </tr>
-            <tr>
-              <td>Title</td>
-              <td>
-                <TextInput
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                    if (documentId && AUTOSAVE_STATUS.includes(status)) {
-                      debouncedSaveMarkdown(
-                        (a) => {
-                          if (!a) {
-                            fetchDocuments();
-                          }
-                          setSaving(a);
-                        },
-                        documentId,
-                        {
-                          title: e.target.value,
-                          content,
-                          status,
-                          publishAt,
-                          uri,
-                        }
-                      );
-                    }
-                  }}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Visibility</td>
-              <td>
-                <select
-                  value={status}
-                  onChange={(e) => {
-                    setStatus(e.target.value);
-                    autoSave({ status: e.target.value });
-                  }}
-                >
-                  {OPTIONS.map(({ value, display }) => (
-                    <option key={`visibility-${value}`} value={value}>
-                      {display}
-                    </option>
-                  ))}
-                </select>
-              </td>
-            </tr>
-            {status === 'published' && (
-              <tr>
-                <td>Publish Date</td>
-                <td>
-                  <input
-                    type="date"
-                    value={publishAt}
-                    onChange={(e) => {
-                      setPublishAt(
-                        e.target.value || dayjs().format('YYYY-MM-DD')
-                      );
-                      autoSave({
-                        publishAt:
-                          e.target.value || dayjs().format('YYYY-MM-DD'),
-                      });
-                    }}
-                  />
-                </td>
-              </tr>
-            )}
-            {['published', 'unlisted', 'swagger'].includes(status) && (
-              <tr>
-                <td>URI</td>
-                <td>
-                  <TextInput
-                    value={uri}
-                    onChange={(e) => {
-                      setUri(e.target.value);
-                      autoSave({ uri: e.target.value });
-                    }}
-                  />
-                  <a href={`/view/${encodeURIComponent(uri)}`} target="_blank">
-                    Link
-                  </a>
-                </td>
-              </tr>
-            )}
-            {documentId && (
+          <h2>Editor</h2>
+          <table>
+            <tbody>
               <tr>
                 <td colSpan={2}>
-                  <button
-                    onClick={async () => {
-                      const res = confirm(`Delete document ${title}?`);
-                      if (res) {
-                        await axios.delete(
-                          `/api/markdown-document/id/${documentId}`
-                        );
-                        history.push('/markdown-editor');
-                      }
-                    }}
-                  >
-                    Delete
+                  <button disabled={saving} onClick={saveNow}>
+                    {saving ? 'Saving...' : 'Save'}
                   </button>
+                  {AUTOSAVE_STATUS.includes(status) && ' (Autosave on)'}
                 </td>
               </tr>
-            )}
-          </tbody>
+              <tr>
+                <td>Title</td>
+                <td>
+                  <TextInput
+                    value={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                      if (documentId && AUTOSAVE_STATUS.includes(status)) {
+                        debouncedSaveMarkdown(
+                          (a) => {
+                            if (!a) {
+                              fetchDocuments();
+                            }
+                            setSaving(a);
+                          },
+                          documentId,
+                          {
+                            title: e.target.value,
+                            content,
+                            status,
+                            publishAt,
+                            uri,
+                          }
+                        );
+                      }
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Visibility</td>
+                <td>
+                  <select
+                    value={status}
+                    onChange={(e) => {
+                      setStatus(e.target.value);
+                      autoSave({ status: e.target.value });
+                    }}
+                  >
+                    {OPTIONS.map(({ value, display }) => (
+                      <option key={`visibility-${value}`} value={value}>
+                        {display}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+              {status === 'published' && (
+                <tr>
+                  <td>Publish Date</td>
+                  <td>
+                    <input
+                      type="date"
+                      value={publishAt}
+                      onChange={(e) => {
+                        setPublishAt(
+                          e.target.value || dayjs().format('YYYY-MM-DD')
+                        );
+                        autoSave({
+                          publishAt:
+                            e.target.value || dayjs().format('YYYY-MM-DD'),
+                        });
+                      }}
+                    />
+                  </td>
+                </tr>
+              )}
+              {['published', 'unlisted', 'swagger'].includes(status) && (
+                <tr>
+                  <td>URI</td>
+                  <td>
+                    <TextInput
+                      value={uri}
+                      onChange={(e) => {
+                        setUri(e.target.value);
+                        autoSave({ uri: e.target.value });
+                      }}
+                    />
+                    <a
+                      href={`/view/${encodeURIComponent(uri)}`}
+                      target="_blank"
+                    >
+                      Link
+                    </a>
+                  </td>
+                </tr>
+              )}
+              {documentId && (
+                <tr>
+                  <td colSpan={2}>
+                    <button
+                      onClick={async () => {
+                        const res = confirm(`Delete document ${title}?`);
+                        if (res) {
+                          await axios.delete(
+                            `/api/markdown-document/id/${documentId}`
+                          );
+                          history.push('/markdown-editor');
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <TextEditor
+            value={content}
+            onChange={(e) => {
+              setContent(e.target.value);
+              autoSave({ content: e.target.value });
+            }}
+            onKeyDown={(e) => {
+              if (
+                (e.key == 's' || e.key == 'S') &&
+                (navigator.userAgent.match('Mac') ? e.metaKey : e.ctrlKey)
+              ) {
+                e.preventDefault();
+                debouncedSaveMarkdown.cancel();
+                saveNow();
+              }
+            }}
+          />
         </Controls>
-        <TextEditor
-          value={content}
-          onChange={(e) => {
-            setContent(e.target.value);
-            autoSave({ content: e.target.value });
-          }}
-          onKeyDown={(e) => {
-            if (
-              (e.key == 's' || e.key == 'S') &&
-              (navigator.userAgent.match('Mac') ? e.metaKey : e.ctrlKey)
-            ) {
-              e.preventDefault();
-              debouncedSaveMarkdown.cancel();
-              saveNow();
-            }
-          }}
-        />
       </div>
       <Preview>
         <h2>Preview</h2>
