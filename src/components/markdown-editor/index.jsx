@@ -17,8 +17,8 @@ const debouncedSaveMarkdown = debounce(
     await saveMarkdown(documentId, data);
     setSaving(false);
   },
-  1000,
-  { maxWait: 10000 }
+  5000,
+  { maxWait: 30000 }
 );
 
 const AUTOSAVE_STATUS = ['private', 'unlisted', 'draft', 'note'];
@@ -123,6 +123,24 @@ export default function MarkdownEditor({ notesOnly }) {
     }
   };
 
+  const saveNow = async () => {
+    setSaving(true);
+    const newId = await saveMarkdown(documentId, {
+      title,
+      content,
+      status,
+      publishAt,
+      uri,
+    });
+
+    if (newId === documentId) {
+      fetchDocument(documentId);
+    }
+    const basePath = notesOnly ? 'notes' : 'markdown-editor';
+    history.push(`/${basePath}/${newId}`);
+    fetchDocuments();
+  };
+
   useEffect(() => {
     fetchDocuments();
     if (documentId) {
@@ -151,26 +169,7 @@ export default function MarkdownEditor({ notesOnly }) {
           <tbody>
             <tr>
               <td colSpan={2}>
-                <button
-                  disabled={saving}
-                  onClick={async () => {
-                    setSaving(true);
-                    const newId = await saveMarkdown(documentId, {
-                      title,
-                      content,
-                      status,
-                      publishAt,
-                      uri,
-                    });
-
-                    if (newId === documentId) {
-                      fetchDocument(documentId);
-                    }
-                    const basePath = notesOnly ? 'notes' : 'markdown-editor';
-                    history.push(`/${basePath}/${newId}`);
-                    fetchDocuments();
-                  }}
-                >
+                <button disabled={saving} onClick={saveNow}>
                   {saving ? 'Saving...' : 'Save'}
                 </button>
                 {AUTOSAVE_STATUS.includes(status) && ' (Autosave on)'}
@@ -286,6 +285,16 @@ export default function MarkdownEditor({ notesOnly }) {
           onChange={(e) => {
             setContent(e.target.value);
             autoSave({ content: e.target.value });
+          }}
+          onKeyDown={(e) => {
+            if (
+              (e.key == 's' || e.key == 'S') &&
+              (navigator.userAgent.match('Mac') ? e.metaKey : e.ctrlKey)
+            ) {
+              e.preventDefault();
+              debouncedSaveMarkdown.cancel();
+              saveNow();
+            }
           }}
         />
       </div>
