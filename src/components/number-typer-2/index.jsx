@@ -87,7 +87,11 @@ export default function NumberTyper2() {
     <Container>
       <h2>Type The Numbers 0 to {LAST_NUMBER}</h2>
       <Game>
-        <NextNumber>{isDone ? 'Done' : nextNumber}</NextNumber>
+        <NextNumber>
+          {isDone
+            ? (Math.max(...times) - Math.min(...times)).toFixed(3)
+            : nextNumber}
+        </NextNumber>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -116,15 +120,6 @@ export default function NumberTyper2() {
           />
           <button>Restart</button>
         </form>
-        <div className="time">
-          Total time:{' '}
-          {times.length > 0 ? (
-            <span>{(Math.max(...times) - Math.min(...times)).toFixed(3)}</span>
-          ) : (
-            '0.000'
-          )}
-          s {isDone && 'Done'}
-        </div>
       </Game>
       <Stats>
         <div>

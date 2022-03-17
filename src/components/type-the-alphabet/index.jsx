@@ -83,7 +83,9 @@ export default function TypeTheAlphabet() {
       <h2>(Not) Type the Alphabet</h2>
       <Game>
         <NextLetter>
-          {isDone ? 'Done' : THE_ALPHABET[alphabet.length].toUpperCase()}
+          {isDone
+            ? (Math.max(...times) - Math.min(...times)).toFixed(3)
+            : THE_ALPHABET[alphabet.length].toUpperCase()}
         </NextLetter>
         <form
           onSubmit={(e) => {
@@ -112,15 +114,6 @@ export default function TypeTheAlphabet() {
           />
           <button>Restart</button>
         </form>
-        <div className="time">
-          Total time:{' '}
-          {times.length > 0 ? (
-            <span>{(Math.max(...times) - Math.min(...times)).toFixed(3)}</span>
-          ) : (
-            '0.000'
-          )}
-          s {isDone && 'Done'}
-        </div>
       </Game>
       <Stats>
         <div>
