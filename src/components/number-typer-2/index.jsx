@@ -15,13 +15,14 @@ const Game = styled.div`
   form {
     padding-bottom: 0.5em;
 
-    input,
-    button {
-      font-size: 36pt;
+    input[type='number'] {
+      -moz-appearance: textfield;
     }
 
-    input {
-      width: 16em;
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
 
     button {
@@ -61,7 +62,7 @@ const TOLERANCE = 0.001;
 const LAST_NUMBER = 100;
 
 export default function NumberTyper2() {
-  const [currentNumber, setCurrentNumber] = useState(0);
+  const [currentNumber, setCurrentNumber] = useState(-1);
   const [inputValue, setInputValue] = useState('');
   const [times, setTimes] = useState([]);
   const inputEl = useRef(null);
@@ -75,7 +76,7 @@ export default function NumberTyper2() {
   let chartData = [];
   if (times.length > 0) {
     chartData = times.map((time, i) => ({
-      x: i + 1,
+      x: i,
       y: time - times[0],
     }));
   }
@@ -84,13 +85,13 @@ export default function NumberTyper2() {
 
   return (
     <Container>
-      <h2>Type The Numbers 1 to {LAST_NUMBER}</h2>
+      <h2>Type The Numbers 0 to {LAST_NUMBER}</h2>
       <Game>
         <NextNumber>{isDone ? 'Done' : nextNumber}</NextNumber>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            setCurrentNumber(0);
+            setCurrentNumber(-1);
             setTimes([]);
             inputEl.current.focus();
           }}
@@ -135,7 +136,7 @@ export default function NumberTyper2() {
           >
             <Line type="monotone" dataKey="y" stroke="#8884d8" />
             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-            <XAxis dataKey="x" />
+            <XAxis dataKey="x" domain={[0, LAST_NUMBER]} type="number" />
             <YAxis domain={[0, Math.ceil(Math.max(...times) - times[0])]} />
           </LineChart>
         </div>
