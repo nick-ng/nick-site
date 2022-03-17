@@ -28,6 +28,7 @@ import MarkdownEditor from './components/markdown-editor';
 import MarkdownViewer from './components/markdown-viewer';
 import ConfettiStandAlone from './components/confetti-stand-alone';
 import NumberTyper from './components/number-typer';
+import TypeTheAlphabet from './components/type-the-alphabet';
 import ConfettiMaker from './components/confetti-maker';
 import TextToSpeech from './components/text-to-speech';
 import Timers from './components/timers';
@@ -123,6 +124,9 @@ export default function App() {
             </R>
             <R path="/numbertyper">
               <NumberTyper />
+            </R>
+            <R path="/alphabet">
+              <TypeTheAlphabet />
             </R>
             <R path="/texttospeech">
               <TextToSpeech />

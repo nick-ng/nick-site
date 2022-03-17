@@ -103,7 +103,10 @@ export default function Nav() {
       >
         Replay Player
       </NavLink>
-      <NavLink icons={['fa-keyboard-o']} to="/numbertyper">
+      <NavLink icons={['fa-keyboard-o']} to="/alphabet">
+        Type The Alphabet
+      </NavLink>
+      <NavLink icons={['fa-calculator -o']} to="/numbertyper">
         Number Typer
       </NavLink>
       <NavLink icons={['fa-smile-o']} to="/confetti-maker">
