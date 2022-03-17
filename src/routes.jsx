@@ -27,7 +27,7 @@ import AimTimeHelper from './components/csgo/aim-time-helper';
 import MarkdownEditor from './components/markdown-editor';
 import MarkdownViewer from './components/markdown-viewer';
 import ConfettiStandAlone from './components/confetti-stand-alone';
-import NumberTyper from './components/number-typer';
+import NumberTyper from './components/number-typer-2';
 import TypeTheAlphabet from './components/type-the-alphabet';
 import ConfettiMaker from './components/confetti-maker';
 import TextToSpeech from './components/text-to-speech';
