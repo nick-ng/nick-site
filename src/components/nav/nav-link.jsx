@@ -8,8 +8,12 @@ import css from './styles.css';
 const INDENT_PX = 10;
 
 const hasAKey = (otherKeys) => {
+  console.log('otherKeys', otherKeys);
   if (otherKeys) {
-    otherKeys.some((key) => Boolean(localStorage.getItem(key)));
+    return (
+      otherKeys.some((key) => Boolean(localStorage.getItem(key))) ||
+      Boolean(localStorage.getItem('adminKey'))
+    );
   }
   return Boolean(localStorage.getItem('adminKey'));
 };
