@@ -8,7 +8,7 @@ import MarkdownDisplay from '../markdown-display';
 const Container = styled.div``;
 
 const BlogPost = styled.div`
-  max-width: 50vw;
+  max-width: 35em;
   width: 30em;
   padding: 0 0 0.5em;
   border-bottom: 1px solid lightgrey;

@@ -48,11 +48,14 @@ export default function Nav() {
       >
         Notes
       </AdminNav>
-      <AdminNav icons="fa-bell-o" to="/wedding">
+      <AdminNav otherKeys={['weddingAlbumKey']} icons="fa-bell-o" to="/wedding">
         Wedding Album
       </AdminNav>
       <AdminNav icons="fa-camera-retro" to="/wedding/photos" indentLevel={1}>
         Photos
+      </AdminNav>
+      <AdminNav icons="" to="/wedding-permission">
+        Wedding Permissions
       </AdminNav>
       <AdminNav icons="fa-bookmark-o" to="/bookmarks">
         Bookmarks

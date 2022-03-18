@@ -14,6 +14,7 @@ import Countdowns from './components/countdowns';
 import Home from './components/home';
 import Todos from './components/todos';
 import WeddingPhotos from './components/wedding-photos';
+import WeddingPhotosGrantPermission from './components/wedding-photos/grant-permission';
 import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
 // import PokemonEVHelper from './components/pokemon/ev-helper';
@@ -47,6 +48,9 @@ export default function App() {
             </R>
             <R path="/wedding">
               <WeddingPhotos />
+            </R>
+            <R path="/wedding-permission">
+              <WeddingPhotosGrantPermission />
             </R>
             <R path="/pll">
               <PermuteLastLayerPage />

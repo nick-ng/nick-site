@@ -1,7 +1,9 @@
 const redis = require('redis');
+const { cli } = require('webpack');
 
 const boxclicker = require('./boxclicker');
 const cache = require('./cache');
+const wedding = require('./wedding');
 
 const client = redis.createClient({
   url: process.env.REDIS_URL,
@@ -10,4 +12,5 @@ const client = redis.createClient({
 module.exports = {
   boxclicker: boxclicker(client),
   cache: cache(client),
+  wedding: wedding(client),
 };

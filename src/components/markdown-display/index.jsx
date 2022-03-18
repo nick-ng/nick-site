@@ -7,9 +7,16 @@ const StyledReactMarkdown = styled(ReactMarkdown)`
   table {
     border-collapse: collapse;
 
+    th {
+      padding: 0.5em;
+    }
+
+    td {
+      padding: 0.3em 0.5em;
+    }
+
     th,
     td {
-      padding: 0.5em;
       border: 1px solid lightgrey;
     }
 
@@ -35,7 +42,7 @@ export default function MarkdownDisplay({ className, content }) {
   return (
     <StyledReactMarkdown
       className={className}
-      plugins={[gfm]}
+      remarkPlugins={[gfm]}
       linkTarget="_blank"
     >
       {content}

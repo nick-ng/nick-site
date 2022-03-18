@@ -17,11 +17,6 @@ module.exports = {
         context: ['/oll', '/api', '/pokemon_assets', '.json', '/css'],
         target: 'http://localhost:3435',
       },
-      {
-        context: ['/ws'],
-        target: 'ws://localhost:3435',
-        ws: true,
-      },
     ],
   },
   mode: process.env.NODE_ENV || 'production',

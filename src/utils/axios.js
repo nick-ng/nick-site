@@ -1,18 +1,25 @@
 import axios from 'axios';
 
-// Add adminKey to request
-axios.interceptors.request.use(config => {
-    const adminKey = localStorage.getItem('adminKey');
-    if (adminKey) {
-        const headers = {
-            ...config.headers,
-            'x-admin-key': adminKey,
-        };
+axios.interceptors.request.use((config) => {
+  const extraHeaders = {};
 
-        return {
-            ...config,
-            headers,
-        };
-    }
-    return config;
+  // Add adminKey to request
+  const adminKey = localStorage.getItem('adminKey');
+  if (adminKey) {
+    extraHeaders['x-admin-key'] = adminKey;
+  }
+
+  // Add weddingAlbumKey to request
+  const weddingAlbumKey = localStorage.getItem('weddingAlbumKey');
+  if (weddingAlbumKey) {
+    extraHeaders['x-wedding-album-key'] = weddingAlbumKey;
+  }
+
+  return {
+    ...config,
+    headers: {
+      ...config.headers,
+      ...extraHeaders,
+    },
+  };
 });
