@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import debounce from 'lodash/debounce';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
@@ -45,6 +46,7 @@ const Table = styled.table`
 const Button = styled.button`
   padding: 1em 1em;
   width: 100%;
+  text-align: left;
 `;
 
 const fetcher = async (setPermissionRequests) => {
@@ -67,6 +69,15 @@ export default function GrantPermission() {
 
   useEffect(() => {
     fetcher(setPermissionRequests);
+
+    const intervalId = setInterval(
+      () => {
+        fetcher(setPermissionRequests);
+      },
+      60 * 60 * 1000 // 60 minutes
+    );
+
+    return clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -80,9 +91,23 @@ export default function GrantPermission() {
     );
   }, [permissionRequests]);
 
+  const debounceRefresh = useRef(
+    debounce(
+      () => {
+        fetcher(setPermissionRequests);
+      },
+      5000,
+      {
+        leading: true,
+        trailing: false,
+      }
+    )
+  ).current;
+
   return (
     <Container>
       <h2>Wedding Permission Manager</h2>
+      <Button onClick={debounceRefresh}>Refresh</Button>
       <p>
         {permissionRequests.length} total requests to view the wedding album
       </p>
