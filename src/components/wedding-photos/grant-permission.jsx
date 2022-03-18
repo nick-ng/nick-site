@@ -152,7 +152,14 @@ export default function GrantPermission() {
                     >
                       {permission.message}
                     </td>
-                    <td>{permission.ipAddress}</td>
+                    <td>
+                      <a
+                        href={`https://api.ipfind.com/?ip=${permission.ipAddress}`}
+                        target="_blank"
+                      >
+                        {permission.ipAddress}
+                      </a>
+                    </td>
                     <td>{permissionDay.format('D MMM YYYY')}</td>
                     <td>{permissionDay.fromNow()}</td>
                   </tr>
