@@ -101,7 +101,7 @@ export default function WeddingPhotos() {
                 href={`${url}${viewParams}&fit=fill&w=${newWidth}&h=${newHeight}`}
                 onClick={() => {
                   setShowPreview({
-                    imageUrl: `${url}${viewParams}&fit=fill&w=${newWidth}&h=${newHeight}`,
+                    imageUrl: url,
                     imageLink: `${url}${viewParams}`,
                     imageWidth: newWidth,
                     imageHeight: newHeight,

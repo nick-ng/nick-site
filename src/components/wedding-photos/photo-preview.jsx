@@ -69,7 +69,9 @@ export default function PhotoPreview(props) {
         style={{ width: `${width + 10}px`, height: `${height + 10}px` }}
       >
         <img
-          src={imageUrl}
+          src={`${imageUrl}?fm=jpg&q=85&fit=fill&w=${Math.floor(
+            width
+          )}&h=${Math.floor(height)}`}
           style={{ width: `${width}px`, height: `${height}px` }}
         />
       </PictureLink>
