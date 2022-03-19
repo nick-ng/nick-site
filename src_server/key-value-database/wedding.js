@@ -11,12 +11,18 @@ const getSafeKeyRequest = (key) =>
 
 const getAccessKey = (client) => async (key) => {
   const redisGet = promisify(client.get).bind(client);
+  const redisExpire = promisify(client.expire).bind(client);
 
   const safeKey = getSafeKey(key);
 
   const result = await redisGet(safeKey);
 
-  return result === 'true';
+  if (result === 'true') {
+    redisExpire(safeKey, ACCESS_TTL);
+    return true;
+  }
+
+  return false;
 };
 
 const setAccessKey = (client) => async (key) => {
