@@ -8,7 +8,6 @@ import css from './styles.css';
 const INDENT_PX = 10;
 
 const hasAKey = (otherKeys) => {
-  console.log('otherKeys', otherKeys);
   if (otherKeys) {
     return (
       otherKeys.some((key) => Boolean(localStorage.getItem(key))) ||

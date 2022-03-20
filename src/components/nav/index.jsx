@@ -51,6 +51,13 @@ export default function Nav() {
       <AdminNav otherKeys={['weddingAlbumKey']} icons="fa-bell-o" to="/wedding">
         Wedding Album
       </AdminNav>
+      <AdminNav
+        icons={['fa-bell-o', 'fa-tags']}
+        to="/wedding/tag-manager"
+        indentLevel={1}
+      >
+        Tag Manager
+      </AdminNav>
       <AdminNav icons="fa-unlock" to="/wedding-permission" indentLevel={1}>
         Wedding Permissions
       </AdminNav>

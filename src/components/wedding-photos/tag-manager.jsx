@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Loading from '../loading';
 import RequestPermission from './request-permission';
-import PhotoPreview from './photo-preview';
+import PhotoEditor from './photo-editor';
 
 const TARGET_PX = 1280 * 720;
 
@@ -33,12 +33,26 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const ThumbnailGrid = styled.div`
+const TwoColumns = styled.div`
   width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
+`;
+
+const Controls = styled.div`
+  display: grid;
+`;
+
+const ThumbnailGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   justify-content: center;
   grid-gap: 5px 5px;
+`;
+
+const ThumbnailGridItem = styled.div`
+  ${(props) => (props.selected ? 'border: 3px solid green;' : '')}
 
   img {
     display: block;
@@ -46,11 +60,11 @@ const ThumbnailGrid = styled.div`
   }
 `;
 
-export default function WeddingPhotos() {
+export default function WeddingTagManager() {
   const [loaded, setLoaded] = useState(false);
   const [haveAccess, setHaveAccess] = useState('maybe');
   const [photos, setPhotos] = useState([]);
-  const [showPreview, setShowPreview] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   useEffect(() => {
     const runAsync = async () => {
@@ -78,57 +92,44 @@ export default function WeddingPhotos() {
 
   return (
     <Container>
-      <h2>Wedding Photos</h2>
-      {loaded ? (
-        <ThumbnailGrid>
-          {photos.map((photo) => {
-            const url = photo.file.url;
-            const width = photo?.file?.details?.image?.width;
-            const height = photo?.file?.details?.image?.height;
+      <h2>Wedding Photo Tag Manager</h2>
+      <TwoColumns>
+        <Controls>
+          <PhotoEditor photo={selectedPhoto} />
+        </Controls>
+        {loaded ? (
+          <ThumbnailGrid>
+            {photos.map((photo) => {
+              const url = photo.file.url;
+              const width = photo?.file?.details?.image?.width;
+              const height = photo?.file?.details?.image?.height;
 
-            const { newWidth, newHeight } = resizePicture(
-              width,
-              height,
-              TARGET_PX
-            );
-
-            const description = photo.description;
-            return (
-              <div
-                role="button"
-                tabIndex={0}
-                key={`thumbnail-${url}`}
-                onClick={() => {
-                  setShowPreview({
-                    imageUrl: url,
-                    imageLink: `${url}${viewParams}`,
-                    imageWidth: newWidth,
-                    imageHeight: newHeight,
-                  });
-                }}
-              >
-                <img
-                  loading="lazy"
-                  style={{ minHeight: '200px' }}
-                  src={`https:${url}${thumbnailParams}`}
-                  alt={description}
-                />
-              </div>
-            );
-          })}
-        </ThumbnailGrid>
-      ) : (
-        <Loading />
-      )}
+              const description = photo.description;
+              return (
+                <ThumbnailGridItem
+                  role="button"
+                  tabIndex={0}
+                  selected={url === selectedPhoto?.file?.url}
+                  key={`thumbnail-${url}`}
+                  onClick={() => {
+                    setSelectedPhoto(photo);
+                  }}
+                >
+                  <img
+                    loading="lazy"
+                    style={{ minHeight: '200px' }}
+                    src={`https:${url}${thumbnailParams}`}
+                    alt={description}
+                  />
+                </ThumbnailGridItem>
+              );
+            })}
+          </ThumbnailGrid>
+        ) : (
+          <Loading />
+        )}
+      </TwoColumns>
       {haveAccess === 'no' && <RequestPermission />}
-      {showPreview !== null && (
-        <PhotoPreview
-          closeHandler={() => {
-            setShowPreview(null);
-          }}
-          {...showPreview}
-        />
-      )}
     </Container>
   );
 }
