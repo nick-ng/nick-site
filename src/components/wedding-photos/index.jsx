@@ -11,7 +11,7 @@ const TARGET_PX = 1280 * 720;
 // Check Contentful for image manipulation references
 // https://www.contentful.com/developers/docs/references/images-api/#/reference
 
-const thumbnailParams = '?fm=jpg&q=75&fit=fill&w=500&h=500&f=faces';
+const thumbnailParams = '?fm=jpg&q=75&fit=fill&w=300&h=300&f=faces';
 const viewParams = '?fm=jpg&q=80';
 
 const resizePicture = (width, height, totalPixels) => {
@@ -108,7 +108,12 @@ export default function WeddingPhotos() {
                   });
                 }}
               >
-                <img src={`https:${url}${thumbnailParams}`} alt={description} />
+                <img
+                  loading="lazy"
+                  style={{ minHeight: '200px' }}
+                  src={`https:${url}${thumbnailParams}`}
+                  alt={description}
+                />
               </div>
             );
           })}
