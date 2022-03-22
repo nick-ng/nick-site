@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
-import Loading from '../loading';
-import RequestPermission from './request-permission';
+import Loading from '../../loading';
 import PhotoEditor from './photo-editor';
+import TagEditor from './tag-editor';
 
 const TARGET_PX = 1280 * 720;
 
@@ -41,7 +41,8 @@ const TwoColumns = styled.div`
 `;
 
 const Controls = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
 `;
 
 const ThumbnailGrid = styled.div`
@@ -65,22 +66,27 @@ export default function WeddingTagManager() {
   const [haveAccess, setHaveAccess] = useState('maybe');
   const [photos, setPhotos] = useState([]);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const runAsync = async () => {
       setLoaded(false);
 
       try {
-        const res = await axios.get('/api/wedding_photos');
+        const [photoRes, tagRes] = await Promise.all([
+          axios.get('/api/wedding_photos'),
+          axios.get('/api/wedding_album_tags'),
+        ]);
 
-        setPhotos(res.data);
+        setPhotos(photoRes.data.photos);
         setLoaded(true);
         setHaveAccess('yes');
+        setTags(tagRes.data);
       } catch (e) {
         setLoaded(true);
         setHaveAccess('no');
 
-        if (localStorage.getItem('adminKey')) {
+        if (e.response.status === 401 && localStorage.getItem('adminKey')) {
           localStorage.removeItem('adminKey');
           window.location.href = window.location.href.split('?')[0];
         }
@@ -96,6 +102,7 @@ export default function WeddingTagManager() {
       <TwoColumns>
         <Controls>
           <PhotoEditor photo={selectedPhoto} />
+          <TagEditor tags={tags} setTags={setTags} />
         </Controls>
         {loaded ? (
           <ThumbnailGrid>
@@ -129,7 +136,6 @@ export default function WeddingTagManager() {
           <Loading />
         )}
       </TwoColumns>
-      {haveAccess === 'no' && <RequestPermission />}
     </Container>
   );
 }

@@ -5,6 +5,7 @@ const countdown = require('./countdown');
 const foreignStorage = require('./foreign-storage');
 const markdownDocument = require('./markdown-document');
 const user = require('./user');
+const weddingAlbumTag = require('./wedding-album-tag');
 
 const ssl = {
   require: true,
@@ -31,4 +32,5 @@ module.exports = {
   foreignStorage: foreignStorage(db),
   markdownDocument: markdownDocument(db),
   user: user(db),
+  weddingAlbumTag: weddingAlbumTag(db),
 };
