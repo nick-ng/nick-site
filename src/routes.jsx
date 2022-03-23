@@ -32,6 +32,7 @@ import ConfettiStandAlone from './components/confetti-stand-alone';
 import NumberTyper1 from './components/number-typer';
 import NumberTyper from './components/number-typer-2';
 import TypeTheAlphabet from './components/type-the-alphabet';
+import Mastermind from './components/mastermind';
 import ConfettiMaker from './components/confetti-maker';
 import TextToSpeech from './components/text-to-speech';
 import Timers from './components/timers';
@@ -139,6 +140,9 @@ export default function App() {
             </R>
             <R path="/alphabet">
               <TypeTheAlphabet />
+            </R>
+            <R path="/mastermind">
+              <Mastermind />
             </R>
             <R path="/texttospeech">
               <TextToSpeech />

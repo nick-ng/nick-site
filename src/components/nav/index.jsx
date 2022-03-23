@@ -116,6 +116,9 @@ export default function Nav() {
       <NavLink icons={['fa-calculator -o']} to="/numbertyper">
         Number Typer
       </NavLink>
+      <NavLink icons={['fa-question']} to="/mastermind">
+        Mastermind
+      </NavLink>
       <NavLink icons={['fa-smile-o']} to="/confetti-maker">
         Confetti Maker
       </NavLink>
