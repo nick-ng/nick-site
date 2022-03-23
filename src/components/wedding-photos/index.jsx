@@ -59,14 +59,14 @@ export default function WeddingPhotos() {
       try {
         const res = await axios.get('/api/wedding_photos');
 
-        setPhotos(res.data);
+        setPhotos(res.data.photos);
         setLoaded(true);
         setHaveAccess('yes');
       } catch (e) {
         setLoaded(true);
         setHaveAccess('no');
 
-        if (localStorage.getItem('adminKey')) {
+        if (e.response.status === 401 && localStorage.getItem('adminKey')) {
           localStorage.removeItem('adminKey');
           window.location.href = window.location.href.split('?')[0];
         }
@@ -98,7 +98,6 @@ export default function WeddingPhotos() {
                 role="button"
                 tabIndex={0}
                 key={`thumbnail-${url}`}
-                href={`${url}${viewParams}&fit=fill&w=${newWidth}&h=${newHeight}`}
                 onClick={() => {
                   setShowPreview({
                     imageUrl: url,

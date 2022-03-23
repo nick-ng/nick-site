@@ -14,6 +14,7 @@ import Countdowns from './components/countdowns';
 import Home from './components/home';
 import Todos from './components/todos';
 import WeddingPhotos from './components/wedding-photos';
+import WeddingTagManager from './components/wedding-photos/tag-manager';
 import WeddingPhotosGrantPermission from './components/wedding-photos/grant-permission';
 import Location from './components/location';
 import PokemonFlashCards from './components/pokemon/flash-cards';
@@ -45,6 +46,9 @@ export default function App() {
           <Switch>
             <R path="/weddingphotos">
               <WeddingPhotos />
+            </R>
+            <R path="/wedding/tag-manager">
+              <WeddingTagManager />
             </R>
             <R path="/wedding">
               <WeddingPhotos />

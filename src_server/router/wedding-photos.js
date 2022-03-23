@@ -1,6 +1,8 @@
+const { v4: uuid } = require('uuid');
 const { randomBytes } = require('crypto');
 
 const { wedding } = require('../key-value-database');
+const { weddingAlbumTag } = require('../sql-database');
 
 const contentful = require('../contentful');
 
@@ -23,18 +25,55 @@ module.exports = (router) => {
       res.send([]);
       return;
     }
-    const photos = await contentful.getPhotoList();
-    res.send(photos);
+
+    const [photos, photoTags] = await Promise.all([
+      contentful.getPhotoList(),
+      weddingAlbumTag.getAllTagsOnPhotos(),
+    ]);
+    res.send({ photos, photoTags });
+  });
+
+  router.post('/api/wedding_photo/tag', async (req, res, next) => {
+    const { user } = res.locals;
+    if (!user || user.id === 0) {
+      res.sendStatus(403);
+      return;
+    }
+    const { uri, tagId } = req.body;
+
+    try {
+      await weddingAlbumTag.addTagToPhoto({ uri, tagId });
+      res.sendStatus(201);
+    } catch (e) {
+      res.sendStatus(500);
+    }
+  });
+
+  router.post('/api/wedding_photo/remove-tag', async (req, res, next) => {
+    const { user } = res.locals;
+    if (!user || user.id === 0) {
+      res.sendStatus(403);
+      return;
+    }
+    const { uri, tagId } = req.body;
+
+    try {
+      await weddingAlbumTag.removeTagFromPhoto({ uri, tagId });
+      res.sendStatus(201);
+    } catch (e) {
+      res.sendStatus(500);
+    }
   });
 
   router.post('/api/wedding_photo_access', async (req, res, next) => {
     let key = '';
-    while (key.length < 32) {
-      const keyPart = randomBytes(32 - key.length)
+    while (key.length < 16) {
+      const keyPart = randomBytes(16 - key.length)
         .toString('ascii')
         .replaceAll(/[^a-z0-9]/gi, '');
       key = `${key}${keyPart}`;
     }
+    key = `${key}${uuid().replaceAll(/[^a-z0-9]/gi, '')}`;
 
     const ipAddress =
       req.header('x-forwarded-for') || req.connection.remoteAddress;
@@ -81,5 +120,40 @@ module.exports = (router) => {
     }
 
     res.sendStatus(201);
+  });
+
+  router.post('/api/wedding_album_tag', async (req, res, next) => {
+    const { user } = res.locals;
+    if (!user || user.id === 0) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const { displayName, sortOrder, description } = req.body;
+
+    try {
+      await weddingAlbumTag.createTag({ displayName, sortOrder, description });
+      res.sendStatus(201);
+    } catch (e) {
+      console.error(e.message);
+      res.sendStatus(400);
+    }
+  });
+
+  router.get('/api/wedding_album_tags', async (req, res, next) => {
+    const { user } = res.locals;
+    if (!user || user.id === 0) {
+      res.sendStatus(401);
+      return;
+    }
+
+    try {
+      const a = await weddingAlbumTag.getAllTags();
+
+      res.json(a);
+    } catch (e) {
+      console.error(e.message);
+      res.sendStatus(500);
+    }
   });
 };
