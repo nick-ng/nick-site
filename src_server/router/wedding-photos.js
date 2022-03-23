@@ -1,3 +1,4 @@
+const { v4: uuid } = require('uuid');
 const { randomBytes } = require('crypto');
 
 const { wedding } = require('../key-value-database');
@@ -32,14 +33,47 @@ module.exports = (router) => {
     res.send({ photos, photoTags });
   });
 
+  router.post('/api/wedding_photo/tag', async (req, res, next) => {
+    const { user } = res.locals;
+    if (!user || user.id === 0) {
+      res.sendStatus(403);
+      return;
+    }
+    const { uri, tagId } = req.body;
+
+    try {
+      await weddingAlbumTag.addTagToPhoto({ uri, tagId });
+      res.sendStatus(201);
+    } catch (e) {
+      res.sendStatus(500);
+    }
+  });
+
+  router.post('/api/wedding_photo/remove-tag', async (req, res, next) => {
+    const { user } = res.locals;
+    if (!user || user.id === 0) {
+      res.sendStatus(403);
+      return;
+    }
+    const { uri, tagId } = req.body;
+
+    try {
+      await weddingAlbumTag.removeTagFromPhoto({ uri, tagId });
+      res.sendStatus(201);
+    } catch (e) {
+      res.sendStatus(500);
+    }
+  });
+
   router.post('/api/wedding_photo_access', async (req, res, next) => {
     let key = '';
-    while (key.length < 32) {
-      const keyPart = randomBytes(32 - key.length)
+    while (key.length < 16) {
+      const keyPart = randomBytes(16 - key.length)
         .toString('ascii')
         .replaceAll(/[^a-z0-9]/gi, '');
       key = `${key}${keyPart}`;
     }
+    key = `${key}${uuid().replaceAll(/[^a-z0-9]/gi, '')}`;
 
     const ipAddress =
       req.header('x-forwarded-for') || req.connection.remoteAddress;
@@ -108,7 +142,6 @@ module.exports = (router) => {
 
   router.get('/api/wedding_album_tags', async (req, res, next) => {
     const { user } = res.locals;
-    console.log('user', user);
     if (!user || user.id === 0) {
       res.sendStatus(401);
       return;
@@ -116,7 +149,6 @@ module.exports = (router) => {
 
     try {
       const a = await weddingAlbumTag.getAllTags();
-      console.log('a', a);
 
       res.json(a);
     } catch (e) {

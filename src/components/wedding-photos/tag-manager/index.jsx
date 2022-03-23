@@ -5,26 +5,23 @@ import styled from 'styled-components';
 import Loading from '../../loading';
 import PhotoEditor from './photo-editor';
 import TagEditor from './tag-editor';
-
-const TARGET_PX = 1280 * 720;
+import { addTagsToPhotos } from '../utils';
 
 // Check Contentful for image manipulation references
 // https://www.contentful.com/developers/docs/references/images-api/#/reference
 
 const thumbnailParams = '?fm=jpg&q=75&fit=fill&w=300&h=300&f=faces';
-const viewParams = '?fm=jpg&q=80';
 
-const resizePicture = (width, height, totalPixels) => {
-  const ratio = width / height;
-  const temp = Math.sqrt(totalPixels * ratio);
+const reloadPhotos = async (setPhotos, setPhotoTags) => {
+  const photoRes = await axios.get('/api/wedding_photos');
 
-  const newWidth = Math.floor(temp);
-  const newHeight = Math.floor(temp / ratio);
+  const newPhotos = addTagsToPhotos(
+    photoRes.data.photos,
+    photoRes.data.photoTags
+  );
 
-  return {
-    newWidth,
-    newHeight,
-  };
+  setPhotos(newPhotos);
+  setPhotoTags(photoRes.data.photoTags);
 };
 
 const Container = styled.div`
@@ -37,7 +34,7 @@ const TwoColumns = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 5px;
+  grid-gap: 1em;
 `;
 
 const Controls = styled.div`
@@ -63,28 +60,29 @@ const ThumbnailGridItem = styled.div`
 
 export default function WeddingTagManager() {
   const [loaded, setLoaded] = useState(false);
-  const [haveAccess, setHaveAccess] = useState('maybe');
   const [photos, setPhotos] = useState([]);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [photoTags, setPhotoTags] = useState([]);
+  const [selectedPhotoUri, setSelectedPhotoUri] = useState(null);
   const [tags, setTags] = useState([]);
+
+  const selectedPhoto = photos.filter(
+    (photo) => photo.file.url === selectedPhotoUri
+  )[0];
 
   useEffect(() => {
     const runAsync = async () => {
       setLoaded(false);
 
       try {
-        const [photoRes, tagRes] = await Promise.all([
-          axios.get('/api/wedding_photos'),
+        const [_, tagRes] = await Promise.all([
+          reloadPhotos(setPhotos, setPhotoTags),
           axios.get('/api/wedding_album_tags'),
         ]);
 
-        setPhotos(photoRes.data.photos);
         setLoaded(true);
-        setHaveAccess('yes');
         setTags(tagRes.data);
       } catch (e) {
         setLoaded(true);
-        setHaveAccess('no');
 
         if (e.response.status === 401 && localStorage.getItem('adminKey')) {
           localStorage.removeItem('adminKey');
@@ -101,36 +99,43 @@ export default function WeddingTagManager() {
       <h2>Wedding Photo Tag Manager</h2>
       <TwoColumns>
         <Controls>
-          <PhotoEditor photo={selectedPhoto} />
+          <PhotoEditor
+            photo={selectedPhoto}
+            photoTags={photoTags}
+            tags={tags}
+            reloadPhotos={() => {
+              reloadPhotos(setPhotos, setPhotoTags);
+            }}
+          />
           <TagEditor tags={tags} setTags={setTags} />
         </Controls>
         {loaded ? (
           <ThumbnailGrid>
-            {photos.map((photo) => {
-              const url = photo.file.url;
-              const width = photo?.file?.details?.image?.width;
-              const height = photo?.file?.details?.image?.height;
+            {[...photos]
+              .sort((a, b) => a.sortOrder - b.sortOrder)
+              .map((photo) => {
+                const url = photo.file.url;
 
-              const description = photo.description;
-              return (
-                <ThumbnailGridItem
-                  role="button"
-                  tabIndex={0}
-                  selected={url === selectedPhoto?.file?.url}
-                  key={`thumbnail-${url}`}
-                  onClick={() => {
-                    setSelectedPhoto(photo);
-                  }}
-                >
-                  <img
-                    loading="lazy"
-                    style={{ minHeight: '200px' }}
-                    src={`https:${url}${thumbnailParams}`}
-                    alt={description}
-                  />
-                </ThumbnailGridItem>
-              );
-            })}
+                const description = photo.description;
+                return (
+                  <ThumbnailGridItem
+                    role="button"
+                    tabIndex={0}
+                    selected={url === selectedPhotoUri}
+                    key={`thumbnail-${url}`}
+                    onClick={() => {
+                      setSelectedPhotoUri(url);
+                    }}
+                  >
+                    <img
+                      loading="lazy"
+                      style={{ minHeight: '200px' }}
+                      src={`https:${url}${thumbnailParams}`}
+                      alt={description}
+                    />
+                  </ThumbnailGridItem>
+                );
+              })}
           </ThumbnailGrid>
         ) : (
           <Loading />

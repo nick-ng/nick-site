@@ -8,13 +8,11 @@ const fetcher = async (setTags) => {
   setTags(res.data);
 };
 
-const TARGET_HEIGHT = 400;
-
 const Container = styled.div``;
 
-const TwoColumns = styled.div`
+const ThreeColumns = styled.div`
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   grid-gap: 1em;
 `;
 
@@ -89,7 +87,7 @@ export default function TagEditor({ tags, setTags }) {
   return (
     <Container>
       <h2>BBB</h2>
-      <TwoColumns>
+      <ThreeColumns>
         <TagPicker>
           <Tag
             selected={currentTagId === 0}
@@ -100,7 +98,7 @@ export default function TagEditor({ tags, setTags }) {
             New
           </Tag>
           {[...tags]
-            .sort((a, b) => a.sortOrder - b.sortOrder)
+            .sort((a, b) => a.displayName.localeCompare(b.displayName))
             .map((tag) => (
               <Tag
                 key={tag.id}
@@ -157,8 +155,17 @@ export default function TagEditor({ tags, setTags }) {
           </label>
           <button>OK</button>
         </Form>
-      </TwoColumns>
-      <pre>{JSON.stringify(tags, null, '  ')}</pre>
+        <div>
+          <span>Tag Order</span>
+          <ol>
+            {[...tags]
+              .sort((a, b) => a.sortOrder - b.sortOrder)
+              .map((tag) => (
+                <li key={tag.id}>{tag.displayName}</li>
+              ))}
+          </ol>
+        </div>
+      </ThreeColumns>
     </Container>
   );
 }

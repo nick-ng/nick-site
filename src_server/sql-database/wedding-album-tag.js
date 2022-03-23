@@ -31,19 +31,22 @@ const addTagToPhoto =
       wedding_album_tag_id: tagId,
     });
 
+const removeTagFromPhoto =
+  (db) =>
+  ({ uri, tagId }) =>
+    db.raw(
+      `
+    DELETE FROM ${wedding_album_tag_relation}
+    WHERE uri = :uri
+    AND wedding_album_tag_id = :tagId
+    `,
+      { uri, tagId }
+    );
+
 const getAllTags = (db) => async () =>
   (await db.raw(`select * from ${wedding_album_tag}`)).rows.map((a) =>
     camelcaseKeys(a)
   );
-
-// const createTag =
-//   (db) =>
-//   ({ displayName, sortOrder, description }) =>
-//     db(wedding_album_tag).insert({
-//       display_name: displayName,
-//       sort_order: sortOrder,
-//       description,
-//     });
 
 const createTag =
   (db) =>
@@ -62,6 +65,7 @@ const createTag =
 module.exports = (db) => ({
   getAllTagsOnPhotos: getAllTagsOnPhotos(db),
   addTagToPhoto: addTagToPhoto(db),
+  removeTagFromPhoto: removeTagFromPhoto(db),
   getAllTags: getAllTags(db),
   createTag: createTag(db),
 });
