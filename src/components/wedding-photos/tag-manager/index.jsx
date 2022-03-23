@@ -64,6 +64,7 @@ export default function WeddingTagManager() {
   const [photoTags, setPhotoTags] = useState([]);
   const [selectedPhotoUri, setSelectedPhotoUri] = useState(null);
   const [tags, setTags] = useState([]);
+  const [reverseSort, setReverseSort] = useState(1);
 
   const selectedPhoto = photos.filter(
     (photo) => photo.file.url === selectedPhotoUri
@@ -99,6 +100,16 @@ export default function WeddingTagManager() {
       <h2>Wedding Photo Tag Manager</h2>
       <TwoColumns>
         <Controls>
+          <label>
+            Reverse Sort:&nbsp;
+            <input
+              type="checkbox"
+              onChange={() => {
+                setReverseSort((prev) => prev * -1);
+              }}
+              checked={reverseSort < 0}
+            />
+          </label>
           <PhotoEditor
             photo={selectedPhoto}
             photoTags={photoTags}
@@ -112,7 +123,7 @@ export default function WeddingTagManager() {
         {loaded ? (
           <ThumbnailGrid>
             {[...photos]
-              .sort((a, b) => a.sortOrder - b.sortOrder)
+              .sort((a, b) => (a.sortOrder - b.sortOrder) * reverseSort)
               .map((photo) => {
                 const url = photo.file.url;
 
