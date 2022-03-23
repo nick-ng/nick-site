@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Loading from '../loading';
 import RequestPermission from './request-permission';
 import PhotoPreview from './photo-preview';
+import { addTagsToPhotos } from './utils';
 
 const TARGET_PX = 1280 * 720;
 
@@ -59,7 +60,9 @@ export default function WeddingPhotos() {
       try {
         const res = await axios.get('/api/wedding_photos');
 
-        setPhotos(res.data.photos);
+        const newPhotos = addTagsToPhotos(res.data.photos, res.data.photoTags);
+
+        setPhotos(newPhotos);
         setLoaded(true);
         setHaveAccess('yes');
       } catch (e) {
@@ -81,41 +84,43 @@ export default function WeddingPhotos() {
       <h2>Wedding Photos</h2>
       {loaded ? (
         <ThumbnailGrid>
-          {photos.map((photo) => {
-            const url = photo.file.url;
-            const width = photo?.file?.details?.image?.width;
-            const height = photo?.file?.details?.image?.height;
+          {[...photos]
+            .sort((a, b) => a.sortOrder - b.sortOrder)
+            .map((photo) => {
+              const url = photo.file.url;
+              const width = photo?.file?.details?.image?.width;
+              const height = photo?.file?.details?.image?.height;
 
-            const { newWidth, newHeight } = resizePicture(
-              width,
-              height,
-              TARGET_PX
-            );
+              const { newWidth, newHeight } = resizePicture(
+                width,
+                height,
+                TARGET_PX
+              );
 
-            const description = photo.description;
-            return (
-              <div
-                role="button"
-                tabIndex={0}
-                key={`thumbnail-${url}`}
-                onClick={() => {
-                  setShowPreview({
-                    imageUrl: url,
-                    imageLink: `${url}${viewParams}`,
-                    imageWidth: newWidth,
-                    imageHeight: newHeight,
-                  });
-                }}
-              >
-                <img
-                  loading="lazy"
-                  style={{ minHeight: '200px' }}
-                  src={`https:${url}${thumbnailParams}`}
-                  alt={description}
-                />
-              </div>
-            );
-          })}
+              const description = photo.description;
+              return (
+                <div
+                  role="button"
+                  tabIndex={0}
+                  key={`thumbnail-${url}`}
+                  onClick={() => {
+                    setShowPreview({
+                      imageUrl: url,
+                      imageLink: `${url}${viewParams}`,
+                      imageWidth: newWidth,
+                      imageHeight: newHeight,
+                    });
+                  }}
+                >
+                  <img
+                    loading="lazy"
+                    style={{ minHeight: '200px' }}
+                    src={`https:${url}${thumbnailParams}`}
+                    alt={description}
+                  />
+                </div>
+              );
+            })}
         </ThumbnailGrid>
       ) : (
         <Loading />
