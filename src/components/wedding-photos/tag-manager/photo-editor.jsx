@@ -63,6 +63,7 @@ export default function PhotoEditor({ photo, tags, reloadPhotos }) {
       <Photo>
         {imageUrl && (
           <img
+            key={`${imageUrl}?fm=jpg&q=80&fit=fill&w=${newWidth}&h=${TARGET_HEIGHT}`}
             src={`${imageUrl}?fm=jpg&q=80&fit=fill&w=${newWidth}&h=${TARGET_HEIGHT}`}
           />
         )}
