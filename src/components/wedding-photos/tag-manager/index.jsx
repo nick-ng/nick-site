@@ -47,6 +47,9 @@ const ThumbnailGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   justify-content: center;
   grid-gap: 5px 5px;
+
+  overflow-y: scroll;
+  height: 100vh;
 `;
 
 const ThumbnailGridItem = styled.div`
@@ -97,9 +100,9 @@ export default function WeddingTagManager() {
 
   return (
     <Container>
-      <h2>Wedding Photo Tag Manager</h2>
       <TwoColumns>
         <Controls>
+          <h2>Wedding Photo Tag Manager</h2>
           <label>
             Reverse Sort:&nbsp;
             <input
