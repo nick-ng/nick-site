@@ -135,6 +135,7 @@ export default function Mastermind() {
                 {currentGuess.map((guess, i) => (
                   <td key={`guess-${i}`}>
                     <input
+                      type="tel"
                       value={guess}
                       onChange={(e) => {
                         const value = e.target.value;
