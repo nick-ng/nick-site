@@ -1,47 +1,69 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import GuessAccuracy from './guess-accuracy';
 import { getAnswer, checkGuess } from './utils';
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
-const PrevGuesses = styled.div``;
+const Instructions = styled.p`
+  max-width: 35em;
+  width: 30em;
 
-const Guess = styled.form`
-  display: grid;
-  justify-content: start;
-  grid-template-columns: auto auto auto auto auto;
-  grid-gap: 0.5em;
+  margin-top: 0;
+`;
 
-  input,
-  & > div {
-    display: block;
+const MaxRangeInput = styled.input`
+  width: 3em;
+`;
+
+const GameArea = styled.table`
+  margin-top: 0.5em;
+  border-collapse: collapse;
+
+  td {
     border: 1px solid grey;
-    width: 48px;
-    height: 48px;
-    text-align: center;
-    font-size: 1em;
-  }
+    width: 3em;
+    height: 3em;
 
-  & > div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    input {
+      border: none;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      background-color: none;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 1em;
+    }
 
-  button {
-    width: 48px;
-    height: 48px;
+    button {
+      width: 100%;
+      height: 100%;
+    }
   }
 `;
 
+const Guess = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: 1em;
+`;
+
 export default function Mastermind() {
-  const [answer, setAnswer] = useState(getAnswer());
+  const [maxRange, setMaxRange] = useState(6);
+  const [answer, setAnswer] = useState(getAnswer(1, parseInt(maxRange, 10)));
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState(['', '', '', '']);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [showReset, setShowReset] = useState(false);
 
   const submitGuess = () => {
     if (currentGuess.every((a) => a.length > 0)) {
@@ -50,71 +72,94 @@ export default function Mastermind() {
         prev.concat([{ guess: currentGuess, guessAccuracy }])
       );
       setCurrentGuess(['', '', '', '']);
+      if (guessAccuracy.correct === 4) {
+        setIsCorrect(true);
+        setShowReset(true);
+      }
     }
+  };
+
+  const resetGame = () => {
+    setGuesses([]);
+    setAnswer(getAnswer(1, parseInt(maxRange, 10)));
+    setShowReset(false);
+    setIsCorrect(false);
   };
 
   return (
     <Container>
       <h2>Mastermind</h2>
-      <PrevGuesses>
-        {guesses.map(({ guess, guessAccuracy }) => (
-          <Guess key={guess.join(',')}>
-            <div>{guess[0]}</div>
-            <div>{guess[1]}</div>
-            <div>{guess[2]}</div>
-            <div>{guess[3]}</div>
-            <GuessAccuracy {...guessAccuracy} />
-          </Guess>
-        ))}
-      </PrevGuesses>
-      <Guess
+      <Instructions>
+        Enter the numbers between 1 and{' '}
+        <MaxRangeInput
+          type="number"
+          value={maxRange}
+          onChange={(e) => {
+            setMaxRange(e.target.value);
+            setShowReset(true);
+          }}
+        />{' '}
+        in the boxes below then press enter or the OK button.
+      </Instructions>
+      <Instructions>⚫ means a number is correct place.</Instructions>
+      <Instructions>
+        ⚪ means a number is in the answer but in the wrong place.
+      </Instructions>
+      {showReset && (
+        <button type="button" onClick={resetGame}>
+          Reset
+        </button>
+      )}
+      <form
         onSubmit={(e) => {
           e.preventDefault();
           submitGuess();
         }}
       >
-        <input
-          value={currentGuess[0]}
-          onChange={(e) => {
-            const value = e.target.value;
-            setCurrentGuess((prev) => {
-              prev[0] = value;
-              return [...prev];
-            });
-          }}
-        />
-        <input
-          value={currentGuess[1]}
-          onChange={(e) => {
-            const value = e.target.value;
-            setCurrentGuess((prev) => {
-              prev[1] = value;
-              return [...prev];
-            });
-          }}
-        />
-        <input
-          value={currentGuess[2]}
-          onChange={(e) => {
-            const value = e.target.value;
-            setCurrentGuess((prev) => {
-              prev[2] = value;
-              return [...prev];
-            });
-          }}
-        />
-        <input
-          value={currentGuess[3]}
-          onChange={(e) => {
-            const value = e.target.value;
-            setCurrentGuess((prev) => {
-              prev[3] = value;
-              return [...prev];
-            });
-          }}
-        />
-        <button>Guess!</button>
-      </Guess>
+        <GameArea>
+          <tbody>
+            {guesses.map(({ guess, guessAccuracy }, i) => (
+              <tr key={`${i},${guess.join(',')}`}>
+                {guess.map((a, j) => (
+                  <td key={`${i},${guess.join(',')}${j}`}>
+                    <Guess>{a}</Guess>
+                  </td>
+                ))}
+                <td>
+                  <GuessAccuracy {...guessAccuracy} />
+                </td>
+              </tr>
+            ))}
+            {!isCorrect && (
+              <tr>
+                {currentGuess.map((guess, i) => (
+                  <td key={`guess-${i}`}>
+                    <input
+                      value={guess}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setCurrentGuess((prev) => {
+                          prev[i] = value;
+                          return [...prev];
+                        });
+                      }}
+                    />
+                  </td>
+                ))}
+                <td>
+                  <button>OK</button>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </GameArea>
+      </form>
+      {isCorrect && <p>Correct!</p>}
+      {showReset && (
+        <button type="button" onClick={resetGame}>
+          Play Again
+        </button>
+      )}
     </Container>
   );
 }
