@@ -42,3 +42,20 @@ export const checkGuess = (guess, answer) => {
     nearly,
   };
 };
+
+export const getColour = (number, maxNumber) => {
+  const n = parseInt(number, 10);
+  const colours = [
+    '#ff8888', // red
+    '#00ee00', // green
+    '#f0f000', // yellow
+    '#55aaff', // blue
+    '#eeeeee', // light grey
+    '#aaaaaa', // dark grey
+  ];
+  if (n < 1 || n > colours.length || maxNumber > colours.length) {
+    return 'white';
+  }
+
+  return colours[n - 1];
+};

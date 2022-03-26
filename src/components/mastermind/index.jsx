@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 import GuessAccuracy from './guess-accuracy';
-import { getAnswer, checkGuess } from './utils';
+import { getAnswer, checkGuess, getColour } from './utils';
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ const GameArea = styled.table`
   border-collapse: collapse;
 
   td {
-    border: 1px solid grey;
+    border: 2px solid black;
     width: 3em;
     height: 3em;
 
@@ -36,7 +36,6 @@ const GameArea = styled.table`
       width: 100%;
       padding: 0;
       margin: 0;
-      background-color: none;
       text-align: center;
       font-family: sans-serif;
       font-size: 1em;
@@ -138,7 +137,10 @@ export default function Mastermind() {
             {guesses.map(({ guess, guessAccuracy }, i) => (
               <tr key={`${i},${guess.join(',')}`}>
                 {guess.map((a, j) => (
-                  <td key={`${i},${guess.join(',')}${j}`}>
+                  <td
+                    key={`${i},${guess.join(',')}${j}`}
+                    style={{ backgroundColor: getColour(a, maxNumber) }}
+                  >
                     <Guess>{a}</Guess>
                   </td>
                 ))}
@@ -150,23 +152,28 @@ export default function Mastermind() {
             {!isCorrect && (
               <tr>
                 {currentGuess.map((guess, i) => (
-                  <td key={`guess-${i}`}>
+                  <td
+                    key={`guess-${i}`}
+                    style={{ backgroundColor: getColour(guess, maxNumber) }}
+                  >
                     <input
                       type="tel"
+                      style={{ backgroundColor: getColour(guess, maxNumber) }}
                       value={guess}
                       ref={answerInputs[i]}
-                      onChange={() => {}}
-                      onInput={(e) => {
+                      onChange={(e) => {
                         const value = e.target.value;
 
                         setCurrentGuess((prev) => {
-                          prev[i] = value;
-                          return [...prev];
+                          const newCurrentGuess = [...prev];
+                          newCurrentGuess[i] = value;
+                          return newCurrentGuess;
                         });
-
+                      }}
+                      onInput={(e) => {
                         if (
-                          value.length >= maxNumberLength ||
-                          parseInt(`${value}0`, 10) > maxNumber
+                          e.target.value.length >= maxNumberLength ||
+                          parseInt(`${e.target.value}0`, 10) > maxNumber
                         ) {
                           answerInputs[(i + 1) % 4].current.focus();
                           answerInputs[(i + 1) % 4].current.select();
