@@ -176,7 +176,6 @@ export default function Mastermind() {
                           parseInt(`${e.target.value}0`, 10) > maxNumber
                         ) {
                           answerInputs[(i + 1) % 4].current.focus();
-                          answerInputs[(i + 1) % 4].current.select();
                         }
                       }}
                     />
