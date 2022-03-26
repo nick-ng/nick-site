@@ -11,7 +11,7 @@ const Container = styled.div`
 `;
 
 const Instructions = styled.p`
-  max-width: 35em;
+  max-width: 50vw;
   width: 30em;
 
   margin-top: 0;

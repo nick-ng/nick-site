@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import Header from '../header';
 import NavLink, { AdminNav } from './nav-link';
 
 import css from './styles.css';
@@ -29,7 +28,6 @@ const DayDisplay = styled.span`
 export default function Nav() {
   return (
     <div className={css.navContainer}>
-      <Header />
       <DayDisplay>{moment().format('dddd')}</DayDisplay>
       <NavLink icons="fa-home" to="/" exact>
         Home
