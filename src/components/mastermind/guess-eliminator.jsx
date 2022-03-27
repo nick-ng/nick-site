@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { GameArea, Guess } from './styles';
-import { getColour } from './utils';
+import { checkGuess, getColour } from './utils';
 
 const Container = styled.div`
   margin-left: 1em;
@@ -13,32 +13,45 @@ const Container = styled.div`
 `;
 
 export default function GuessEliminator({ guesses, maxNumber }) {
-  const [allPermutations, setAllPermutations] = useState([]);
+  const [possiblePermutations, setPossiblePermutations] = useState([]);
 
-  useState(() => {
-    const tempGuesses = [];
+  useEffect(() => {
+    const tempAnswers = [];
 
     for (let a = 1; a <= maxNumber; a++) {
       for (let b = 1; b <= maxNumber; b++) {
         for (let c = 1; c <= maxNumber; c++) {
           for (let d = 1; d <= maxNumber; d++) {
-            tempGuesses.push([a, b, c, d]);
+            const tempAnswer = [a, b, c, d];
+            const isPossible = guesses.every(({ guess, guessAccuracy }) => {
+              const tempAccuracy = checkGuess(guess, tempAnswer);
+
+              return (
+                guessAccuracy.correct === tempAccuracy.correct &&
+                guessAccuracy.nearly === tempAccuracy.nearly
+              );
+            });
+
+            if (isPossible) {
+              tempAnswers.push(tempAnswer);
+            }
           }
         }
       }
     }
 
-    setAllPermutations(tempGuesses);
-  }, [maxNumber]);
+    setPossiblePermutations(tempAnswers);
+  }, [guesses, maxNumber]);
 
   return (
     <Container>
-      <h3>Possible Answers</h3>
-      <pre>{JSON.stringify(guesses, null, '  ')}</pre>
+      <h3>
+        Possible Answers: <span>{possiblePermutations.length}</span>
+      </h3>
       {guesses.length > 0 && (
         <GameArea>
           <tbody>
-            {allPermutations.map((permutation) => (
+            {possiblePermutations.map((permutation) => (
               <tr key={permutation.join('-')}>
                 {permutation.map((a, i) => (
                   <td
