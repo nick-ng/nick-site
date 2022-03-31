@@ -44,11 +44,12 @@ export const checkGuess = (guess, answer) => {
 };
 
 export const getColour = (number, maxNumber) => {
+  return 'white';
   const n = parseInt(number, 10);
   const colours = [
     '#ff8888', // red
-    '#00ee00', // green
     '#f0f000', // yellow
+    '#00ee00', // green
     '#55aaff', // blue
     '#eeeeee', // light grey
     '#aaaaaa', // dark grey
