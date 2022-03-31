@@ -146,7 +146,7 @@ export default function Mastermind() {
                         <GuessAccuracy {...guessAccuracy} />
                       </td>
                       {showGuessEliminator && (
-                        <td style={{ width: '2em' }}>
+                        <td>
                           <input
                             type="checkbox"
                             checked={isSentToGuessEliminator}

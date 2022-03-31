@@ -6,6 +6,7 @@ import { checkGuess, getColour } from './utils';
 
 const Container = styled.div`
   margin-left: 1em;
+  margin-bottom: 1em;
 
   h3 {
     margin-top: 0;
@@ -50,25 +51,29 @@ export default function GuessEliminator({ guesses, maxNumber }) {
   return (
     <Container>
       <h3>
-        Possible Answers: <span>{possiblePermutations.length}</span>
+        Possible Answers (<span>{possiblePermutations.length}</span> total)
       </h3>
-      {guesses.length > 0 && (
+      {guesses.length > 0 ? (
         <GameArea>
           <tbody>
-            {possiblePermutations.map((permutation) => (
-              <tr key={permutation.join('-')}>
-                {permutation.map((a, i) => (
-                  <td
-                    key={`${permutation.join('-')}${i}`}
-                    style={{ backgroundColor: getColour(a, maxNumber) }}
-                  >
-                    <Guess>{a}</Guess>
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {possiblePermutations.length < 1000
+              ? possiblePermutations.map((permutation) => (
+                  <tr key={permutation.join('-')}>
+                    {permutation.map((a, i) => (
+                      <td
+                        key={`${permutation.join('-')}${i}`}
+                        style={{ backgroundColor: getColour(a, maxNumber) }}
+                      >
+                        <Guess>{a}</Guess>
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              : 'Too many permutations'}
           </tbody>
         </GameArea>
+      ) : (
+        <p>There are no guesses so this would just be everything.</p>
       )}
     </Container>
   );
