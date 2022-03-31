@@ -33,11 +33,9 @@ applyMiddlewares(app);
 applyRouters(router);
 app.use(router);
 
-const oneDay = 1000 * 60 * 60 * 24;
-
 // serve static files
 app.use(express.static('assets'));
-app.use(express.static('dist', { maxAge: oneDay * 30 }));
+app.use(express.static('dist', { maxAge: '365d' }));
 
 // redirect all requests to index.html
 app.use((req, res) => {
