@@ -9,6 +9,10 @@ const Container = styled.div`
 
   h3 {
     margin-top: 0;
+
+    @media screen and (max-device-width: 599px) {
+      margin-top: 1em;
+    }
   }
 `;
 

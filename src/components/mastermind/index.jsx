@@ -17,6 +17,10 @@ const FlexRows = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
+
+  @media screen and (max-device-width: 599px) {
+    flex-direction: column;
+  }
 `;
 
 const Instructions = styled.p`
@@ -48,7 +52,11 @@ export default function Mastermind() {
       const guessAccuracy = checkGuess(currentGuess, answer);
       setGuesses((prev) =>
         prev.concat([
-          { guess: currentGuess.map((a) => parseInt(a, 10)), guessAccuracy },
+          {
+            guess: currentGuess.map((a) => parseInt(a, 10)),
+            guessAccuracy,
+            isSentToGuessEliminator: true,
+          },
         ])
       );
       setCurrentGuess(['', '', '', '']);
@@ -123,21 +131,39 @@ export default function Mastermind() {
           >
             <GameArea>
               <tbody>
-                {guesses.map(({ guess, guessAccuracy }, i) => (
-                  <tr key={`${i},${guess.join(',')}`}>
-                    {guess.map((a, j) => (
-                      <td
-                        key={`${i},${guess.join(',')}${j}`}
-                        style={{ backgroundColor: getColour(a, maxNumber) }}
-                      >
-                        <Guess>{a}</Guess>
+                {guesses.map(
+                  ({ guess, guessAccuracy, isSentToGuessEliminator }, i) => (
+                    <tr key={`${i},${guess.join(',')}`}>
+                      {guess.map((a, j) => (
+                        <td
+                          key={`${i},${guess.join(',')}${j}`}
+                          style={{ backgroundColor: getColour(a, maxNumber) }}
+                        >
+                          <Guess>{a}</Guess>
+                        </td>
+                      ))}
+                      <td>
+                        <GuessAccuracy {...guessAccuracy} />
                       </td>
-                    ))}
-                    <td>
-                      <GuessAccuracy {...guessAccuracy} />
-                    </td>
-                  </tr>
-                ))}
+                      {showGuessEliminator && (
+                        <td style={{ width: '2em' }}>
+                          <input
+                            type="checkbox"
+                            checked={isSentToGuessEliminator}
+                            onChange={() => {
+                              setGuesses((prev) => {
+                                const next = [...prev];
+                                next[i].isSentToGuessEliminator =
+                                  !prev[i].isSentToGuessEliminator;
+                                return next;
+                              });
+                            }}
+                          />
+                        </td>
+                      )}
+                    </tr>
+                  )
+                )}
                 {!isCorrect && (
                   <tr>
                     {currentGuess.map((guess, i) => (
@@ -172,7 +198,7 @@ export default function Mastermind() {
                         />
                       </td>
                     ))}
-                    <td>
+                    <td colSpan={showGuessEliminator ? 2 : 1}>
                       <button>OK</button>
                     </td>
                   </tr>
@@ -188,7 +214,10 @@ export default function Mastermind() {
           )}
         </Container>
         {showGuessEliminator && (
-          <GuessEliminator guesses={guesses} maxNumber={maxNumber} />
+          <GuessEliminator
+            guesses={guesses.filter((guess) => guess.isSentToGuessEliminator)}
+            maxNumber={maxNumber}
+          />
         )}
       </FlexRows>
     </Container>
