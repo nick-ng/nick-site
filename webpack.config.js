@@ -27,7 +27,8 @@ module.exports = {
   },
   output: {
     path: `${__dirname}/dist`,
-    filename: '[name].bundle.js',
+    filename: '[chunkhash].b.js',
+    chunkFilename: '[chunkhash].b.js',
     publicPath: '/',
   },
   optimization: {
