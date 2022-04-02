@@ -38,7 +38,7 @@ const OKButton = styled.button`
   margin-top: 0.3em;
 `;
 
-export default function Mastermind() {
+export default function Numberdle() {
   const [maxNumber, setMaxNumber] = useState(9);
   const [answer, setAnswer] = useState(getAnswer(1, parseInt(maxNumber, 10)));
   const [guesses, setGuesses] = useState([]);
@@ -81,8 +81,6 @@ export default function Mastermind() {
   useEffect(() => {
     resetGame();
   }, [maxNumber]);
-
-  console.log(answer);
 
   return (
     <Container>
