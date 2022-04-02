@@ -74,8 +74,6 @@ export default function WeddingPhotos() {
     runAsync();
   }, []);
 
-  console.log('a', [...photos].filter(tagFilter));
-
   return (
     <Container>
       <h2>Wedding Photos</h2>

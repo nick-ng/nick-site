@@ -31,10 +31,10 @@ const checkGuess = (guess, answer) => {
 const testCheckGuess = (guess, answer, expectedHint) => {
   const actualHint = checkGuess(guess, answer);
 
-  console.log('guess       ', JSON.stringify(guess));
-  console.log('answer      ', JSON.stringify(answer));
-  console.log('actualHint  ', JSON.stringify(actualHint));
-  console.log('expectedHint', JSON.stringify(expectedHint));
+  console.info('guess       ', JSON.stringify(guess));
+  console.info('answer      ', JSON.stringify(answer));
+  console.info('actualHint  ', JSON.stringify(actualHint));
+  console.info('expectedHint', JSON.stringify(expectedHint));
 
   return JSON.stringify(expectedHint) === JSON.stringify(actualHint);
 };
