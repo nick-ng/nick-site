@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
 import Loading from '../loading';
 import RequestPermission from './request-permission';
+import PhotoThumbnail from './photo-thumbnail';
 import PhotoPreview from './photo-preview';
-import { addTagsToPhotos } from './utils';
+import TagControls from './tag-controls';
+import { addTagsToPhotos, getUniqueTags, makeTagFilter } from './utils';
 
 const TARGET_PX = 1280 * 720;
 
@@ -15,23 +17,11 @@ const TARGET_PX = 1280 * 720;
 const thumbnailParams = '?fm=jpg&q=75&fit=fill&w=300&h=300&f=faces';
 const viewParams = '?fm=jpg&q=80';
 
-const resizePicture = (width, height, totalPixels) => {
-  const ratio = width / height;
-  const temp = Math.sqrt(totalPixels * ratio);
-
-  const newWidth = Math.floor(temp);
-  const newHeight = Math.floor(temp / ratio);
-
-  return {
-    newWidth,
-    newHeight,
-  };
-};
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 
 const ThumbnailGrid = styled.div`
@@ -52,6 +42,11 @@ export default function WeddingPhotos() {
   const [haveAccess, setHaveAccess] = useState('maybe');
   const [photos, setPhotos] = useState([]);
   const [showPreview, setShowPreview] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const uniqueTags = useMemo(() => getUniqueTags(photos), [photos]);
+
+  const tagFilter = makeTagFilter(selectedTags);
 
   useEffect(() => {
     const runAsync = async () => {
@@ -79,49 +74,54 @@ export default function WeddingPhotos() {
     runAsync();
   }, []);
 
+  console.log('a', [...photos].filter(tagFilter));
+
   return (
     <Container>
       <h2>Wedding Photos</h2>
+      <TagControls
+        allTags={uniqueTags}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
+      />
       {loaded ? (
-        <ThumbnailGrid>
-          {[...photos]
-            .sort((a, b) => a.sortOrder - b.sortOrder)
-            .map((photo) => {
-              const url = photo.file.url;
-              const width = photo?.file?.details?.image?.width;
-              const height = photo?.file?.details?.image?.height;
-
-              const { newWidth, newHeight } = resizePicture(
-                width,
-                height,
-                TARGET_PX
-              );
-
-              const description = photo.description;
-              return (
-                <div
-                  role="button"
-                  tabIndex={0}
-                  key={`thumbnail-${url}`}
-                  onClick={() => {
-                    setShowPreview({
-                      imageUrl: url,
-                      imageLink: `${url}${viewParams}`,
-                      imageWidth: newWidth,
-                      imageHeight: newHeight,
-                    });
-                  }}
-                >
-                  <img
-                    loading="lazy"
-                    style={{ minHeight: '200px' }}
-                    src={`https:${url}${thumbnailParams}`}
-                    alt={description}
-                  />
-                </div>
-              );
-            })}
-        </ThumbnailGrid>
+        <>
+          {selectedTags.length > 0 && (
+            <>
+              <ThumbnailGrid>
+                {[...photos]
+                  .filter(tagFilter)
+                  .sort((a, b) => a.sortOrder - b.sortOrder)
+                  .map((photo) => (
+                    <PhotoThumbnail
+                      photo={photo}
+                      targetPX={TARGET_PX}
+                      thumbnailParams={thumbnailParams}
+                      viewParams={viewParams}
+                      setShowPreview={setShowPreview}
+                      key={`thumbnail-${photo.file.url}`}
+                    />
+                  ))}
+              </ThumbnailGrid>
+              <hr style={{ width: '100%' }} />
+            </>
+          )}
+          <ThumbnailGrid>
+            {[...photos]
+              .filter((photo) => !tagFilter(photo))
+              .sort((a, b) => a.sortOrder - b.sortOrder)
+              .map((photo) => (
+                <PhotoThumbnail
+                  photo={photo}
+                  targetPX={TARGET_PX}
+                  thumbnailParams={thumbnailParams}
+                  viewParams={viewParams}
+                  setShowPreview={setShowPreview}
+                  key={`thumbnail-${photo.file.url}`}
+                />
+              ))}
+          </ThumbnailGrid>
+        </>
       ) : (
         <Loading />
       )}
