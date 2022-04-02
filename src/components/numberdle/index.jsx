@@ -114,16 +114,6 @@ export default function Mastermind() {
             in the boxes below then press enter or the OK button.
           </Instructions>
           <Instructions>Numbers may be repeated.</Instructions>
-          <Instructions>
-            A ⚫ hint means a number is correct place.
-          </Instructions>
-          <Instructions>
-            A ⚪ hint means a number is in the answer but in the wrong place.
-          </Instructions>
-          <Instructions>
-            The hints don't indicate <em>which</em> number is correct. Only how
-            many are correct/nearly correct.
-          </Instructions>
           {showReset && (
             <button type="button" onClick={resetGame}>
               Reset
