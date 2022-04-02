@@ -26,7 +26,7 @@ export const getUniqueTags = (photos) => {
       });
     });
 
-  return [...uniqueTags];
+  return [...uniqueTags].sort((a, b) => a.localeCompare(b));
 };
 
 export const makeTagFilter = (selectedTags) => (photo) => {
