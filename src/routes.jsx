@@ -54,6 +54,7 @@ const NumberTyper1 = lazy(() => import('./components/number-typer'));
 const NumberTyper = lazy(() => import('./components/number-typer-2'));
 const TypeTheAlphabet = lazy(() => import('./components/type-the-alphabet'));
 const Mastermind = lazy(() => import('./components/mastermind'));
+const Numberdle = lazy(() => import('./components/numberdle'));
 const ConfettiMaker = lazy(() => import('./components/confetti-maker'));
 const TextToSpeech = lazy(() => import('./components/text-to-speech'));
 const Timers = lazy(() => import('./components/timers'));
@@ -165,6 +166,9 @@ export default function App() {
               </R>
               <R path="/mastermind">
                 <Mastermind />
+              </R>
+              <R path="/numberdle">
+                <Numberdle />
               </R>
               <R path="/texttospeech">
                 <TextToSpeech />

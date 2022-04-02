@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import GuessAccuracy from './guess-accuracy';
-import GuessEliminator from './guess-eliminator';
 import { GameArea, Guess } from './styles';
 import { getAnswer, checkGuess, getColour } from './utils';
 
@@ -35,14 +33,18 @@ const MaxNumberInput = styled.input`
   width: 3em;
 `;
 
+const OKButton = styled.button`
+  width: 100%;
+  margin-top: 0.3em;
+`;
+
 export default function Mastermind() {
-  const [maxNumber, setMaxNumber] = useState(6);
+  const [maxNumber, setMaxNumber] = useState(9);
   const [answer, setAnswer] = useState(getAnswer(1, parseInt(maxNumber, 10)));
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState(['', '', '', '']);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showReset, setShowReset] = useState(false);
-  const [showGuessEliminator, setShowGuessEliminator] = useState(false);
 
   const answerInputs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
@@ -50,18 +52,17 @@ export default function Mastermind() {
 
   const submitGuess = () => {
     if (currentGuess.every((a) => a.length > 0)) {
-      const guessAccuracy = checkGuess(currentGuess, answer);
+      const hints = checkGuess(currentGuess, answer);
       setGuesses((prev) =>
         prev.concat([
           {
             guess: currentGuess.map((a) => parseInt(a, 10)),
-            guessAccuracy,
-            isSentToGuessEliminator: true,
+            hints,
           },
         ])
       );
       setCurrentGuess(['', '', '', '']);
-      if (guessAccuracy.correct === answer.length) {
+      if (hints.filter((a) => a === 'correct').length === answer.length) {
         setIsCorrect(true);
         setShowReset(true);
       }
@@ -81,34 +82,24 @@ export default function Mastermind() {
     resetGame();
   }, [maxNumber]);
 
+  console.log(answer);
+
   return (
     <Container>
-      <h2>Mastermind</h2>
-      <label style={{ marginBottom: '1em' }}>
-        Cheat:&nbsp;
-        <input
-          type="checkbox"
-          checked={showGuessEliminator}
-          onChange={() => {
-            setShowGuessEliminator((prev) => !prev);
-          }}
-        />
-      </label>
+      <h2>Numberdle</h2>
       <FlexRows>
         <Container>
           <Instructions>
-            This is based on the 1972 boardgame{' '}
-            <a href="" target="_blank">
-              Mastermind
-            </a>
-            . For a version based on{' '}
+            This is based on{' '}
             <a
               href="https://www.nytimes.com/games/wordle/index.html"
               target="_blank"
             >
               Wordle
-            </a>
-            , try <Link to="/numberdle">Numberdle</Link>.
+            </a>{' '}
+            and has the hints on the numbers directly.{' '}
+            <Link to="/mastermind">Mastermind</Link> is based on the boardgame
+            from 1972 and doesn't have hints on numbers.
           </Instructions>
           <Instructions>
             Enter numbers between 1 and{' '}
@@ -146,51 +137,24 @@ export default function Mastermind() {
           >
             <GameArea>
               <tbody>
-                {guesses.map(
-                  ({ guess, guessAccuracy, isSentToGuessEliminator }, i) => (
-                    <tr key={`${i},${guess.join(',')}`}>
-                      {guess.map((a, j) => (
-                        <td
-                          key={`${i},${guess.join(',')}${j}`}
-                          style={{ backgroundColor: getColour(a, maxNumber) }}
-                        >
-                          <Guess>{a}</Guess>
-                        </td>
-                      ))}
-                      <td>
-                        <GuessAccuracy {...guessAccuracy} />
+                {guesses.map(({ guess, hints }, i) => (
+                  <tr key={`${i},${guess.join(',')}`}>
+                    {guess.map((a, j) => (
+                      <td
+                        key={`${i},${guess.join(',')}${j}`}
+                        style={{ ...getColour(hints[j]) }}
+                      >
+                        <Guess>{a}</Guess>
                       </td>
-                      {showGuessEliminator && (
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={isSentToGuessEliminator}
-                            onChange={() => {
-                              setGuesses((prev) => {
-                                const next = [...prev];
-                                next[i].isSentToGuessEliminator =
-                                  !prev[i].isSentToGuessEliminator;
-                                return next;
-                              });
-                            }}
-                          />
-                        </td>
-                      )}
-                    </tr>
-                  )
-                )}
+                    ))}
+                  </tr>
+                ))}
                 {!isCorrect && (
                   <tr>
                     {currentGuess.map((guess, i) => (
-                      <td
-                        key={`guess-${i}`}
-                        style={{ backgroundColor: getColour(guess, maxNumber) }}
-                      >
+                      <td key={`guess-${i}`}>
                         <input
                           type="tel"
-                          style={{
-                            backgroundColor: getColour(guess, maxNumber),
-                          }}
                           value={guess}
                           ref={answerInputs[i]}
                           onChange={(e) => {
@@ -213,13 +177,11 @@ export default function Mastermind() {
                         />
                       </td>
                     ))}
-                    <td colSpan={showGuessEliminator ? 2 : 1}>
-                      <button>OK</button>
-                    </td>
                   </tr>
                 )}
               </tbody>
             </GameArea>
+            {!isCorrect && <OKButton>OK</OKButton>}
           </form>
           {isCorrect && <p>Correct!</p>}
           {showReset && (
@@ -228,12 +190,6 @@ export default function Mastermind() {
             </button>
           )}
         </Container>
-        {showGuessEliminator && (
-          <GuessEliminator
-            guesses={guesses.filter((guess) => guess.isSentToGuessEliminator)}
-            maxNumber={maxNumber}
-          />
-        )}
       </FlexRows>
     </Container>
   );

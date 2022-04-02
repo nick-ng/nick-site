@@ -117,6 +117,9 @@ export default function Nav() {
       <NavLink icons={['fa-question']} to="/mastermind">
         Mastermind
       </NavLink>
+      <NavLink icons={['fa-question']} to="/numberdle">
+        Numberdle
+      </NavLink>
       <NavLink icons={['fa-smile-o']} to="/confetti-maker">
         Confetti Maker
       </NavLink>
