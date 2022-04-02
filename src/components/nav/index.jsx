@@ -6,20 +6,6 @@ import NavLink, { AdminNav } from './nav-link';
 
 import css from './styles.css';
 
-const DayMod3 = styled.div`
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  padding: 10px;
-  min-width: 100px;
-  color: transparent;
-  cursor: default;
-
-  &:hover {
-    color: black;
-  }
-`;
-
 const DayDisplay = styled.span`
   font-size: 1em;
   margin-bottom: 0.3em;
@@ -135,10 +121,14 @@ export default function Nav() {
       <NavLink icons={['fa-ellipsis-h']} to="/misc">
         Misc.
       </NavLink>
-      <DayMod3>
-        {moment().diff(moment([2020, 11, 31]), 'days') % 3} (
-        {moment().diff(moment([2020, 11, 31]), 'days')})
-      </DayMod3>
+      <a
+        className={css.navLink}
+        href="https://github.com/nick-ng"
+        target="_blank"
+      >
+        <i className={`${css.navIcon} fa fa-github`} />
+        <span className={css.navText}>My GitHub</span>
+      </a>
     </div>
   );
 }
