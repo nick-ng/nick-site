@@ -1,11 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import GuessAccuracy from './guess-accuracy';
 import GuessEliminator from './guess-eliminator';
 import { GameArea, Guess } from './styles';
 import { getAnswer, checkGuess, getColour } from './utils';
+
+const getSeed = () => {
+  const now = new Date();
+  return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+};
 
 const Container = styled.div`
   display: flex;
@@ -31,18 +36,38 @@ const Instructions = styled.p`
   margin-top: 0;
 `;
 
+const Details = styled.details`
+  max-width: 50vw;
+  width: 30em;
+
+  cursor: pointer;
+
+  summary {
+    margin-bottom: 1em;
+    text-decoration: underline;
+  }
+
+  &[open] summary {
+    text-decoration: none;
+  }
+`;
+
 const MaxNumberInput = styled.input`
   width: 3em;
 `;
 
 export default function Mastermind() {
   const [maxNumber, setMaxNumber] = useState(6);
-  const [answer, setAnswer] = useState(getAnswer(1, parseInt(maxNumber, 10)));
+  const [answer, setAnswer] = useState([1, 1, 1, 1]);
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState(['', '', '', '']);
   const [isCorrect, setIsCorrect] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [showGuessEliminator, setShowGuessEliminator] = useState(false);
+
+  const { search } = useLocation();
+  const query = useMemo(() => new URLSearchParams(search), [search]);
+  const isDaily = query.get('daily') !== 'no';
 
   const answerInputs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
@@ -69,31 +94,45 @@ export default function Mastermind() {
     }
   };
 
-  const resetGame = () => {
+  const resetGame = (seed = null) => {
     setGuesses([]);
-    setAnswer(getAnswer(1, parseInt(maxNumber, 10)));
+    setAnswer(getAnswer(1, parseInt(maxNumber, 10), seed));
     setShowReset(false);
     setIsCorrect(false);
     setCurrentGuess(['', '', '', '']);
   };
 
   useEffect(() => {
-    resetGame();
-  }, [maxNumber]);
+    const seed = isDaily ? getSeed() : null;
+    resetGame(seed);
+  }, [maxNumber, isDaily]);
 
   return (
     <Container>
-      <h2>Mastermind</h2>
-      <label style={{ marginBottom: '1em' }}>
-        Cheat:&nbsp;
-        <input
-          type="checkbox"
-          checked={showGuessEliminator}
-          onChange={() => {
-            setShowGuessEliminator((prev) => !prev);
-          }}
-        />
-      </label>
+      <h2>{isDaily && 'Daily '}Mastermind</h2>
+      {isDaily ? (
+        <Instructions>
+          Click <Link to="/mastermind?daily=no">here</Link> for a random
+          Mastermind puzzle.
+        </Instructions>
+      ) : (
+        <Instructions>
+          Click <Link to="/mastermind">here</Link> for the daily Mastermind
+          puzzle.
+        </Instructions>
+      )}
+      {!isDaily && (
+        <label style={{ marginBottom: '1em' }}>
+          Cheat:&nbsp;
+          <input
+            type="checkbox"
+            checked={showGuessEliminator}
+            onChange={() => {
+              setShowGuessEliminator((prev) => !prev);
+            }}
+          />
+        </label>
+      )}
       <FlexRows>
         <Container>
           <Instructions>
@@ -110,30 +149,40 @@ export default function Mastermind() {
             </a>
             , try <Link to="/numberdle">Numberdle</Link>.
           </Instructions>
-          <Instructions>
-            Enter numbers between 1 and{' '}
-            <MaxNumberInput
-              type="number"
-              value={maxNumber}
-              onChange={(e) => {
-                setMaxNumber(e.target.value);
-                setShowReset(true);
-              }}
-            />{' '}
-            in the boxes below then press enter or the OK button.
-          </Instructions>
-          <Instructions>Numbers may be repeated.</Instructions>
-          <Instructions>
-            A ⚫ hint means a number is correct place.
-          </Instructions>
-          <Instructions>
-            A ⚪ hint means a number is in the answer but in the wrong place.
-          </Instructions>
-          <Instructions>
-            The hints don't indicate <em>which</em> number is correct. Only how
-            many are correct/nearly correct.
-          </Instructions>
-          {showReset && (
+          {isDaily ? (
+            <Instructions>
+              Enter numbers between 1 and 6 in the boxes below then press enter
+              or the OK button.
+            </Instructions>
+          ) : (
+            <Instructions>
+              Enter numbers between 1 and{' '}
+              <MaxNumberInput
+                type="number"
+                value={maxNumber}
+                onChange={(e) => {
+                  setMaxNumber(e.target.value);
+                  setShowReset(true);
+                }}
+              />{' '}
+              in the boxes below then press enter or the OK button.
+            </Instructions>
+          )}
+          <Details>
+            <summary>Instructions</summary>
+            <Instructions>Numbers may be repeated.</Instructions>
+            <Instructions>
+              A ⚫ hint means a number is correct place.
+            </Instructions>
+            <Instructions>
+              A ⚪ hint means a number is in the answer but in the wrong place.
+            </Instructions>
+            <Instructions>
+              The hints don't indicate <em>which</em> number is correct. Only
+              how many are correct/nearly correct.
+            </Instructions>
+          </Details>
+          {showReset && !isDaily && (
             <button type="button" onClick={resetGame}>
               Reset
             </button>
@@ -221,14 +270,25 @@ export default function Mastermind() {
               </tbody>
             </GameArea>
           </form>
-          {isCorrect && <p>Correct!</p>}
-          {showReset && (
+          {isCorrect && (
+            <p>
+              Correct!
+              {isDaily && (
+                <span>
+                  {' '}
+                  Click <Link to="/mastermind?daily=no">here</Link> for a random
+                  Mastermind puzzle.
+                </span>
+              )}
+            </p>
+          )}
+          {showReset && !isDaily && (
             <button type="button" onClick={resetGame}>
               Play Again
             </button>
           )}
         </Container>
-        {showGuessEliminator && (
+        {showGuessEliminator && !isDaily && (
           <GuessEliminator
             guesses={guesses.filter((guess) => guess.isSentToGuessEliminator)}
             maxNumber={maxNumber}

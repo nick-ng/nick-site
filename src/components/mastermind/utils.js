@@ -1,9 +1,16 @@
-export const getAnswer = (minNumber = 1, maxNumber = 6) => {
+import seedrandom from 'seedrandom';
+
+export const getAnswer = (minNumber = 1, maxNumber = 6, seed = null) => {
   const answer = [];
+  let rng = Math.random;
+
+  if (seed !== null) {
+    rng = seedrandom(seed);
+  }
 
   for (let n = 0; n < 4; n++) {
     const range = maxNumber - minNumber + 1;
-    answer.push((Math.floor(Math.random() * range) + minNumber).toString());
+    answer.push((Math.floor(rng() * range) + minNumber).toString());
   }
 
   return answer;
