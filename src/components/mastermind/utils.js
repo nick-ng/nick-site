@@ -1,4 +1,7 @@
 import seedrandom from 'seedrandom';
+import dayjs from 'dayjs';
+
+export const DAILY_MASTERMIND_STORE = 'DAILY_MASTERMIND_STORE';
 
 export const getAnswer = (minNumber = 1, maxNumber = 6, seed = null) => {
   const answer = [];
@@ -65,4 +68,45 @@ export const getColour = (number, maxNumber) => {
   }
 
   return colours[n - 1];
+};
+
+export const setDailyMastermindGuesses = (guesses) => {
+  console.log('guesses', guesses);
+
+  localStorage.setItem(
+    DAILY_MASTERMIND_STORE,
+    JSON.stringify({
+      timestamp: Date.now(),
+      guesses,
+    })
+  );
+};
+
+export const getDailyMastermindGuesses = (setGuesses) => {
+  try {
+    const dailyStore = JSON.parse(localStorage.getItem(DAILY_MASTERMIND_STORE));
+
+    const guessDate = dayjs(dailyStore.timestamp);
+    const startOfToday = dayjs().startOf('day');
+
+    if (guessDate > startOfToday) {
+      setGuesses(dailyStore.guesses);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getShareMessage = (guesses) => {
+  return `Daily Mastermind: ${dayjs().format('D MMM YYYY')}
+Guesses: ${guesses.length}
+${guesses
+  .map(
+    ({ guessAccuracy }) =>
+      `${'⚫'.repeat(guessAccuracy.correct)}${'⚪'.repeat(
+        guessAccuracy.nearly
+      )}`
+  )
+  .join('\n')}
+https://nick.ng/mastermind`;
 };

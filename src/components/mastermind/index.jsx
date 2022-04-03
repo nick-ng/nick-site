@@ -5,7 +5,14 @@ import { Link, useLocation } from 'react-router-dom';
 import GuessAccuracy from './guess-accuracy';
 import GuessEliminator from './guess-eliminator';
 import { GameArea, Guess } from './styles';
-import { getAnswer, checkGuess, getColour } from './utils';
+import {
+  getAnswer,
+  checkGuess,
+  getColour,
+  getDailyMastermindGuesses,
+  setDailyMastermindGuesses,
+  getShareMessage,
+} from './utils';
 
 const getSeed = () => {
   const now = new Date();
@@ -56,14 +63,33 @@ const MaxNumberInput = styled.input`
   width: 3em;
 `;
 
+const ShareButton = styled.button`
+  position: relative;
+
+  &:hover {
+    &::before {
+      content: 'Click to copy message to clipboard';
+      width: 10em;
+      position: absolute;
+      bottom: 1.7em;
+      border: 1px solid grey;
+      padding: 0.5em 1em;
+      background-color: white;
+      border-radius: 1em;
+    }
+  }
+`;
+
 export default function Mastermind() {
   const [maxNumber, setMaxNumber] = useState(6);
   const [answer, setAnswer] = useState([1, 1, 1, 1]);
   const [guesses, setGuesses] = useState([]);
   const [currentGuess, setCurrentGuess] = useState(['', '', '', '']);
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [showReset, setShowReset] = useState(false);
   const [showGuessEliminator, setShowGuessEliminator] = useState(false);
+
+  const isCorrect =
+    guesses.length > 0 &&
+    guesses[guesses.length - 1].guessAccuracy.correct === answer.length;
 
   const { search } = useLocation();
   const query = useMemo(() => new URLSearchParams(search), [search]);
@@ -76,20 +102,20 @@ export default function Mastermind() {
   const submitGuess = () => {
     if (currentGuess.every((a) => a.length > 0)) {
       const guessAccuracy = checkGuess(currentGuess, answer);
-      setGuesses((prev) =>
-        prev.concat([
+      setGuesses((prev) => {
+        const newGuesses = prev.concat([
           {
             guess: currentGuess.map((a) => parseInt(a, 10)),
             guessAccuracy,
             isSentToGuessEliminator: true,
           },
-        ])
-      );
+        ]);
+
+        setDailyMastermindGuesses(newGuesses);
+
+        return newGuesses;
+      });
       setCurrentGuess(['', '', '', '']);
-      if (guessAccuracy.correct === answer.length) {
-        setIsCorrect(true);
-        setShowReset(true);
-      }
       answerInputs[0].current.focus();
     }
   };
@@ -97,14 +123,16 @@ export default function Mastermind() {
   const resetGame = (seed = null) => {
     setGuesses([]);
     setAnswer(getAnswer(1, parseInt(maxNumber, 10), seed));
-    setShowReset(false);
-    setIsCorrect(false);
     setCurrentGuess(['', '', '', '']);
   };
 
   useEffect(() => {
     const seed = isDaily ? getSeed() : null;
     resetGame(seed);
+
+    if (isDaily) {
+      getDailyMastermindGuesses(setGuesses);
+    }
   }, [maxNumber, isDaily]);
 
   return (
@@ -162,7 +190,6 @@ export default function Mastermind() {
                 value={maxNumber}
                 onChange={(e) => {
                   setMaxNumber(e.target.value);
-                  setShowReset(true);
                 }}
               />{' '}
               in the boxes below then press enter or the OK button.
@@ -182,7 +209,7 @@ export default function Mastermind() {
               how many are correct/nearly correct.
             </Instructions>
           </Details>
-          {showReset && !isDaily && (
+          {isCorrect && !isDaily && (
             <button type="button" onClick={resetGame}>
               Reset
             </button>
@@ -272,17 +299,29 @@ export default function Mastermind() {
           </form>
           {isCorrect && (
             <p>
-              Correct!
+              Correct!{' '}
               {isDaily && (
-                <span>
-                  {' '}
-                  Click <Link to="/mastermind?daily=no">here</Link> for a random
-                  Mastermind puzzle.
-                </span>
+                <ShareButton
+                  onClick={() => {
+                    if (!isCorrect || !isDaily) {
+                      alert('Solve the Daily Mastermind first.');
+                      return;
+                    }
+                    navigator.clipboard.writeText(getShareMessage(guesses));
+                  }}
+                >
+                  Share
+                </ShareButton>
               )}
             </p>
           )}
-          {showReset && !isDaily && (
+          {isCorrect && isDaily && (
+            <div>
+              Click <Link to="/mastermind?daily=no">here</Link> for a random
+              Mastermind puzzle.
+            </div>
+          )}
+          {isCorrect && !isDaily && (
             <button type="button" onClick={resetGame}>
               Play Again
             </button>
