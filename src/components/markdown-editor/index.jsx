@@ -68,6 +68,8 @@ const TextEditor = styled.textarea`
 `;
 
 const Preview = styled.div`
+  max-width: 55em;
+
   @media (max-device-width: 980px) {
     display: none;
   }
