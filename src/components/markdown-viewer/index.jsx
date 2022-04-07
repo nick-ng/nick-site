@@ -7,7 +7,15 @@ import MarkdownDisplay from '../markdown-display';
 import SwaggerUIDisplay from '../swagger-ui-display';
 import Loading from '../loading';
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & > * {
+    max-width: 55em;
+  }
+`;
 
 export default function MarkdownViewer() {
   const history = useHistory();
