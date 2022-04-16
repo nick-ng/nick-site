@@ -305,6 +305,9 @@ export default function ({
           <div>
             <button
               onClick={() => {
+                if (!confirm(`Really stop timer "${name}"?`)) {
+                  return;
+                }
                 onSave({
                   id,
                   ...tempSettings,
@@ -317,6 +320,9 @@ export default function ({
             </button>
             <button
               onClick={() => {
+                if (!confirm(`Really restart timer "${name}"?`)) {
+                  return;
+                }
                 onSave({
                   id,
                   ...tempSettings,
