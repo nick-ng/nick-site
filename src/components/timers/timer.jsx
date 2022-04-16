@@ -322,7 +322,11 @@ export default function ({
             </button>
             <button
               onClick={() => {
-                if (!confirm(`Really restart timer "${name}"?`)) {
+                if (
+                  remainingMS > 0 &&
+                  timerState === 'run' &&
+                  !confirm(`Really restart timer "${name}"?`)
+                ) {
                   return;
                 }
                 onSave({
