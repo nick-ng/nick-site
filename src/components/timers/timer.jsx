@@ -158,7 +158,9 @@ export default function ({
     }
 
     const sizeDifference = endSize - startSize;
-    const newSize = startSize + sizeDifference * (elapsedMS / durationMS);
+    const newSize =
+      startSize +
+      sizeDifference * (elapsedMS / durationMS) * (elapsedMS / durationMS);
     setCurrentSize(newSize);
 
     const { display, timeout } = getTimeFormat(getDHMSFromMS(remainingMS));
