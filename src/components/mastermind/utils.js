@@ -71,8 +71,6 @@ export const getColour = (number, maxNumber) => {
 };
 
 export const setDailyMastermindGuesses = (guesses) => {
-  console.log('guesses', guesses);
-
   localStorage.setItem(
     DAILY_MASTERMIND_STORE,
     JSON.stringify({
