@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import NavLink, { AdminNav } from './nav-link';
+import MiniTimers from '../mini-timers';
 
 import css from './styles.css';
 
@@ -14,7 +15,8 @@ const DayDisplay = styled.span`
 export default function Nav() {
   return (
     <div className={css.navContainer}>
-      <DayDisplay>{moment().format('dddd')}</DayDisplay>
+      <DayDisplay>{dayjs().format('dddd')}</DayDisplay>
+      <MiniTimers />
       <NavLink icons="fa-home" to="/" exact>
         Home
       </NavLink>
