@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { isNull } from 'lodash';
 
 const getFormattedTime = (milliseconds) => {
   let temp = milliseconds;
@@ -60,19 +59,27 @@ export default function MiniTimer(props) {
     props;
 
   const [displayTime, setDisplayTime] = useState(getFormattedTime(durationMS));
+  const [displayTime2, setDisplayTime2] = useState('');
 
   useEffect(() => {
     let intervalId = null;
     if (timerState === 'run') {
       intervalId = setInterval(() => {
         const remainingMS = durationMS - (Date.now() - lastManualRestart);
+
         const formattedTime = getFormattedTime(remainingMS);
-        if (formattedTime !== displayTime) {
-          setDisplayTime(formattedTime);
+
+        if (remainingMS > 36000000) {
+          setDisplayTime('9:99:99');
+          if (formattedTime !== displayTime2) {
+            setDisplayTime2(formattedTime);
+          }
+          return;
         }
 
         if (remainingMS <= 0) {
           setDisplayTime('0:00:00');
+          setDisplayTime2('');
           timersSetter((prev) => {
             return [...prev]
               .filter((a) => a.id !== id)
@@ -83,6 +90,16 @@ export default function MiniTimer(props) {
                 },
               ]);
           });
+
+          clearInterval(intervalId);
+          intervalId = null;
+
+          return;
+        }
+
+        if (formattedTime !== displayTime) {
+          setDisplayTime(formattedTime);
+          setDisplayTime2('');
         }
       }, 331);
     }
@@ -118,6 +135,7 @@ export default function MiniTimer(props) {
         }}
       >
         <span>{name}</span>
+        {displayTime2 && <span>&nbsp;{displayTime2}</span>}
       </TimerLabel>
       {timerState !== 'run' && (
         <TimerButtons
