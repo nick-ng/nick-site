@@ -78,6 +78,8 @@ export default function MiniTimer(props) {
         }
 
         if (remainingMS <= 0) {
+          const beep = new Audio('/sounds/440-0.2.mp3');
+          beep.play();
           setDisplayTime('0:00:00');
           setDisplayTime2('');
           timersSetter((prev) => {
