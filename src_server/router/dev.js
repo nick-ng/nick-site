@@ -8,4 +8,6 @@ module.exports = (router) => {
       res.status(400).send(e.message);
     }
   });
+
+  router.get('/real-504', async () => {});
 };
