@@ -1,10 +1,19 @@
 import React from 'react';
 import cx from 'classnames';
+import styled from 'styled-components';
 
 import typeInfo from '../type-info.json';
 
 import css from './styles.css';
 import css2 from '../types.css';
+
+const StyledPokemonFlashCard = styled.div`
+  display: flex;
+  flex-direction: row;
+  border: 1px solid gray;
+  width: 350px;
+  font-weight: bold;
+`;
 
 const { order, matchUps } = typeInfo;
 
@@ -23,7 +32,7 @@ const evaluateAnswer = (aType, dType, answer) => {
 const PokemonFlashCard = ({ aType, dType, answer, answerHandler }) => {
   const evaluation = evaluateAnswer(aType, dType, answer);
   return (
-    <div className={css.cardContainer}>
+    <StyledPokemonFlashCard>
       <div className={css.question}>
         <div className={css.role}>Attacker</div>
         <div className={cx(css.type, css2[aType])}>{aType}</div>
@@ -42,7 +51,7 @@ const PokemonFlashCard = ({ aType, dType, answer, answerHandler }) => {
           <button onClick={() => answerHandler(aType, dType, 2)}>2</button>
         </div>
       )}
-    </div>
+    </StyledPokemonFlashCard>
   );
 };
 

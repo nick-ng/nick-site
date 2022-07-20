@@ -1,6 +1,19 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import typeInfo from '../type-info.json';
+
+const StyledPokemonFlashCardStats = styled.details`
+  margin-top: 0.5em;
+
+  summary {
+    cursor: pointer;
+  }
+
+  button {
+    margin-top: 1em;
+  }
+`;
 
 const { matchUps } = typeInfo;
 
@@ -27,12 +40,14 @@ export const groupMatchUps = (history) => {
   }, {});
 };
 
-const PokemonFlashCardStats = ({ history, showAnswers }) => {
+const PokemonFlashCardStats = ({ history, resetStatsHandler }) => {
   const matchUps = groupMatchUps(history);
 
+  console.log('history', history);
+
   return (
-    <div>
-      <h3>Stats</h3>
+    <StyledPokemonFlashCardStats>
+      <summary>Stats ({history.length})</summary>
       <div>
         {Object.entries(matchUps)
           .sort((a, b) => a[1].correctPercent - b[1].correctPercent)
@@ -40,15 +55,20 @@ const PokemonFlashCardStats = ({ history, showAnswers }) => {
           .map(([key, value]) => (
             <div key={key}>
               <span>{`${key}: ${value.correctPercent}%`}</span>
-              {showAnswers && (
-                <span>{` (${
-                  value.correctAnswer === 0.5 ? '½' : value.correctAnswer
-                })`}</span>
-              )}
+              <span>{` (${
+                value.correctAnswer === 0.5 ? '½' : value.correctAnswer
+              })`}</span>
             </div>
           ))}
       </div>
-    </div>
+      <button
+        onClick={() => {
+          resetStatsHandler();
+        }}
+      >
+        Reset Stats
+      </button>
+    </StyledPokemonFlashCardStats>
   );
 };
 

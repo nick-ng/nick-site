@@ -69,17 +69,10 @@ export default class PokemonFlashCards extends React.Component {
 
       return;
     }
-    const quizEndTimestamp = Date.now() + quizDuration * 1000;
-    const timerUpdater = setInterval(() => {
-      this.setState({
-        quizSecondsRemaining: Math.round(
-          (quizEndTimestamp - Date.now()) / 1000
-        ),
-      });
-    }, 250);
+
     this.setState({
       isQuizzing: true,
-      timerUpdater,
+      timerUpdater: null,
       quizSecondsRemaining: quizDuration,
       questionsAnswered: 1,
     });
@@ -141,34 +134,11 @@ export default class PokemonFlashCards extends React.Component {
   };
 
   render() {
-    const {
-      currentAttacker,
-      currentDefender,
-      history,
-      quizDuration,
-      quizHistory,
-      quizSecondsRemaining,
-      isQuizzing,
-    } = this.state;
+    const { currentAttacker, currentDefender, history } = this.state;
+
     return (
       <div className={css.pokemonFlashCards}>
         <h2>Pokemon Type Flash Cards</h2>
-        <div className={css.quizControls}>
-          {isQuizzing ? (
-            this.renderQuizStatus()
-          ) : (
-            <>
-              <label>Time</label>
-              <input
-                value={quizDuration}
-                onChange={this.quizDurationChangeHandler}
-              />
-            </>
-          )}
-
-          <button onClick={this.resetTimerHandler}>Reset</button>
-        </div>
-
         <div>
           <PokemonFlashCard
             aType={currentAttacker}
@@ -176,12 +146,16 @@ export default class PokemonFlashCards extends React.Component {
             answerHandler={this.answerHandler}
           />
         </div>
-        {(quizSecondsRemaining <= 0 || !isQuizzing) && (
-          <PokemonFlashCardStats
-            history={isQuizzing ? quizHistory : history}
-            showAnswers={true}
-          />
-        )}
+        <PokemonFlashCardStats
+          history={history}
+          showAnswers={true}
+          resetStatsHandler={() => {
+            localStorage.setItem(POKEMON_FLASH_CARDS_HISTORY, []);
+            this.setState({
+              history: [],
+            });
+          }}
+        />
       </div>
     );
   }
