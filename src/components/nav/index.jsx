@@ -117,6 +117,9 @@ export default function Nav() {
       <NavLink icons={['fa-clock-o']} to="/timers">
         Timers
       </NavLink>
+      <NavLink icons={['fa-keyboard-o']} to="/keybind-planner">
+        Keybind Planner
+      </NavLink>
       <AdminNav icons="fa-tachometer" to="/location">
         Location
       </AdminNav>

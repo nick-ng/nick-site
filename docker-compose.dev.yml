@@ -1,0 +1,9 @@
+services:
+  back:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.back
+    ports:
+      - 3435:3435
+    volumes:
+      - ./:/code

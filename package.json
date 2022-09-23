@@ -31,11 +31,13 @@
     "server": "node ./server.js",
     "sim-deploy": "rm -rf node_modules && npm ci && npm run heroku-postbuild && npm run server",
     "sim-deploy-win": "npm ci && npm run heroku-postbuild && npm run server",
-    "start": "npm run dev",
+    "startb": "npm run dev",
+    "start": "docker-compose -f docker-compose.dev.yml up",
     "test": "npm run prettier-check",
     "update-pokemon-moves": "wget -O ./src/components/pokemon/showdown/moves.js https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/moves.js",
     "update-pokemon-pokedex": "wget -O ./src/components/pokemon/showdown/pokedex.js https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/pokedex.js",
-    "update-pokemon": "npm run update-pokemon-pokedex && npm run update-pokemon-moves"
+    "update-pokemon": "npm run update-pokemon-pokedex && npm run update-pokemon-moves",
+    "docker:dev:build": "docker compose -f docker-compose.dev.yml build"
   },
   "repository": {
     "type": "git",
