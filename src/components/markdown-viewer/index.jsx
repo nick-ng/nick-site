@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import MarkdownDisplay from '../markdown-display';
-import SwaggerUIDisplay from '../swagger-ui-display';
 import Loading from '../loading';
 
 const Container = styled.div`
@@ -49,10 +48,6 @@ export default function MarkdownViewer() {
         <div style={{ marginTop: '1em' }}>
           <Loading />
         </div>
-      ) : status === 'swagger' ? (
-        <SwaggerUIDisplay
-          url={`${location.origin}/api/swagger/uri/${documentUri}`}
-        />
       ) : (
         <MarkdownDisplay content={content} />
       )}

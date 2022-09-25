@@ -8,7 +8,6 @@ import debounce from 'lodash/debounce';
 
 import { saveMarkdown } from './utils';
 import MarkdownDisplay from '../markdown-display';
-import SwaggerUIDisplay from '../swagger-ui-display';
 import DocumentPicker from './document-picker';
 
 const debouncedSaveMarkdown = debounce(
@@ -308,11 +307,7 @@ export default function MarkdownEditor({ notesOnly }) {
       </div>
       <Preview>
         <h2>Preview</h2>
-        {status === 'swagger' ? (
-          <SwaggerUIDisplay spec={content} />
-        ) : (
-          <MarkdownDisplay content={content} />
-        )}
+        <MarkdownDisplay content={content} />
       </Preview>
     </Container>
   );
