@@ -99,7 +99,6 @@
     "seedrandom": "^3.0.5",
     "style-loader": "^0.13.1",
     "styled-components": "^5.1.1",
-    "swagger-ui-react": "^3.46.0",
     "uuid": "^7.0.3",
     "webpack": "^5.27.1",
     "webpack-cli": "^4.5.0",
