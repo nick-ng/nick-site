@@ -1,3 +1,7 @@
+/volumes/
+/maintainence/*
+!/maintainence/*.sh
+
 # Build folder
 /dist/*
 

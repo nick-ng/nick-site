@@ -58,6 +58,7 @@ const Numberdle = lazy(() => import('./components/numberdle'));
 const ConfettiMaker = lazy(() => import('./components/confetti-maker'));
 const TextToSpeech = lazy(() => import('./components/text-to-speech'));
 const Timers = lazy(() => import('./components/timers'));
+const KeybindPlanner = lazy(() => import('./components/keybind-planner'));
 const Misc = lazy(() => import('./components/markdown-pages/misc'));
 
 export default function App() {
@@ -175,6 +176,9 @@ export default function App() {
               </R>
               <R path="/timers">
                 <Timers />
+              </R>
+              <R path="/keybind-planner">
+                <KeybindPlanner />
               </R>
               <R path="/misc">
                 <Misc />
