@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  postgresql:
+    env_file:
+      - .env
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_USER: root
+      POSTGRES_DB: nick_dot_ng
+    volumes:
+      - ./volumes/postgresql:/var/lib/postgresql/data
+      - ./maintainence:/root/maintainence

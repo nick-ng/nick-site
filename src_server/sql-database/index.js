@@ -7,11 +7,6 @@ const markdownDocument = require('./markdown-document');
 const user = require('./user');
 const weddingAlbumTag = require('./wedding-album-tag');
 
-const ssl = {
-  require: true,
-  rejectUnauthorized: false,
-};
-
 const options = {
   client: 'pg',
   connection: {
@@ -19,10 +14,6 @@ const options = {
   },
   searchPath: ['knex', 'public'],
 };
-
-if (process.env.NODE_ENV !== 'development') {
-  options.connection.ssl = ssl;
-}
 
 const db = knex(options);
 

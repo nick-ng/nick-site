@@ -28,7 +28,7 @@
     "db:down": "docker-compose down",
     "db:reset": "docker-compose down && docker volume rm nick-site_postgres-data",
     "db:connect": "docker exec -it nick-site_sql-db_1 psql test_db",
-    "server": "node ./server.js",
+    "server": "npm run knex-migrate-prod && node ./server.js",
     "sim-deploy": "rm -rf node_modules && npm ci && npm run heroku-postbuild && npm run server",
     "sim-deploy-win": "npm ci && npm run heroku-postbuild && npm run server",
     "startb": "npm run dev",

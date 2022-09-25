@@ -1,0 +1,18 @@
+FROM node:lts-alpine
+
+ENV NODE_ENV=production
+ENV HUSKY=0
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm ci --ignore-scripts
+
+# Bundle app source
+COPY . .
+
+RUN npm run build
+
+EXPOSE 8080
+CMD [ "npm", "run", "server"]

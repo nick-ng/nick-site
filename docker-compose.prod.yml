@@ -1,12 +1,15 @@
+version: '3.4'
+
 services:
-  back:
+  nick-site:
+    env_file:
+      - .env
     build:
       context: .
-      dockerfile: Dockerfile.dev.back
+      dockerfile: Dockerfile.prod
+    restart: always
     ports:
-      - 3435:3435
-    volumes:
-      - ./:/code
+      - '${PORT}:${PORT}'
   postgresql:
     env_file:
       - .env
