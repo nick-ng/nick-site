@@ -59,6 +59,7 @@ const ConfettiMaker = lazy(() => import('./components/confetti-maker'));
 const TextToSpeech = lazy(() => import('./components/text-to-speech'));
 const Timers = lazy(() => import('./components/timers'));
 const KeybindPlanner = lazy(() => import('./components/keybind-planner'));
+const Resolution2023 = lazy(() => import('./components/resolution-2023'));
 const Misc = lazy(() => import('./components/markdown-pages/misc'));
 
 export default function App() {
@@ -179,6 +180,9 @@ export default function App() {
               </R>
               <R path="/keybind-planner">
                 <KeybindPlanner />
+              </R>
+              <R path="/resolution-2023">
+                <Resolution2023 />
               </R>
               <R path="/misc">
                 <Misc />
