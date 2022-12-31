@@ -39,21 +39,23 @@ export default function Resolution2023() {
         <li>Do push-ups equal to the sum of the month and the date.</li>
       </ul>
       <p>Push-ups to do today: {today.getDate() + today.getMonth() + 1}</p>
-      <button
-        onClick={() => {
-          const dateString = getDateString(today);
-          if (daysDone.includes(dateString)) {
-            return;
-          }
+      {!daysDone.includes(getDateString(today)) && (
+        <button
+          onClick={() => {
+            const dateString = getDateString(today);
+            if (daysDone.includes(dateString)) {
+              return;
+            }
 
-          const newDaysDone = daysDone.concat([dateString]);
+            const newDaysDone = daysDone.concat([dateString]);
 
-          setArray(DAYS_DONE_STORE, newDaysDone);
-          setDaysDone(newDaysDone);
-        }}
-      >
-        Push-ups for {today.toLocaleDateString('en-NZ', dateOptions)} done
-      </button>
+            setArray(DAYS_DONE_STORE, newDaysDone);
+            setDaysDone(newDaysDone);
+          }}
+        >
+          Push-ups for {today.toLocaleDateString('en-NZ', dateOptions)} done
+        </button>
+      )}
       <p>Push-ups done:</p>
       <ul>
         {daysDone
