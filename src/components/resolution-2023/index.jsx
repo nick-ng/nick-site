@@ -57,7 +57,7 @@ export default function Resolution2023() {
         </button>
       )}
       <p>Push-ups done:</p>
-      <ul>
+      <ol>
         {daysDone
           .sort((a, b) => new Date(a) - new Date(b))
           .map((dateString) => (
@@ -65,7 +65,7 @@ export default function Resolution2023() {
               {new Date(dateString).toLocaleDateString('en-NZ', dateOptions)}
             </li>
           ))}
-      </ul>
+      </ol>
     </StyledResolution2023>
   );
 }
