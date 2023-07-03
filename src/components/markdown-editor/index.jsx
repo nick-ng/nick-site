@@ -85,16 +85,19 @@ export default function MarkdownEditor({ notesOnly }) {
   const [status, setStatus] = useState('private');
   const [publishAt, setPublishAt] = useState(dayjs().format('YYYY-MM-DD'));
   const [uri, setUri] = useState(uuid());
+  const [updatedAt, setUpdatedAt] = useState('');
 
   const fetchDocument = async (id) => {
     const res = await axios.get(`/api/markdown-document/id/${id}`);
-    const { content, publishAt, status, title, uri } = res.data;
+    const { content, publishAt, status, title, uri, createdAt, updatedAt } =
+      res.data;
     setTitle(title);
     setContent(content);
     setStatus(status);
     setPublishAt(dayjs(publishAt).format('YYYY-MM-DD'));
     setUri(uri || uuid());
     setSaving(false);
+    setUpdatedAt(updatedAt || createdAt);
   };
 
   const fetchDocuments = async () => {
@@ -175,7 +178,13 @@ export default function MarkdownEditor({ notesOnly }) {
                   <button disabled={saving} onClick={saveNow}>
                     {saving ? 'Saving...' : 'Save'}
                   </button>
-                  {AUTOSAVE_STATUS.includes(status) && ' (Autosave on)'}
+                  {AUTOSAVE_STATUS.includes(status) && (
+                    <span>&nbsp;(Autosave on)</span>
+                  )}
+                  <span>
+                    Last updated:&nbsp;
+                    {dayjs(updatedAt).format('D MMM YYYY, h:mm a')}
+                  </span>
                 </td>
               </tr>
               <tr>
