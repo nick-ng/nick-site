@@ -3,6 +3,11 @@ const { promisify } = require('util');
 const CACHE_KEY = 'cache';
 const CACHE_TTL = 60 * 10; // 10 minutes
 
+/**
+ * @param {string} key
+ *
+ * @returns {string}
+ */
 const getSafeKey = (key) => `${CACHE_KEY}${key.replace(/\//g, ':')}`;
 
 const get = (client) => async (key, getter) => {
