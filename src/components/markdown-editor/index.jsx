@@ -6,15 +6,22 @@ import axios from 'axios';
 import { v4 as uuid } from 'uuid';
 import debounce from 'lodash/debounce';
 
-import { saveMarkdown } from './utils';
+import { saveMarkdown, fetchDocument } from './utils';
 import MarkdownDisplay from '../markdown-display';
 import DocumentPicker from './document-picker';
 
 const debouncedSaveMarkdown = debounce(
-  async (setSaving, documentId, data) => {
+  async (setSaving, documentId, data, doReload = () => {}) => {
     setSaving(true);
-    await saveMarkdown(documentId, data);
+    const { needReload, previousContent } = await saveMarkdown(
+      documentId,
+      data
+    );
     setSaving(false);
+
+    if (needReload) {
+      doReload(previousContent);
+    }
   },
   5000,
   { maxWait: 30000 }
@@ -86,19 +93,7 @@ export default function MarkdownEditor({ notesOnly }) {
   const [publishAt, setPublishAt] = useState(dayjs().format('YYYY-MM-DD'));
   const [uri, setUri] = useState(uuid());
   const [updatedAt, setUpdatedAt] = useState('');
-
-  const fetchDocument = async (id) => {
-    const res = await axios.get(`/api/markdown-document/id/${id}`);
-    const { content, publishAt, status, title, uri, createdAt, updatedAt } =
-      res.data;
-    setTitle(title);
-    setContent(content);
-    setStatus(status);
-    setPublishAt(dayjs(publishAt).format('YYYY-MM-DD'));
-    setUri(uri || uuid());
-    setSaving(false);
-    setUpdatedAt(updatedAt || createdAt);
-  };
+  const [discardedContents, setDiscardedContents] = useState([]);
 
   const fetchDocuments = async () => {
     const res = await axios.get('/api/markdown-document');
@@ -117,39 +112,86 @@ export default function MarkdownEditor({ notesOnly }) {
 
   const autoSave = (newData) => {
     if (documentId && AUTOSAVE_STATUS.includes(status)) {
-      debouncedSaveMarkdown(setSaving, documentId, {
-        title,
-        content,
-        status,
-        publishAt,
-        uri,
-        ...newData,
-      });
+      debouncedSaveMarkdown(
+        setSaving,
+        documentId,
+        {
+          title,
+          content,
+          status,
+          publishAt,
+          uri,
+          updatedAt,
+          ...newData,
+        },
+        async (previousContent) => {
+          setDiscardedContents((p) =>
+            p.concat({ date: new Date(), content: previousContent })
+          );
+          const fresh = await fetchDocument(documentId);
+          setTitle(fresh.title);
+          setContent(fresh.content);
+          setStatus(fresh.status);
+          setPublishAt(dayjs(fresh.publishAt).format('YYYY-MM-DD'));
+          setUri(fresh.uri || uuid());
+          setUpdatedAt(fresh.updatedAt || fresh.createdAt);
+          setSaving(false);
+        }
+      );
     }
   };
 
   const saveNow = async () => {
     setSaving(true);
-    const newId = await saveMarkdown(documentId, {
+    const {
+      id: newId,
+      needReload,
+      previousContent,
+    } = await saveMarkdown(documentId, {
       title,
       content,
       status,
       publishAt,
       uri,
+      updatedAt,
     });
 
-    if (newId === documentId) {
-      fetchDocument(documentId);
+    if (newId !== documentId) {
+      const basePath = notesOnly ? 'notes' : 'markdown-editor';
+      fetchDocuments();
+      history.push(`/${basePath}/${newId}`);
     }
-    const basePath = notesOnly ? 'notes' : 'markdown-editor';
-    history.push(`/${basePath}/${newId}`);
-    fetchDocuments();
+
+    if (needReload) {
+      setDiscardedContents((p) =>
+        p.concat({ date: new Date(), previousContent })
+      );
+    }
+
+    const fresh = await fetchDocument(documentId);
+    setTitle(fresh.title);
+    setContent(fresh.content);
+    setStatus(fresh.status);
+    setPublishAt(dayjs(fresh.publishAt).format('YYYY-MM-DD'));
+    setUri(fresh.uri || uuid());
+    setUpdatedAt(fresh.updatedAt || fresh.createdAt);
+    setSaving(false);
   };
 
   useEffect(() => {
     fetchDocuments();
     if (documentId) {
-      fetchDocument(documentId);
+      (async () => {
+        const { content, publishAt, status, title, uri, createdAt, updatedAt } =
+          await fetchDocument(documentId);
+        setTitle(title);
+        setContent(content);
+        setStatus(status);
+        setPublishAt(dayjs(publishAt).format('YYYY-MM-DD'));
+        setUri(uri || uuid());
+        setSaving(false);
+        setUpdatedAt(updatedAt || createdAt);
+      })();
     } else {
       setTitle(dayjs().format('YYYY-MM-DD HH:mm:ss'));
       setContent('');
@@ -181,10 +223,15 @@ export default function MarkdownEditor({ notesOnly }) {
                   {AUTOSAVE_STATUS.includes(status) && (
                     <span>&nbsp;(Autosave on)</span>
                   )}
-                  <span>
-                    Last updated:&nbsp;
-                    {dayjs(updatedAt).format('D MMM YYYY, h:mm a')}
-                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style={{ fontSize: '10pt', paddingLeft: '3px' }}
+                  colSpan={2}
+                >
+                  Last updated:&nbsp;
+                  {dayjs(updatedAt).format('D MMM YYYY, h:mm a')}
                 </td>
               </tr>
               <tr>
@@ -274,22 +321,21 @@ export default function MarkdownEditor({ notesOnly }) {
                   </td>
                 </tr>
               )}
-              {documentId && (
+              {discardedContents.length > 0 && (
                 <tr>
-                  <td colSpan={2}>
-                    <button
-                      onClick={async () => {
-                        const res = confirm(`Delete document ${title}?`);
-                        if (res) {
-                          await axios.delete(
-                            `/api/markdown-document/id/${documentId}`
-                          );
-                          history.push('/markdown-editor');
-                        }
-                      }}
-                    >
-                      Delete
-                    </button>
+                  <td>Discarded Contents</td>
+                  <td>
+                    {discardedContents.map((d) => (
+                      <div key={d.date.valueOf()}>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(d.content);
+                          }}
+                        >
+                          {dayjs(d.date).format('D MMM YYYY, h:mm a')}
+                        </button>
+                      </div>
+                    ))}
                   </td>
                 </tr>
               )}
@@ -312,6 +358,29 @@ export default function MarkdownEditor({ notesOnly }) {
               }
             }}
           />
+          {documentId && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}
+            >
+              <button
+                onClick={async () => {
+                  const res = confirm(`Delete document ${title}?`);
+                  if (res) {
+                    await axios.delete(
+                      `/api/markdown-document/id/${documentId}`
+                    );
+                    history.push('/markdown-editor');
+                  }
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </Controls>
       </div>
       <Preview>
