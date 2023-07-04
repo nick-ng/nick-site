@@ -16,13 +16,14 @@ export const fetchDocument = async (id) => {
 // {title, content, status, publishAt, uri}
 export const saveMarkdown = async (
   id,
-  { title, content, status, publishAt, uri, updatedAt }
+  { title, content, status, publishAt, uri },
+  oldUpdatedAt
 ) => {
   if (typeof id === 'string') {
     const prevData = await fetchDocument(id);
 
     const dbDate = new Date(prevData.updatedAt || prevData.createdAt);
-    const localDate = new Date(updatedAt);
+    const localDate = new Date(oldUpdatedAt);
 
     if (dbDate > localDate) {
       return { id, needReload: true, previousContent: content };

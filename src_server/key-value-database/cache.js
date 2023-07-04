@@ -29,6 +29,14 @@ const get = (client) => async (key, getter) => {
   return item;
 };
 
+const del = (client) => async (key) => {
+  const redisDel = promisify(client.del).bind(client);
+
+  const safeKey = getSafeKey(key);
+
+  return redisDel(safeKey);
+};
+
 const delAll = (client) => async () => {
   const redisDel = promisify(client.del).bind(client);
   const redisScan = promisify(client.scan).bind(client);
@@ -41,12 +49,11 @@ const delAll = (client) => async () => {
     allCacheKeys.push(...res[1]);
   } while (cursor !== '0');
 
-  allCacheKeys.forEach((key) => {
-    redisDel(key);
-  });
+  await Promise.all(allCacheKeys.map((key) => redisDel(key)));
 };
 
 module.exports = (client) => ({
   get: get(client),
+  del: del(client),
   delAll: delAll(client),
 });

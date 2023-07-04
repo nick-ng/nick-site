@@ -11,17 +11,18 @@ import MarkdownDisplay from '../markdown-display';
 import DocumentPicker from './document-picker';
 
 const debouncedSaveMarkdown = debounce(
-  async (setSaving, documentId, data, doReload = () => {}) => {
+  async (setSaving, documentId, data, updatedAt, doReload = () => {}) => {
     setSaving(true);
+
     const { needReload, previousContent } = await saveMarkdown(
       documentId,
-      data
+      data,
+      updatedAt
     );
+
     setSaving(false);
 
-    if (needReload) {
-      doReload(previousContent);
-    }
+    doReload(needReload, previousContent);
   },
   5000,
   { maxWait: 30000 }
@@ -121,13 +122,16 @@ export default function MarkdownEditor({ notesOnly }) {
           status,
           publishAt,
           uri,
-          updatedAt,
           ...newData,
         },
-        async (previousContent) => {
-          setDiscardedContents((p) =>
-            p.concat({ date: new Date(), content: previousContent })
-          );
+        updatedAt,
+        async (needReload, previousContent) => {
+          if (needReload) {
+            setDiscardedContents((p) =>
+              p.concat({ date: new Date(), content: previousContent })
+            );
+          }
+
           const fresh = await fetchDocument(documentId);
           setTitle(fresh.title);
           setContent(fresh.content);
@@ -147,14 +151,17 @@ export default function MarkdownEditor({ notesOnly }) {
       id: newId,
       needReload,
       previousContent,
-    } = await saveMarkdown(documentId, {
-      title,
-      content,
-      status,
-      publishAt,
-      uri,
-      updatedAt,
-    });
+    } = await saveMarkdown(
+      documentId,
+      {
+        title,
+        content,
+        status,
+        publishAt,
+        uri,
+      },
+      updatedAt
+    );
 
     if (newId !== documentId) {
       const basePath = notesOnly ? 'notes' : 'markdown-editor';
@@ -182,15 +189,14 @@ export default function MarkdownEditor({ notesOnly }) {
     fetchDocuments();
     if (documentId) {
       (async () => {
-        const { content, publishAt, status, title, uri, createdAt, updatedAt } =
-          await fetchDocument(documentId);
-        setTitle(title);
-        setContent(content);
-        setStatus(status);
-        setPublishAt(dayjs(publishAt).format('YYYY-MM-DD'));
-        setUri(uri || uuid());
+        const fresh = await fetchDocument(documentId);
+        setTitle(fresh.title);
+        setContent(fresh.content);
+        setStatus(fresh.status);
+        setPublishAt(dayjs(fresh.publishAt).format('YYYY-MM-DD'));
+        setUri(fresh.uri || uuid());
+        setUpdatedAt(fresh.updatedAt || fresh.createdAt);
         setSaving(false);
-        setUpdatedAt(updatedAt || createdAt);
       })();
     } else {
       setTitle(dayjs().format('YYYY-MM-DD HH:mm:ss'));
