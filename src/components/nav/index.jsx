@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import NavLink, { AdminNav } from './nav-link';
-import MiniTimers from '../mini-timers';
 
 import css from './styles.css';
 
@@ -16,7 +15,6 @@ export default function Nav() {
   return (
     <div className={css.navContainer}>
       <DayDisplay>{dayjs().format('dddd')}</DayDisplay>
-      <MiniTimers />
       <NavLink icons="fa-home" to="/" exact>
         Home
       </NavLink>
@@ -113,9 +111,6 @@ export default function Nav() {
       </NavLink>
       <NavLink icons={['fa-volume-up']} to="/texttospeech">
         Text to Speech
-      </NavLink>
-      <NavLink icons={['fa-clock-o']} to="/timers">
-        Timers
       </NavLink>
       <NavLink icons={['fa-keyboard-o']} to="/keybind-planner">
         Keybind Planner
