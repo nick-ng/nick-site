@@ -36,6 +36,10 @@ const StyledReactMarkdown = styled(ReactMarkdown)`
   li {
     line-height: 1.5;
   }
+
+  img {
+    max-width: 55em;
+  }
 `;
 
 export default function MarkdownDisplay({ className, content }) {
