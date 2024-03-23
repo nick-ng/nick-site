@@ -7,6 +7,11 @@ const { weddingAlbumTag } = require('../sql-database');
 const contentful = require('../contentful');
 
 const hasValidWeddingAlbumKey = async (key) => {
+  const endTimeStampMs = 1715313823768; // 10th of May 2024
+  if (Date.now() < endTimeStampMs) {
+    return true;
+  }
+
   if (!key) {
     return false;
   }
