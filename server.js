@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const compression = require('compression');
+const cors = requore('cors');
 const path = require('path');
 const http = require('http');
 
@@ -14,6 +15,14 @@ const router = express.Router();
 const port = process.env.PORT || 8080;
 app.set('port', port);
 
+app.use(
+  cors({
+    origin: '*',
+    methods: 'GET',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  })
+);
 app.use(compression());
 app.use(express.json());
 
