@@ -324,6 +324,14 @@ export default function MarkdownEditor({ notesOnly }) {
                     >
                       Link
                     </a>
+                    <a
+                      href={`https://presentation-program.nick.ng/view?s=nickng&p=${encodeURIComponent(
+                        uri
+                      )}`}
+                      target="_blank"
+                    >
+                      Presentation
+                    </a>
                   </td>
                 </tr>
               )}
